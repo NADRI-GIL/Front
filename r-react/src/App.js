@@ -6,6 +6,10 @@ import Main from './Body/Main';
 import Footer from './Footer/Footer';
 import Detail from './Body/Detail';
 import Notice from './Body/Notice';
+import Region from './Body/Region';
+import Login from './Body/Login';
+import SignUp from './Body/SignUp';
+
 const App = () => {
 	return (
 		<div className='App'>
@@ -16,6 +20,11 @@ const App = () => {
 				<Route path="/" element={<Main />}></Route>			
 				<Route path="/Detail" element={<Detail />}></Route>
 				<Route path="/Notice" element={<Notice />}></Route>
+				<Route path="/Region" element={<Region />}></Route>
+				<Route path="/SignUp" element={<SignUp />}></Route>
+				<Route path="/Login" element={<Login />}></Route>
+
+
 			</Routes>
 	      <Footer/>
       </BrowserRouter>
