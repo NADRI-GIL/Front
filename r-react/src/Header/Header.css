@@ -1,0 +1,280 @@
+.app-Header{
+    position : relative;
+    z-index: 2;
+    
+}
+
+.header_top{
+    padding-top: 10px;
+    box-shadow:  0px 0px 10px rgb(124, 122, 122);
+}
+
+.header-logo {
+    /* width: 100%; */
+    margin : 0 auto;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+   
+}
+
+.logo{
+    margin-top: 20px;
+    width: 45%;
+    height: 100%;
+    margin-left: 200px;
+    display: inline-block;
+}
+button{
+    border: 0;
+    background-color:transparent;
+}
+
+
+.header-search{
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    /* width: auto; */
+}
+
+.search{
+    margin: 10px auto; 
+    border: none;
+    background-color :rgb(235, 230, 230);
+    border-radius: 20px;
+    width: 80%;
+    height: 50%;
+}
+
+
+.Fasearch{
+    position: absolute;
+    right: 100px;
+}
+
+.H_login{
+    background: #fff;
+    border-radius: 8px;
+    position: absolute;
+    /* top: 5px; */
+    /* right: 0; */
+    display: block;
+    width: 150px;
+    text-align: center;
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-20px);
+    transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
+    padding: 10px;
+    top: -20px;
+    right: -150px;
+    color: black;
+}
+
+
+.etc ul .H_login li{
+    border-bottom :  1px solid #dddddd;
+    list-style: none;
+    display: block;
+    margin: 0 auto;
+}
+
+.H_login li a {
+    text-decoration: none;
+    color:black;
+    padding: 5px 5px;
+    display: block;
+    font-size: large;
+  }
+
+.etc{
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* width: auto; */
+    padding-left: 20px;
+    padding-top: 10px;
+}
+
+.etc_button{
+    display: inline-block;
+    margin-right: 25px;
+    position: relative;
+}
+
+.etc_button li{
+    list-style: none;
+    display: inline-block;
+    margin-right: 15px;
+}
+
+header > h2 {
+	margin-left:20px;
+}
+
+.Menu nav {
+	/* width:200px; */
+	height:100%;
+    background-color: blue;
+}
+
+ ul {
+	justify-content: space-between;
+}
+
+ ul li {
+	font-size:20px;
+	height: 100%;
+    list-style: none; 
+}
+
+ul li a{                  
+    text-align: center;         
+    list-style : none;
+    text-decoration-line: none;
+    color: black;
+}
+
+.main-menu {
+    margin: 0%;
+    list-style: none;
+    /* display: inline-flex; */
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 30px;
+    /* background-color: rgb(255, 255, 155); */
+}
+
+
+.main-menu ul li {
+	list-style: none;
+	display: inline-block;
+	margin-right: 200px;
+	position: relative;
+
+}
+
+
+
+.sub-menu {
+    text-align: center;
+    height: 50px;
+    width: 500px;
+    padding-top: 1%;
+}
+
+.sub-menu ul {
+    list-style: none;
+    visibility: hidden;
+    text-align: center;
+    padding: 0px;
+}
+.sub-menu {
+    text-align: center;
+    height: 50px;
+    width: 500px;
+    padding-top: 1%;
+}
+
+.sub-menu2 {
+    position: absolute;
+	left: -10;
+    border-radius : 8px;
+	background:white;
+    /* border:2px solid;
+    border-color:darkgrey; */
+    width: 180px;
+	z-index: 9;
+	padding: 5px 0;
+	-webkit-transition: all, 0.3s;
+	-moz-transition: all, 0.3s;
+	-ms-transition: all, 0.3s;
+	-o-transition: all, 0.3s;
+	transition: all, 0.3s;
+	opacity: 0;
+	visibility: hidden;
+    display: block;
+    margin-top: 20px;
+}
+
+.sub-menu2 > li {
+    margin-right: 0;
+	display: block;
+}
+
+.sub-menu2 > li > a{
+    text-transform: capitalize;
+	color: black;
+	font-weight: 400;
+	padding: 5px 15px;
+}
+
+
+
+.main-menu ul li:hover .sub-menu2 {
+	opacity: 1;
+	visibility: visible;
+}
+
+.main-menu ul li .sub-menu2 li {
+	margin-right: 0;
+	display: flex;
+}
+
+.main-menu ul li .sub-menu2 li:hover>a {
+	color: #6db0ef;
+
+}
+
+.main-menu ul li .sub-menu2 li a {
+	text-transform: capitalize;
+	color: black;
+	font-weight: 400;
+	padding: 5px 15px;
+}
+
+.main-menu ul li.active a {
+	color: black;
+    background-color:rgb(124, 122, 122);
+}
+
+.main-menu ul li:hover .sub-menu2 {
+	top: 30px;
+	opacity: 1;
+	visibility: visible;
+}
+
+.main-menu ul li:hover>a {
+	color: #6db0ef;
+}
+
+.main-menu ul li:last-child {
+	margin-right: 0;
+}
+
+.main-menu ul li a {
+	font-size: 22px;
+	color: #252525;
+	text-transform: uppercase;
+	font-weight: 700;
+	letter-spacing: 2px;
+    -webkit-transition: all, 0.3s;
+	-moz-transition: all, 0.3s;
+	-ms-transition: all, 0.3s;
+	-o-transition: all, 0.3s;
+	transition: all, 0.3s; 
+	padding: 5px 0;
+	display: block;
+}
+  
+.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
