@@ -13,7 +13,7 @@ function Router(){
             {/* <Route path="/signIn" element={<SignIn/>}></Route> */}
             {/* <Route path="/signUp" element={<SignUp/>}></Route> */}
             <Route path="/preferenceSurvey" element={<PreferenceSurvey/>}></Route>
-
+            <Route path="/Main" element={<Main/>}></Route>
         </Routes>
     </BrowserRouter>
     )
