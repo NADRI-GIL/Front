@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 function PreferencesSurvey() {
     const [preferenceTouristDestination, setPreferenceTouristDestination] = useState(new Array(20).fill(false))
     const data = [
-        { id : 0, name : '경복궁', image : 'nadri-gil\\public\\images.jpg'},
+        { id : 0, name : '경복궁', image : 'nadri_gil\\nadri-gil\\public\\images.jpg'},
         { id : 1, name : '경복궁1', image : 'nadri-gil\\public\\images.jpg'},
         { id : 2, name : '경복궁2', image : 'nadri-gil\\public\\images.jpg'},
         { id : 3, name : '경복궁3', image : 'nadri-gil\\public\\images.jpg'},
