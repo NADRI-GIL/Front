@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Link } from 'react-router-dom';
@@ -6,6 +6,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import "swiper/css"; //basic
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import axios from "axios";
 
 function ControlledCarousel() {
   const [index, setIndex] = useState(0);
@@ -16,8 +17,10 @@ function ControlledCarousel() {
         { id : 2, name : '경복궁2', image : 'images.jpg'},
     ]
 
+
   const handleSelect = (selectedIndex, e) => {
     setIndex(selectedIndex);
+
   };
 
   return (
@@ -37,28 +40,39 @@ function ControlledCarousel() {
     );
 }
 
-function Swipe() {
-  const data=[
-   { id : 0, location: "서울", name:"경복궁", image : "images.jpg", detail : "경복궁은 1395년 태조 이성계에 의해서 새로운 조선왕조의 법궁으로 지어졌다. "},
-   { id : 1, location: "서울", name:"name", image : "images.jpg", detail : "경복궁은 1395년 태조 이성계에 의해서 새로운 조선왕조의 법궁으로 지어졌다. "},
-   { id : 2, location: "서울", name:"경복궁", image : "images.jpg", detail : "경복궁은 1395년 태조 이성계에 의해서 새로운 조선왕조의 법궁으로 지어졌다. "},
-   { id : 3, location: "서울", name:"name", image : "images.jpg", detail : "경복궁은 1395년 태조 이성계에 의해서 새로운 조선왕조의 법궁으로 지어졌다. "},
-   { id : 4, location: "서울", name:"경복궁", image : "images.jpg", detail : "경복궁은 1395년 태조 이성계에 의해서 새로운 조선왕조의 법궁으로 지어졌다. "},
-   { id : 5, location: "서울", name:"name", image : "images.jpg", detail : "경복궁은 1395년 태조 이성계에 의해서 새로운 조선왕조의 법궁으로 지어졌다. "},
-  ]
 
+function Swipe() {
+
+  const [travel,setTravels] = useState(null);   //결과값
+
+  const fetchTravel = async () => {
+          setTravels(null);
+          const response = await axios.get("http://43.200.49.4:8080/travels/1/detail");
+          setTravels(response.data.list);
+          console.log(response);
+  };
+
+  useEffect( () =>{
+      
+      fetchTravel();
+  },[] )
+
+
+  if (!travel) return null;  //users값이 유효하지 않는 경우
+
+  
   return(
   <div>
         <Swiper spaceBetween={50} slidesPerView={4} onSlideChange={() => console.log('slide change')} onSwiper={(swiper) => console.log(swiper)}>
-          {data.map((e)=> {
+          {travel.map((e)=> {
           return( <SwiperSlide> 
-          <Link to = "../Detail" state={e}>
-              <div className="trend">
+          <Link to = "../TravelDetail" state={e}>
+              <div classsName="trend" style={{margin:"5px", height:"270px"}}>
                     <div className="t_image">
-                    <img className="t_image" src={e.image} alt="Second slide"/>
+                    <img style={{minHeight:'200px'}} className="t_image" src={e.image} alt="Second slide"/>
                     </div>
-                    <div clalssName="t_text">
-                        <h5 className ="tt2">{e.location} {e.name}</h5>
+                    <div clalssName="t_text" style={{position:'absolute',textAlign:"center", marginTop:"20px"}}>
+                        <h5 className ="tt2"style={{textAlign:'center', justifiyCenter:"center", width:"100%", marign:"0 auto"}}>{e.name} {e.id}</h5>
                     </div>
                 </div>
             </Link>
@@ -70,13 +84,39 @@ function Swipe() {
   )
 }
 
+function Notice(){
+  const data=[
+    { notice_id : 0, user_id : "user", register_date :"202202022", title:"제목", content : "내용" },
+    { notice_id : 1, user_id : "user", register_date :"202202022", title:"제목", content : "내용" },
+    { notice_id : 2, user_id : "user", register_date :"202202022", title:"제목", content : "내용" },
+    ]
+
+  return(
+    <div>
+      <h5>공지사항</h5>
+      <Link to = "../Notice">
+        <button>+</button>
+      </Link>
+      <ul>
+        {data.map((e)=>{
+          return (
+              <li><a href="#">{e.title}</a></li>
+          )
+        })}
+      </ul>
+    </div>
+  )
+}
+
+
 
 class Main extends React.Component{
-  render(){
+  render(){ 
       return (
           <div className ="app_main">
               <ControlledCarousel/> 
               <Swipe/>
+              <Notice/>
           </div>
       );
   }

@@ -3,7 +3,7 @@ import Main from "./routes/Main";
 import SignIn from "./routes/SignIn";
 import SignUp from "./routes/SignUp";
 import PreferenceSurvey from "./routes/PreferenceSurvey";
-
+import TravelDetail from "./routes/TravelDetail";
 
 function Router(){
     return (
@@ -14,6 +14,7 @@ function Router(){
             {/* <Route path="/signUp" element={<SignUp/>}></Route> */}
             <Route path="/preferenceSurvey" element={<PreferenceSurvey/>}></Route>
             <Route path="/Main" element={<Main/>}></Route>
+            <Route path="/TravelDetail" element={<TravelDetail/>}></Route>
         </Routes>
     </BrowserRouter>
     )
