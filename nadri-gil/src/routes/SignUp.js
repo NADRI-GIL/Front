@@ -16,7 +16,7 @@ function SignUp(){
     const [email, setEmail] = useState("")
 
     let navigate = useNavigate();
-
+    console.log(id, password);
 
     const { mutate, isLoading } = useMutation(postSignup, {
         onSuccess: data => {

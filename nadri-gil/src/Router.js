@@ -4,7 +4,7 @@ import SignIn from "./routes/SignIn";
 import SignUp from "./routes/SignUp";
 import PreferenceSurvey from "./routes/PreferenceSurvey";
 import TravelDetail from "./routes/TravelDetail";
-
+import PutData from "./routes/PutData";
 function Router(){
     return (
     <BrowserRouter>
@@ -15,6 +15,7 @@ function Router(){
             <Route path="/preferenceSurvey" element={<PreferenceSurvey/>}></Route>
             <Route path="/Main" element={<Main/>}></Route>
             <Route path="/TravelDetail" element={<TravelDetail/>}></Route>
+            <Route path="/PutData" element={<PutData/>}></Route>
         </Routes>
     </BrowserRouter>
     )

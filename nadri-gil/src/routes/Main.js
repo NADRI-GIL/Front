@@ -3,36 +3,34 @@ import Carousel from 'react-bootstrap/Carousel';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import "swiper/css"; //basic
+import "swiper/css"; 
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import axios from "axios";
+import mypic from './iconsearch.png'
 
 function ControlledCarousel() {
   const [index, setIndex] = useState(0);
 
-  const data = [
-        { id : 0, name : '경복궁', image : 'images.jpg'},
-        { id : 1, name : '경복궁1', image : 'images.jpg'},
-        { id : 2, name : '경복궁2', image : 'images.jpg'},
+  const data1 = [
+        { id : 0, name : '경복궁'},
+        { id : 1, name : '경복궁1'},
+        { id : 2, name : '경복궁2'},
     ]
 
 
   const handleSelect = (selectedIndex, e) => {
     setIndex(selectedIndex);
-
   };
 
+  console.log(data1.image);
+
   return (
-    <Carousel activeIndex={index} onSelect={handleSelect}>
-       {data.map((e)=> {
+    <Carousel style={{height:"280px"}} activeIndex={index} onSelect={handleSelect}>
+       {data1.map((e)=> {
           return( 
-      <Carousel.Item>
-        <img
-          className="d-block w-100"
-          src={e.image}
-          alt="First slide"
-        />
+      <Carousel.Item style={{}}>
+        <img src={mypic} style={{height:"280px", widht:"100%"}}alt="f slide"/>
       </Carousel.Item>
         )
       })}
@@ -41,25 +39,21 @@ function ControlledCarousel() {
 }
 
 
+//swiper
 function Swipe() {
-
-  const [travel,setTravels] = useState(null);   //결과값
-
+  const [travel,setTravels] = useState(0);
+  
   const fetchTravel = async () => {
-          setTravels(null);
-          const response = await axios.get("http://43.200.49.4:8080/travels/1/detail");
-          setTravels(response.data.list);
-          console.log(response);
+         {const response = await axios.get("http://43.200.49.4:8080/travels/1/detail");
+         setTravels(response.data.list);
+          console.log(response.data.list);}
   };
 
   useEffect( () =>{
-      
       fetchTravel();
   },[] )
 
-
-  if (!travel) return null;  //users값이 유효하지 않는 경우
-
+  if (!travel) return null; 
   
   return(
   <div>
@@ -67,12 +61,13 @@ function Swipe() {
           {travel.map((e)=> {
           return( <SwiperSlide> 
           <Link to = "../TravelDetail" state={e}>
-              <div classsName="trend" style={{margin:"5px", height:"270px"}}>
-                    <div className="t_image">
-                    <img style={{minHeight:'200px'}} className="t_image" src={e.image} alt="Second slide"/>
+              <div style={{margin:"5px", height:"270px"}}>
+                    <div >
+                    <img style={{minHeight:'200px', width:'200px'}}  src={e.image} alt="Second slide"/>
                     </div>
-                    <div clalssName="t_text" style={{position:'absolute',textAlign:"center", marginTop:"20px"}}>
-                        <h5 className ="tt2"style={{textAlign:'center', justifiyCenter:"center", width:"100%", marign:"0 auto"}}>{e.name} {e.id}</h5>
+                    <div  style={{position:'absolute',textAlign:"center", marginTop:"20px"}}>
+                        <h5 style={{textAlign:'center', justifiyCenter:"center", width:"100%", marign:"0 auto"}}>{e.name}</h5>
+                        <h5 style={{textAlign:'center', justifiyCenter:"center", width:"100%", marign:"0 auto"}}>{e.address}</h5>
                     </div>
                 </div>
             </Link>
@@ -92,7 +87,7 @@ function Notice(){
     ]
 
   return(
-    <div>
+    <div sytle={{width: "100%"}}>
       <h5>공지사항</h5>
       <Link to = "../Notice">
         <button>+</button>
@@ -109,14 +104,24 @@ function Notice(){
 }
 
 
+function Course(){
+
+return(
+<></>
+)
+}
+
 
 class Main extends React.Component{
   render(){ 
       return (
-          <div className ="app_main">
+          <div style={{justifyContent: "center"}}>
               <ControlledCarousel/> 
               <Swipe/>
+              <div style={{width:"70%", margin:"0 auto"}}>
               <Notice/>
+              <Course/>
+              </div>
           </div>
       );
   }
