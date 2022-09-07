@@ -21,3 +21,12 @@ export const postSignup = async (data) => {
     })
       .then((response) => response.json());
   }
+  export const getPreference = async (data) => {
+    return fetch(`${URL}/travels/random`, {
+      method: "get",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json());
+  }
