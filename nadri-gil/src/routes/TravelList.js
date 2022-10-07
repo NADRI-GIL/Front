@@ -179,12 +179,12 @@ function TravelList() {
             <SelectBox options={OPTIONS} defaultValue={false}></SelectBox>
             <ContentList>
                 
-                {isLoading?'loading...':travelList.map((e) => {
+                {isLoading?'loading...':travelList.map((item) => {
                     return (
                         <Content>
                             <a href="">
-                                <img src={e.image}></img>
-                                <p>{e.name}</p>
+                                <img src={item.image}></img>
+                                <p>{item.name}</p>
                             </a>
                         </Content>
                     )
