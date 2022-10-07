@@ -45,17 +45,17 @@ function MyPage() {
         {
             id: 2,
             title: "코스 만들기",
-            to: "./travelList"
+            to: "./mypagecourse"
         },
         {
             id: 3,
             title: "제작한 코스",
-            to: "./travelList"
+            to: "./mypageheartlist"
         },
         {
             id: 4,
             title: "남긴 리뷰",
-            to: "./travelList"
+            to: "./mypageheartlist"
         }
 
 

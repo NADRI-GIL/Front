@@ -8,6 +8,7 @@ import TravelList from "./routes/TravelList";
 import MyPageLayout from "./routes/MyPage/MyPageLayout"
 import MyPageInfo from "./routes/MyPage/MyPageInfo";
 import MyPageHeartList from "./routes/MyPage/MyPageHeartList";
+import MyPageCourse from "./routes/MyPage/MyPageCourse";
 function Router(){
     return (
     <BrowserRouter>
@@ -20,7 +21,7 @@ function Router(){
             <Route path="/mypage" element={<MyPageLayout/>}>
                 <Route path="/mypage/mypageinfo" element={<MyPageInfo/>}></Route>
                 <Route path="/mypage/mypageheartlist" element={<MyPageHeartList/>}></Route>
-                <Route path="/mypage/travelList" element={<TravelList/>}></Route>
+                <Route path="/mypage/mypagecourse" element={<MyPageCourse/>}></Route>
             </Route>
         </Routes>
     </BrowserRouter>
