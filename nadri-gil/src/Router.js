@@ -5,6 +5,7 @@ import SignIn from "./routes/SignIn";
 import SignUp from "./routes/SignUp";
 import PreferenceSurvey from "./routes/PreferenceSurvey";
 import TravelList from "./routes/TravelList";
+import CreateCourse from "./routes/CreateCourse";
 
 import MyPageLayout from "./routes/MyPage/MyPageLayout"
 import MyPageInfo from "./routes/MyPage/MyPageInfo";
@@ -20,6 +21,7 @@ function Router(){
                 <Route path="/signUp" element={<SignUp/>}></Route>
                 <Route path="/preferenceSurvey" element={<PreferenceSurvey/>}></Route>
                 <Route path="/travelList" element={<TravelList/>}></Route>
+                <Route path="/createcourse" element={<CreateCourse/>}></Route>
                 <Route path="/mypage" element={<MyPageLayout/>}>
                     <Route path="/mypage/mypageinfo" element={<MyPageInfo/>}></Route>
                     <Route path="/mypage/mypageheartlist" element={<MyPageHeartList/>}></Route>

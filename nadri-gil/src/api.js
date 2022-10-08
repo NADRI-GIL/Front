@@ -40,8 +40,17 @@ export const getTravelsAll = async () => {
   })
     .then((response) => response.json());
 }
-export const directions5api = async () => {
-  return fetch(`/api/map-direction/v1/driving?start=127.45521181369443, 36.629567359731475&goal=127.45502402553248, 36.63565971545496&option=trafast`, {
+export const directions5api = async (direction) => {
+  let start = direction[0].lng + ',' + direction[0].lat;
+  let goal = direction[direction.length-1].lng + ',' + direction[direction.length-1].lat;
+  let waypoints = ''
+  if(direction.length > 2){
+    for(let i = 1; i < direction.length -1; i++){
+      waypoints += direction[i].lng + ',' + direction[i].lat;
+      if(i < direction.length - 2) waypoints += '|'
+    }
+  }
+  return fetch(`/api/map-direction/v1/driving?start=${start}&goal=${goal}&option=trafast&waypoints=${waypoints}`, {
     method: "get",
     headers: {
       "Content-Type": "application/json",
