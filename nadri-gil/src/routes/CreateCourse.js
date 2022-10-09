@@ -55,7 +55,6 @@ function CreateCourse() {
         }
     });
     useEffect(() => {
-        console.log(courseData)
         if (courseData != null) {
             const { naver } = window;
 
@@ -87,7 +86,7 @@ function CreateCourse() {
             }
             new naver.maps.Polyline({
                 path: polylinePath,     //선 위치 변수배열
-                strokeColor: '#FF0000', //선 색 빨강 #빨강,초록,파랑
+                strokeColor: '#3366ff', //선 색 빨강 #빨강,초록,파랑
                 strokeOpacity: 0.8, //선 투명도 0 ~ 1
                 strokeWeight: 6,   //선 두께
                 map: map           //오버레이할 지도
@@ -99,7 +98,8 @@ function CreateCourse() {
 
     return (
         <Container>
-            {isLoading ? 'loading...' : "<div>{data}</div>"}
+            {isLoading ? 'loading...' : 
+            <div>{courseData.trafast[0].summary.duration/60000}분 소요됩니다.</div>}
             <MapContainer id="map"></MapContainer>
         </Container>
     )
