@@ -1,4 +1,6 @@
-const URL = "http://43.200.49.4:8080"
+import axios from "axios";
+
+const URL = "http://13.124.150.86:8080"
 
 export const postSignup = async (data) => {
     return fetch(`${URL}/users/signUp`, {
@@ -29,4 +31,18 @@ export const postSignup = async (data) => {
       },
     })
       .then((response) => response.json());
+  }
+
+  export const getMain = async (data) => {
+    return axios.get(`${URL}/travels/all`);
+  }
+
+  export const getTravelDetail = async (id) => {
+
+    return axios.get(`${URL}/travels/${id}/detail`);
+  }
+
+  export const getCart = async (id) => {
+
+    return axios.get(`${URL}/carts/add/${id}`);
   }
