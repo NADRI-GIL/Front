@@ -1,0 +1,167 @@
+
+.main{
+    width: 62%;
+    margin: 0 auto;
+    font-family: 'SUIT';
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+a:link { 
+    text-decoration: none;
+    color : inherit;
+   }
+    
+a:visited { 
+text-decoration: none;
+}
+
+a:hover { 
+text-decoration: none;
+color: inherit;
+}
+/* SWipe image */
+
+.title{
+    display : flex;
+    justify-content:space-between;
+    margin-top: 100px;
+}
+
+.title > .text_link> h6{
+    color: #3366ff;
+}
+
+
+.swipe{
+    margin-top: 50px;
+    margin-bottom: 150px;
+}
+
+.swipe_div{
+    margin: 0 auto; 
+    height:300px;
+    text-align: center;
+    overflow: hidden;
+}
+
+.swipe_div img {
+    transition: all 0.2s linear;
+  }
+  .swipe_div:hover img {
+    transform: scale(1.1);
+  }
+
+  .swipe_imgbox{
+overflow: hidden;
+ }
+
+.swipe_img{
+   min-height:270px;
+    Width:240px;
+    margin: 0 auto;
+}
+
+.swipe_h5{
+    text-align:center; 
+    justify-content:center;
+    margin:0 auto;
+    position: static;
+
+}
+/* 
+travel_detail.js */
+
+.detail{
+    width: 50%;
+    margin: 0 auto;
+    font-family: 'SUIT';
+    margin-top: 70px;
+}
+
+.detail_component{
+    /* margin-top: 30px; */
+    min-height: 500px;
+}
+
+.button_user{
+    border: 0;
+    background-color: transparent;
+}
+
+.T_userbutton{
+    justify-content: space-between;
+    display: flex;
+}
+
+.T_userbutton_2{
+   display: flex;
+   
+}
+.review{
+    position: relative !important;
+    text-align: center;
+    /* width: 300px; */
+    /* margin: 0 auto; */
+    /* margin-left:30px; */
+}
+
+.review_box{
+    margin: 10px auto; 
+    border: none;
+    background-color :rgb(240, 237, 237);
+    border-radius: 10px;
+    width: 100%;
+    height: 70px;
+
+}
+
+.review_upload{
+    position: absolute;
+    right: 15px;
+    font-size: 15px;
+    top: 30px;
+    margin: 0 auto;
+    border: 0;
+    background-color: transparent;
+
+}
+.comment{
+    width: 100%;
+    height: 50px;
+    /* margin-top: 20px; */
+}
+
+.comment_one{
+    margin-top: 20px;
+}
+.comment_detail{
+    /* display: flex;
+    justify-content: space-between; */
+    /* height: 100%; */
+}
+
+.comment_detail > img{
+    margin:auto;
+    display: block;
+}
+
+.tabs{
+    margin-top: 20px;
+}
+
+.tabs.active{
+    border-bottom: 2px solid #369fff;
+}
+.tabs li{
+    font-size: 1rem;
+    font-weight: bold;
+    display: inline-block;
+    padding: 1rem;
+}
+.tabs li.active{
+    border-bottom : 2px solid #369fff;
+    
+}

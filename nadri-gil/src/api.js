@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const URL = "http://13.124.150.86:8080"
 
 export const postSignup = async (data) => {
@@ -29,6 +31,20 @@ export const postLogin = async (data) => {
       },
     })
       .then((response) => response.json());
+  }
+
+  export const getMain = async (data) => {
+    return axios.get(`${URL}/travels/all`);
+  }
+
+  export const getTravelDetail = async (id) => {
+
+    return axios.get(`${URL}/travels/${id}/detail`);
+  }
+
+  export const getCart = async (id) => {
+
+    return axios.get(`${URL}/carts/add/${id}`);
   }
   
 export const getTravelsAll = async () => {
