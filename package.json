@@ -1,5 +1,10 @@
 {
   "dependencies": {
+    "styled-components": "^5.3.6"
+  }
+}
+{
+  "dependencies": {
     "swiper": "^8.3.2"
   }
 }
