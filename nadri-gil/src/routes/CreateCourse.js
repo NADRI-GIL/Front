@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from "styled-components";
 import { useQuery } from "react-query";
 import { directions5api } from "../api.js"
+import "../index.css"
 
 const Container = styled.div`
     width:60%;
@@ -17,22 +18,26 @@ function CreateCourse() {
         {
             name: "청주 시외버스터미널",
             lng: 127.43202481650647,
-            lat: 36.62576080594968
+            lat: 36.62576080594968,
+            add:"충북 청주시 흥덕구 풍산로 6"
         },
         {
             name: "충북대학교",
             lng: 127.45739630160224,
-            lat: 36.6284055465184
+            lat: 36.6284055465184,
+            add:"충북 청주시 서원구 충대로 1 충북대학교"
         },
         {
             name: "투썸플레이스 동남지구점",
             lng: 127.5170063098491,
-            lat: 36.61543334257298
+            lat: 36.61543334257298,
+            add:"충북 청주시 서원구 충대로 1 충북대학교"
         },
         {
             name: "청주고등학교",
             lng: 127.45537018595921,
-            lat: 36.63558179683339
+            lat: 36.63558179683339,
+            add:"충북 청주시 서원구 충대로 1 충북대학교"
         }
     ]
     const [courseData, setCourseData] = useState(null)
@@ -55,34 +60,80 @@ function CreateCourse() {
         }
     });
     useEffect(() => {
+        console.log(courseData)
         if (courseData != null) {
             const { naver } = window;
 
             let mapOptions = {
-                center: new naver.maps.LatLng(courseData.trafast[0].summary.start.location[1], courseData.trafast[0].summary.start.location[0]),
-                zoom: 15
+                center: new naver.maps.LatLng(courseData.trafast[0].summary.bbox[1][1] - (courseData.trafast[0].summary.bbox[1][1] - courseData.trafast[0].summary.bbox[0][1]) / 2, courseData.trafast[0].summary.bbox[1][0] - (courseData.trafast[0].summary.bbox[1][0] - courseData.trafast[0].summary.bbox[0][0]) / 2),
+                zoom: 13
             };
+            const style = "width:10vw;  background-color:white; padding:1vw;"
 
             let map = new naver.maps.Map('map', mapOptions);
-            new naver.maps.Marker({
-                position: new naver.maps.LatLng(courseData.trafast[0].summary.start.location[1], courseData.trafast[0].summary.start.location[0]),
-                map,
-            });
-            new naver.maps.Marker({
-                position: new naver.maps.LatLng(courseData.trafast[0].summary.goal.location[1], courseData.trafast[0].summary.goal.location[0]),
-                map,
-            });
-            for (let i = 0; i < courseData.trafast[0].summary.waypoints.length; i++) {
-                new naver.maps.Marker({
-                    position: new naver.maps.LatLng(courseData.trafast[0].summary.waypoints[i].location[1], courseData.trafast[0].summary.waypoints[i].location[0]),
+            let markers = []
+            let infowindows = []
+            points.forEach((item, i) => {
+                console.log(i)
+                let marker = new naver.maps.Marker({
+                    position: new naver.maps.LatLng(item.lat, item.lng),
                     map,
                 });
+
+                var content = `<div style='${style}'>
+                <p style="font-family: 'SUIT';">
+                ${item.name}
+                </p>
+                <p style="font-family: 'SUIT'; font-size:0.5vw;">
+                ${item.add}
+                <p>
+                </div>`
+
+                // 마커를 클릭시 나타내는 윈도우창
+                let infowindow = new naver.maps.InfoWindow({
+                    content: content,
+                    backgroundColor: '#00ff0000',
+                    borderColor: '#00ff0000',
+                    anchorSize: new naver.maps.Size(0, 0)
+                })
+
+                markers.push(marker);
+                infowindows.push(infowindow);
+            })
+            // 마커를 클릭시 infowindow을 창을 띄우는 이벤트와 닫는 이벤트들
+            for (let i = 0, ii = markers.length; i < ii; i++) {
+                naver.maps.Event.addListener(map, "click", ClickMap(i));
+                naver.maps.Event.addListener(markers[i], "click", getClickHandler(i));
             }
+
+            // 마커 이외의 영역 클릭시 닫기
+            function ClickMap(i) {
+                return function () {
+                    var infowindow = infowindows[i];
+                    infowindow.close()
+                }
+            }
+
+            // 마커가 열려있을시 닫고 닫혔있을시 열리는 이벤트
+            function getClickHandler(i) {
+                return function () {
+                    var marker = markers[i]
+                    var infowindow = infowindows[i]
+                    if (infowindow.getMap()) {// getMap -> infowindow가 표시 유무에 따라 true/false
+                        infowindow.close()
+                    } else {
+                        infowindow.open(map, marker);
+                        // map.setZoom(14, false);
+                        // map.panTo(marker.position)
+                    }
+                }
+            }
+
             let polylinePath = []
 
             for (let i = 0; i < courseData.trafast[0].path.length; i++) {
-                polylinePath.push(new naver.maps.LatLng(courseData.trafast[0].path[i][1],courseData.trafast[0].path[i][0] ))
-                               
+                polylinePath.push(new naver.maps.LatLng(courseData.trafast[0].path[i][1], courseData.trafast[0].path[i][0]))
+
             }
             new naver.maps.Polyline({
                 path: polylinePath,     //선 위치 변수배열
@@ -98,8 +149,7 @@ function CreateCourse() {
 
     return (
         <Container>
-            {isLoading ? 'loading...' : 
-            <div>{courseData.trafast[0].summary.duration/60000}분 소요됩니다.</div>}
+            {isLoading ? 'loading...' : "<div>{data}</div>"}
             <MapContainer id="map"></MapContainer>
         </Container>
     )
