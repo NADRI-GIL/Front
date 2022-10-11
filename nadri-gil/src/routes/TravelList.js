@@ -52,8 +52,10 @@ const Select = styled.select`
 function TravelList() {
     const {isLoading, data} = useQuery("travelData", getTravelsAll, {
         cacheTime: Infinity,
+        staleTime: Infinity,
         refetchOnMount: false,
         refetchOnWindowFocus: false,
+        retry: 0,
         onSuccess: data => {
           // 성공시 호출
           setTravelList(data.list)
