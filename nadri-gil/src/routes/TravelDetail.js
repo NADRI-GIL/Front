@@ -1,12 +1,10 @@
-import React, {useContext, useState, useEffect, useRef } from 'react';
+import React, {useState, useEffect, useRef } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {AiOutlineHeart, AiFillStar, AiFillHeart, AiFillFilter} from 'react-icons/ai';
 import {  BsCartPlus,BsCartPlusFill  } from "react-icons/bs";
 import { useMutation, useQuery } from "react-query";
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { isLoginedAtom, loginIdAtom } from '../atom';
-import {getTravelDetail, getCart} from "../api.js";
+import {getTravelDetail, postCart, getCart} from "../api.js";
 import "./Main.css";
 import mypic from './gyeoungbuk.jpg';
 
@@ -16,12 +14,11 @@ const { kakao } = window;
 const Like =() =>{
   const location = useLocation();
   const state = location.state;
-const isLogined = useRecoilValue(isLoginedAtom);
 
   const [like, setLike] = useState(true);
 
   const handleLike = () => {
-    
+
       setLike(!like);
       if(like==false)
       {
@@ -36,7 +33,7 @@ const isLogined = useRecoilValue(isLoginedAtom);
   return(
     <button className="button_user" onClick={handleLike}>
           {
-            like ? (<AiOutlineHeart size="30" color="red" className="bookmarkFillIcon" /> ) : 
+            like ? (<AiOutlineHeart size="30" className="bookmarkFillIcon" /> ) : 
             ( <AiFillHeart size="30" color="red" className="bookmarkIcon" />)
         }
     </button>
@@ -47,28 +44,44 @@ const Cart =() => {
   const location = useLocation();
   const state = location.state;
   const [cart, setCart] = useState(true);
-  
- useQuery('Cart',()=> getCart(state.id), {
-  enabled: !cart,
-  onError: (error) => {
-    if (error.response?.data.code === 401) {
-      console.log("에러");
-      console.log(error);
-    }
-    }
-});
+  // const [userid, setUserid] = useState();
+
+  const loginid = JSON.parse(localStorage.getItem("recoil-persist"));
+  const {data } = useQuery('getCart',()=> getCart);
+  console.log(data);
+
+  const { mutate, isLoading } = useMutation(postCart, {
+      onSuccess: data => {
+        console.log(data);
+        if(data.resultCode === 0){
+          alert(data.resultMsg)
+        }
+        else{
+          alert(data.resultMsg)
+        }
+      },
+      onError: () => {
+    
+      },
+
+    });
   
     const handleCart = () =>{
       console.log(cart);
       setCart(!cart);
+
       if (cart ==false)
       {
         console.log(cart);
       }
       else
       {
-        console.log(cart);
-        console.log("접속");
+        console.log(loginid.loginId)
+        console.log("loginId :" +loginid.loginId+"travelId :"+state.id);
+        mutate({
+          "loginId" : loginid.loginId,
+          "travelId" : state.id
+        })
     }
   }
 
@@ -266,14 +279,14 @@ class Detail extends React.Component{
         <TravelUser/>
         <hr></hr>
         <TravelImage/>
-        {/* <hr></hr> */}
-       {/* <TravelDetail/>
+        <hr></hr>
+       <TravelDetail/>
        <hr></hr>
        <Location/>
        <hr></hr>
-       <TravelReview/> */}
+       <TravelReview/>
   
-      <A/>
+      {/* <A/> */}
       </div>
         );
     }

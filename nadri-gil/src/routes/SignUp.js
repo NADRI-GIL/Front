@@ -15,6 +15,8 @@ function SignUp(){
     // 이메일
     const [email, setEmail] = useState("")
 
+    const [nickname, setNickname] = useState("")
+
     let navigate = useNavigate();
     console.log(id, password);
 
@@ -59,6 +61,10 @@ function SignUp(){
         setEmail(event.currentTarget.value)
     }
 
+    const onNicknameHandler = (event) => {
+        setNickname(event.currentTarget.value)
+    }
+
 
     const onClickSignUp = () =>{
         console.log(id, password, email, name)
@@ -66,7 +72,8 @@ function SignUp(){
             "loginId" : id,
             "password" : password,
             "name" : name,
-            "email" : email
+            "email" : email,
+            "nickname": nickname,
         })
     }
     return(
@@ -83,6 +90,8 @@ function SignUp(){
             {password === confirmPassword ? <p>비밀번호가 일치합니다.</p> : <p>비밀번호가 일치하지 않습니다.</p>}
             <h3>이메일</h3>
             <input type="text" onChange={onEmailHandler}/>
+            <h3>닉네임</h3>
+            <input type="text" onChange={onNicknameHandler}/>
             <button onClick={onClickSignUp}>회원가입</button>
         </div>
     )
