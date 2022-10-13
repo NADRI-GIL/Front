@@ -77,7 +77,7 @@ export const directions5api = async (direction) => {
       if(i < direction.length - 2) waypoints += '|'
     }
   }
-  return fetch(`/api/map-direction/v1/driving?start=${start}&goal=${goal}&option=trafast&waypoints=${waypoints}`, {
+  return fetch(`/api/map-direction/v1/driving?start=${start}&goal=${goal}&option=trafast:tracomfort:traoptimal&waypoints=${waypoints}`, {
     method: "get",
     headers: {
       "Content-Type": "application/json",
