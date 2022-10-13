@@ -1,6 +1,10 @@
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { isLoginedAtom, loginIdAtom } from './atom';
+import "./Header.css";
+import {FiSearch} from 'react-icons/fi';
+
+
 
 const Header = () => {
     let navigate = useNavigate();
@@ -11,39 +15,43 @@ const Header = () => {
         setIsLoginedFn(false);
         setLoginIdFn("");
     }
+
+
     return (
         <div>
-            <div style={{display:"flex", justifyContent:"space-around"}}>
+           <header>
+            <nav>
+                <div className="group">
                 <div>
-                    <h1>나드리길</h1>
+                    <h1><a href="./">나드리길</a></h1>
                 </div>
-                <div>
-                    <h2>검색바</h2>
-                </div>
-                <div>
-                    <h2>장바구니</h2>
-                </div>
+                <ul>
+                <li><a href="./travelList">지역</a></li>
+                <li><a href="./">인기</a></li>
+                <li><a href="./">코스</a></li>
+                <li><a href="./Notice">공지사항</a></li>
+            </ul>
+            
+            <div class="search">
+  <input type="text" placeholder="검색어 입력"/>
+  <FiSearch size="30" className="search_button" /> 
+  </div></div>
                 {isLogined ?
-                    <div>
-                        <h2>마이페이지</h2>
+                    <ul>
+                        <li><a href="./mypage/mypageinfo">마이페이지</a></li>
                         <div onClick={onClickLogOut}>
-                        <h2>로그아웃</h2>
+                        <li>로그아웃</li>
                         </div>
-                    </div>
+                    </ul>
                     :
-                    <div>
+                    <ul>
                         <Link to="/signIn">
-                        <h2>로그인</h2>
+                        <li>로그인</li>
                         </Link>
-                    </div>}
-            </div>
-            <div style={{display:"flex", justifyContent:"space-around"}}>
-                <h2>지역</h2>
-                <h2>카테고리</h2>
-                <h2>인기</h2>
-                <h2>코스</h2>
-                <h2>공지사항</h2>
-            </div>
+                    </ul>}
+            </nav>
+            </header>
+            <hr></hr>
             <Outlet />
         </div>
     );

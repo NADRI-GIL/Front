@@ -4,6 +4,20 @@ import { useMutation } from "react-query";
 import { postLogin } from "../api.js"
 import { isLoginedAtom, loginIdAtom } from "../atom.js"
 import { useSetRecoilState, useRecoilValue } from "recoil";
+import cookie from 'react-cookies';
+import { useCookies } from 'react-cookie';
+
+// import { setCookie } from "Cookie";
+
+// const setCookie = (name, value, exp = 5) => {
+//   let date = new Date();
+//   // 날짜 생성
+//   date.setTime(date.getTime() + exp * 24 * 60 * 60 * 1000);
+//   // 저장!  setTime()은 1970년1월1일부터 경과된 시간을 밀리초로 수정함 (날짜정보를 수정)
+//   //getTime()은 1970년1월1일부터 경과된 시간을 밀리초로 표기함 (날짜정보를 가져올떄)
+//   document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/`;
+//   //toUTCString()은 UTC 표준 시간대를 사용하여 지정된 날짜를 나타내는 문자열
+// };
 
 function SignIn(){
     // 아이디
@@ -11,13 +25,15 @@ function SignIn(){
     // 비밀번호
     const [password, setPassword] = useState("")
     let navigate = useNavigate();
-
+    // setCookie("userId", id, 3);
     const setIsLoginedFn = useSetRecoilState(isLoginedAtom)
     const setLoginIdFn = useSetRecoilState(loginIdAtom)
     const islogined = useRecoilValue(isLoginedAtom)
-    console.log(islogined)
+   
+  
     const { mutate, isLoading } = useMutation(postLogin, {
         onSuccess: data => {
+          
           console.log(data);
           const message = "success"
           alert(message)
@@ -56,6 +72,7 @@ function SignIn(){
                 "loginId" : id,
                 "password" : password
             }
+            
         )
     }
     return(
