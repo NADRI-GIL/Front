@@ -259,7 +259,7 @@ function TravelList() {
                 {isLoading ? 'loading...' : travelList.slice(offset, offset+limit).map((item) => {
                     return (
                         <Content>
-                            <a href={`/TravelDetail2/${item.id}`}>
+                            <a href={`/TravelDetail/${item.id}`}>
                                 <img src={item.image}></img>
                                 <p>{item.name}</p>
                             </a>
