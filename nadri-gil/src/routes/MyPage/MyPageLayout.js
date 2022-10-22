@@ -24,7 +24,8 @@ height:5vh;
 font-family: 'SUIT';
 font-size:0.8vw;
 align-items : center;
-p{margin-left:1.5vw;}
+p{margin-left:1.5vw;
+margin-bottom:0;}
 &:hover{
     background-color: rgb(242,242,242);
 }
