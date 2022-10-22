@@ -39,7 +39,7 @@ export const postLogin = async (data) => {
   }
 
   export const getMain = async (data) => {
-    return axios.get(`${URL}/travels/all`);
+    return axios.get(`${URL}/travels/random`);
   }
 
   export const getTravelDetail = async (id) => {
