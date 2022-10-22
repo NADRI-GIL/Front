@@ -10,7 +10,8 @@ const Container = styled.div`
 `;
 const MapContainer = styled.div`
 width:100%;
-height:60vh;
+height:70vh;
+margin-top:3vh;
 `
 const Content = styled.div`
 width:90%;
@@ -85,6 +86,20 @@ border:0;
 height:2px;
 margin:1vh 0 1vh 0;
 background-color:#f4f4f4;
+`
+const CompleteButton = styled.button`
+float:right;
+font-family: 'SUIT';
+box-sizing: border-box;
+background-color:#3366ff;
+color:#ffffff;
+border:none;
+border-radius: 10px;
+height: 6vh;
+font-size:0.8vw;
+padding:0 7vh 0 7vh;
+margin: 8vh auto 8vh auto;
+// margin-top:2vh;
 `
 function CreateCourse() {
     const points = [
@@ -371,6 +386,7 @@ function CreateCourse() {
                 })}
             </ContentList>
             <MapContainer id="map"></MapContainer>
+            <CompleteButton>내가 만든 코스 공유하기 -&gt;</CompleteButton>
         </Container>
     )
 };
