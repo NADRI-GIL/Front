@@ -39,36 +39,58 @@ text-align:center;
         margin-top:1vh;
     }
 `;
-const Select = styled.select`
-    width: 4vw;
-    height: 5vh;
-    border: none;
-    font-size:15px;
-    border-radius: 20px;
-    background-color:#c8d6ff;
-    color:#3366ff;
-    text-align-last: center;
-    text-align: center;
-`;
+const SelectContainer = styled.div`
+width:100%;
+margin-top:4vh;
 
+`;
+const Select = styled.div`
+cursor : pointer;
+display:inline-block;
+font-family: 'SUIT';
+border: none;
+border-radius: 20px;
+padding:1vh 1vw 1vh 1vw;
+background-color:#e1e9ff;
+color:#3366ff;
+text-align-last: center;
+text-align: center;
+`;
+const Selected = styled.div`
+cursor : pointer;
+display:inline-block;
+font-family: 'SUIT';
+border: none;
+border-radius: 20px;
+padding:1vh 1vw 1vh 1vw;
+background-color:#F5F5F5;
+color:#464646;
+text-align-last: center;
+text-align: center;
+`;
+const Hr = styled.hr`
+border:0;
+height:2px;
+background-color:#f4f4f4;
+`
 function TravelList() {
-    const {isLoading, data} = useQuery("travelData", getTravelsAll, {
+    const { isLoading, data } = useQuery("travelData", getTravelsAll, {
         cacheTime: Infinity,
         staleTime: Infinity,
         refetchOnMount: false,
         refetchOnWindowFocus: false,
         retry: 0,
         onSuccess: data => {
-          // 성공시 호출
-          setTravelList(data.list)
-          console.log(data);
+            // 성공시 호출
+            setTravelList(data.list)
+            console.log(data);
         },
         onError: e => {
-          // 실패시 호출 (401, 404 같은 error가 아니라 정말 api 호출이 실패한 경우만 호출됩니다.)
-          // 강제로 에러 발생시키려면 api단에서 throw Error 날립니다. (참조: https://react-query.tanstack.com/guides/query-functions#usage-with-fetch-and-other-clients-that-do-not-throw-by-default)
-          console.log(e.message);
+            // 실패시 호출 (401, 404 같은 error가 아니라 정말 api 호출이 실패한 경우만 호출됩니다.)
+            // 강제로 에러 발생시키려면 api단에서 throw Error 날립니다. (참조: https://react-query.tanstack.com/guides/query-functions#usage-with-fetch-and-other-clients-that-do-not-throw-by-default)
+            console.log(e.message);
         }
-      });
+    });
 
     // const data = [
     //     {
@@ -143,50 +165,61 @@ function TravelList() {
     //         "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
     //     }
     // ]
-    const OPTIONS = [
-        { value: false, name:'선택'},
-        { value: "개발", name: "개발" },
-        { value: "디자인", name: "디자인" },
-        { value: "과학", name: "과학" },
-    ];
-    const [travelList,setTravelList] = useState(data);
-    const [fieldValue, setFieldValue] =useState(false);
+    const OPTIONS = ['경기', '경북', '경남', '서울', '부산', '대구', '인천', '광주', '대전', '울산', '세종', '강원',
+        '충북', '충남', '전북', '전남', '제주'];
 
-    const SelectBox = (props) => {
-        const handleChange = (e) => {
-            setFieldValue(e.target.value);
-            let value = e.target.value 
-            if(value!=="false"){
-                let tmp = travelList.filter((e)=>e.field === value)
-                console.log(tmp)
-                setTravelList(tmp)
-            }
-            else setTravelList(data)
-        };
-        return (
-            <Select onChange={handleChange} value={fieldValue}>
-                {props.options.map((option) => (
-                    <option
-                        key={option.value}
-                        value={option.value}
-                        // defaultValue={props.defaultValue === option.value}
-                    >
-                        {option.name}
-                    </option>
-                ))}
-            </Select>  
-        );
-    };
+    const [travelList, setTravelList] = useState(data);
+    const [fieldValue, setFieldValue] = useState([]);
+    const [selectState, setSelectState] = useState(false);
 
+    const selectedData = (field) => {
+        if (fieldValue.indexOf(field) === -1) {
+            let tmp = [...fieldValue]
+            tmp.push(field)
+            setFieldValue([...tmp])
+            let tmpdata = data.list.filter((e) => tmp.indexOf(e.location) != -1)
+            setTravelList([...tmpdata])
+        }
+
+    }
+    const deleteData = (index) => {
+        let tmp = [...fieldValue]
+        tmp.splice(index, 1)
+        setFieldValue([...tmp])
+        let tmpdata = data.list.filter((e) => tmp.indexOf(e.location) != -1)
+        setTravelList([...tmpdata])
+        if (tmp.length === 0) {
+            setTravelList(data.list)
+        }
+    }
     return (
         <Container>
-            <SelectBox options={OPTIONS} defaultValue={false}></SelectBox>
-            <ContentList>
-                
-                {isLoading?'loading...':travelList.map((item) => {
+            <SelectContainer>
+                <Select onClick={() => { setSelectState(!selectState) }}>지역</Select>
+                {fieldValue.map((item, index) => {
                     return (
+                        <Selected onClick={() => deleteData(index)} style={{ margin: '0 0 0 0.5vw' }}>{item}</Selected>
+                    )
+                })}
+                
+                {selectState ?
+                
+                    <div>
+                        <Hr></Hr>
+                        {OPTIONS.map((item) => {
+                            return (
+                                <Select onClick={() => selectedData(item)} style={{ margin: '0.5vh 0.5vw 0 0' }}>{item}</Select>
+                            )
+                        })}
+                    </div> : ''}
+            </SelectContainer>
+            <ContentList>
+
+                {isLoading ? 'loading...' : travelList.map((item) => {
+                    return (
+
                         <Content>
-                            <a href="">
+                            <a href={`/TravelDetail2/${item.id}`}>
                                 <img src={item.image}></img>
                                 <p>{item.name}</p>
                             </a>
@@ -194,6 +227,17 @@ function TravelList() {
                     )
                 })
                 }
+                {/* {travelList.map((item) => {
+                    return (
+                        <Content>
+                            <a href={`/TravelDetail2/${item.id}`}>
+                                <img src={item.image}></img>
+                                <p>{item.name}</p>
+                            </a>
+                        </Content>
+                    )
+                })
+                } */}
             </ContentList>
         </Container>
     )
