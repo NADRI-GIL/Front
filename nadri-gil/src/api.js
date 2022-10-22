@@ -59,7 +59,7 @@ export const postLogin = async (data) => {
   }
   
 export const getTravelsAll = async () => {
-  return fetch(`${URL}/travels/all`, {
+  return fetch(`${URL}/travels/random`, {
     method: "get",
     headers: {
       "Content-Type": "application/json",
