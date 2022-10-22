@@ -1,14 +1,23 @@
 import React, { useState } from 'react'
-import {Link, useNavigate} from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import styled from "styled-components";
 import { useMutation } from "react-query";
 import { postSignup } from "../api.js"
+import { BsFileX } from 'react-icons/bs';
 
 
 const Container = styled.div`
 h3{font-family: 'SUIT';}
 width:40%;
 margin:auto;
+`
+const SubCntainer = styled.div`
+display:flex;
+flex-wrap:wrap;
+justify-content: space-between;
+`
+const Element = styled.div`
+
 `
 const Hr = styled.hr`
 border:0;
@@ -34,7 +43,7 @@ const Input = styled.input`
 background-color: #F6F6F6;
 font-family: 'SUIT';
 height: 4.5vh;
-width:20vw;
+width:18vw;
 border-radius: 0.5vw;
 border: none;
 margin:0.5vh 0 1vh 0;
@@ -60,7 +69,7 @@ padding:0 7vh 0 7vh;
 margin:auto;
 margin-top:5vh;
 `
-function SignUp(){
+function SignUp() {
     // 아이디
     const [id, setId] = useState("")
     // 비밀번호
@@ -79,21 +88,21 @@ function SignUp(){
 
     const { mutate, isLoading } = useMutation(postSignup, {
         onSuccess: data => {
-          console.log(data);
-          if(data.resultCode === 0){
-            alert(data.resultMsg)
-            // 로그인 페이지로 이동
-            navigate('/signIn')
-          }
-          else{
-            alert(data.resultMsg)
-          }
+            console.log(data);
+            if (data.resultCode === 0) {
+                alert(data.resultMsg)
+                // 로그인 페이지로 이동
+                navigate('/signIn')
+            }
+            else {
+                alert(data.resultMsg)
+            }
         },
         onError: () => {
-          alert("there was an error")
+            alert("there was an error")
         },
 
-      });
+    });
 
     // 아이디 입력 시
     const onIdHandler = (event) => {
@@ -123,35 +132,49 @@ function SignUp(){
     }
 
 
-    const onClickSignUp = () =>{
+    const onClickSignUp = () => {
         console.log(id, password, email, name)
         mutate({
-            "loginId" : id,
-            "password" : password,
-            "name" : name,
-            "email" : email,
+            "loginId": id,
+            "password": password,
+            "name": name,
+            "email": email,
             "nickname": nickname,
         })
     }
-    return(
+    return (
         <Container>
             <h3>회원가입</h3>
             <Hr></Hr>
-            <Title>이름</Title>
-            <Input type="text" onChange={onNameHandler}/>
-            <Title>아이디</Title>
-            <Input type="text" onChange={onIdHandler}/>
-            <Title>비밀번호</Title>
-            <Input type="password" onChange={onPasswordHandler}/>
-            <Title>비밀번호 확인</Title>
-            <Input type="password" onChange={onConfirmPasswordHandler}/>
-            {password.length===0? '': password === confirmPassword ? <AvailablePw>비밀번호가 일치합니다.</AvailablePw> : <UnAvailablePw>비밀번호가 일치하지 않습니다.</UnAvailablePw>}
-            <Title>이메일</Title>
-            <Input type="text" onChange={onEmailHandler}/>
-            <Title>닉네임</Title>
-            <Input type="text" onChange={onNicknameHandler}/>
-            <div style={{ textAlign: "center"}}>
-            <CompleteButton onClick={onClickSignUp}>회원가입</CompleteButton>
+            <SubCntainer>
+                <Element>
+                    <Title>이름</Title>
+                    <Input type="text" onChange={onNameHandler} />
+                </Element>
+                <Element>
+                    <Title>아이디</Title>
+                    <Input type="text" onChange={onIdHandler} />
+                </Element>
+                <Element>
+                    <Title>비밀번호</Title>
+                    <Input type="password" onChange={onPasswordHandler} />
+                </Element>
+                <Element>
+                    <Title>비밀번호 확인</Title>
+                    <Input type="password" onChange={onConfirmPasswordHandler} />
+                    {password.length === 0 ? '' : password === confirmPassword ? <AvailablePw>비밀번호가 일치합니다.</AvailablePw> : <UnAvailablePw>비밀번호가 일치하지 않습니다.</UnAvailablePw>}
+                </Element>
+                <Element>
+                    <Title>이메일</Title>
+                    <Input type="text" onChange={onEmailHandler} />
+                </Element>
+                <Element>
+                    <Title>닉네임</Title>
+                    <Input type="text" onChange={onNicknameHandler} />
+                </Element>
+            </SubCntainer>
+            <div style={{ textAlign: "center" }}>
+                <CompleteButton onClick={onClickSignUp}>회원가입</CompleteButton>
             </div>
         </Container>
     )
