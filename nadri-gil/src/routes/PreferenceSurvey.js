@@ -23,6 +23,8 @@ height:25vh;
 padding:5px;
 text-align:center;
     img{
+        object-fit: cover;
+        height:18vh;
         width:100%;
     }
     a{
@@ -50,25 +52,34 @@ padding:0 7vh 0 7vh;
 `
 function PreferenceSurvey() {
     const [preferenceTravel, setPreferenceTravel] = useState([])
-    // const { isLoading, isError, error, data } = useQuery('preference', getPreference,{
-    //     cacheTime: Infinity,
-    //     staleTime: Infinity,
-    //     refetchOnMount: false,
-    //     refetchOnWindowFocus: false,
-    //     retry: 0,
-    // });
+    const { isLoading, isError, error, data } = useQuery('preference', getPreference,{
+        cacheTime: Infinity,
+        staleTime: Infinity,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        retry: 0,
+        onSuccess: data => {
+            // 성공시 호출
+            console.log(data);
+          },
+          onError: e => {
+            // 실패시 호출 (401, 404 같은 error가 아니라 정말 api 호출이 실패한 경우만 호출됩니다.)
+            // 강제로 에러 발생시키려면 api단에서 throw Error 날립니다. (참조: https://react-query.tanstack.com/guides/query-functions#usage-with-fetch-and-other-clients-that-do-not-throw-by-default)
+            console.log(e.message);
+          }
+    });
     
-    const data = {
-        list:[
-        { id: 0, name: '경복궁', image: './img/images.jpg' },
-        { id: 1, name: '경복궁1', image: './img/images.jpg' },
-        { id: 2, name: '경복궁2', image: './img/images.jpg' },
-        { id: 3, name: '경복궁3', image: './img/images.jpg' },
-        { id: 4, name: '경복궁4', image: './img/images.jpg' },
-        { id: 5, name: '경복궁5', image: './img/images.jpg' },
-        { id: 6, name: '경복궁6', image: './img/images.jpg' },
-        ]
-    }
+    // const data = {
+    //     list:[
+    //     { id: 0, name: '경복궁', image: './img/images.jpg' },
+    //     { id: 1, name: '경복궁1', image: './img/images.jpg' },
+    //     { id: 2, name: '경복궁2', image: './img/images.jpg' },
+    //     { id: 3, name: '경복궁3', image: './img/images.jpg' },
+    //     { id: 4, name: '경복궁4', image: './img/images.jpg' },
+    //     { id: 5, name: '경복궁5', image: './img/images.jpg' },
+    //     { id: 6, name: '경복궁6', image: './img/images.jpg' },
+    //     ]
+    // }
 
     const onPreferenceTravelHandler = (id) => {
         if(preferenceTravel.indexOf(id)===-1){
@@ -88,7 +99,7 @@ function PreferenceSurvey() {
         <Container>
             <h3>여행지 선호도 조사 페이지</h3>
             <ContentList>
-            {data.list.map((item) => {
+            {!isLoading?data.list.map((item) => {
                 if (preferenceTravel.indexOf(item.id)!=-1) {
                     return (
                         <Content>
@@ -106,7 +117,7 @@ function PreferenceSurvey() {
                     )
                 }
 
-            })}
+            }):'loading...'}
             </ContentList>
             <div style={{textAlign: "center"}}>
             <CompleteButton onClick={onClickHandler}>완료</CompleteButton>
