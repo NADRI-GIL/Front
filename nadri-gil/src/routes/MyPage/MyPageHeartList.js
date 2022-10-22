@@ -27,6 +27,8 @@ height:20vh;
 padding:5px;
 text-align:center;
     img{
+        object-fit: cover;
+        height:15vh;
         width:100%;
     }
     a{

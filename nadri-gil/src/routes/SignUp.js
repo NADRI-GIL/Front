@@ -1,8 +1,65 @@
 import React, { useState } from 'react'
 import {Link, useNavigate} from "react-router-dom"
+import styled from "styled-components";
 import { useMutation } from "react-query";
 import { postSignup } from "../api.js"
 
+
+const Container = styled.div`
+h3{font-family: 'SUIT';}
+width:40%;
+margin:auto;
+`
+const Hr = styled.hr`
+border:0;
+height:2px;
+background-color:#f4f4f4;
+`
+const Title = styled.p`
+font-family: 'SUIT';
+font-size:1vw;
+margin-top: 1.5vh;
+`
+const AvailablePw = styled(Title)`
+font-size:0.7vw;
+margin:0vh 0vh 0.5vh 0vh;
+color:green;
+`
+const UnAvailablePw = styled(Title)`
+font-size:0.7vw;
+margin:0vh 0vh 0.5vh 0vh;
+color:red;
+`
+const Input = styled.input`
+background-color: #F6F6F6;
+font-family: 'SUIT';
+height: 4.5vh;
+width:20vw;
+border-radius: 0.5vw;
+border: none;
+margin:0.5vh 0 1vh 0;
+padding-left: 1vw;
+outline-color: #3366ff;
+::placeholder{
+    font-family: 'SUIT';
+}
+&:focus {
+    background-color: white;
+}
+`
+const CompleteButton = styled.button`
+font-family: 'SUIT';
+box-sizing: border-box;
+background-color:#3366ff;
+color:#ffffff;
+border:none;
+border-radius: 10px;
+height: 6vh;
+font-size:0.8vw;
+padding:0 7vh 0 7vh;
+margin:auto;
+margin-top:5vh;
+`
 function SignUp(){
     // 아이디
     const [id, setId] = useState("")
@@ -14,6 +71,8 @@ function SignUp(){
     const [name, setName] = useState("")
     // 이메일
     const [email, setEmail] = useState("")
+
+    const [nickname, setNickname] = useState("")
 
     let navigate = useNavigate();
     console.log(id, password);
@@ -59,6 +118,10 @@ function SignUp(){
         setEmail(event.currentTarget.value)
     }
 
+    const onNicknameHandler = (event) => {
+        setNickname(event.currentTarget.value)
+    }
+
 
     const onClickSignUp = () =>{
         console.log(id, password, email, name)
@@ -66,25 +129,31 @@ function SignUp(){
             "loginId" : id,
             "password" : password,
             "name" : name,
-            "email" : email
+            "email" : email,
+            "nickname": nickname,
         })
     }
     return(
-        <div>
-            <h1>회원가입</h1>
-            <h3>이름</h3>
-            <input type="text" onChange={onNameHandler}/>
-            <h3>아이디</h3>
-            <input type="text" onChange={onIdHandler}/>
-            <h3>비밀번호</h3>
-            <input type="password" onChange={onPasswordHandler}/>
-            <h3>비밀번호 확인</h3>
-            <input type="password" onChange={onConfirmPasswordHandler}/>
-            {password === confirmPassword ? <p>비밀번호가 일치합니다.</p> : <p>비밀번호가 일치하지 않습니다.</p>}
-            <h3>이메일</h3>
-            <input type="text" onChange={onEmailHandler}/>
-            <button onClick={onClickSignUp}>회원가입</button>
-        </div>
+        <Container>
+            <h3>회원가입</h3>
+            <Hr></Hr>
+            <Title>이름</Title>
+            <Input type="text" onChange={onNameHandler}/>
+            <Title>아이디</Title>
+            <Input type="text" onChange={onIdHandler}/>
+            <Title>비밀번호</Title>
+            <Input type="password" onChange={onPasswordHandler}/>
+            <Title>비밀번호 확인</Title>
+            <Input type="password" onChange={onConfirmPasswordHandler}/>
+            {password.length===0? '': password === confirmPassword ? <AvailablePw>비밀번호가 일치합니다.</AvailablePw> : <UnAvailablePw>비밀번호가 일치하지 않습니다.</UnAvailablePw>}
+            <Title>이메일</Title>
+            <Input type="text" onChange={onEmailHandler}/>
+            <Title>닉네임</Title>
+            <Input type="text" onChange={onNicknameHandler}/>
+            <div style={{ textAlign: "center"}}>
+            <CompleteButton onClick={onClickSignUp}>회원가입</CompleteButton>
+            </div>
+        </Container>
     )
 }
 export default SignUp;

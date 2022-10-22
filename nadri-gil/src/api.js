@@ -17,11 +17,16 @@ export const postLogin = async (data) => {
   return fetch(`${URL}/users/login`, {
     method: "post",
     headers: {
-      "Content-Type": "application/json",
+      Accept:'application/json',
+
+      'Content-Type': 'application/json',
+      
+    
     },
     body: JSON.stringify(data),
-  })
+  }, { withCredentials: true })
     .then((response) => response.json());
+
 }
   export const getPreference = async (data) => {
     return fetch(`${URL}/travels/random`, {
@@ -34,7 +39,7 @@ export const postLogin = async (data) => {
   }
 
   export const getMain = async (data) => {
-    return axios.get(`${URL}/travels/all`);
+    return axios.get(`${URL}/travels/random`);
   }
 
   export const getTravelDetail = async (id) => {
@@ -42,9 +47,15 @@ export const postLogin = async (data) => {
     return axios.get(`${URL}/travels/${id}/detail`);
   }
 
-  export const getCart = async (id) => {
-
-    return axios.get(`${URL}/carts/add/${id}`);
+  export const postCart = async (data) => {
+    return fetch(`${URL}/carts/add`, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json());
   }
   
 export const getTravelsAll = async () => {
@@ -77,5 +88,13 @@ export const directions5api = async (direction) => {
     .then((response) => response.json());
 }
 
-
+export const getCart = async () => {
+  return fetch(`${URL}/carts/myList`, {
+    method: "get",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json());
+}
 

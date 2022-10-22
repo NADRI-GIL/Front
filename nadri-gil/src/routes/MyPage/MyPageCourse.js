@@ -28,6 +28,9 @@ padding:5px;
 text-align:center;
 
     img{
+        object-fit: cover;
+        height:15vh;
+        // overflow: hidden;
         width:100%;
     }
     p{
@@ -62,25 +65,25 @@ function MyPageCourse(){
                 "id": 2,
                 "name": "여행지 명2",
                 "location": "지역(분류)",
-                "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
+                "image": "https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=3a7a695b-499c-472d-b767-32b23b71ce55"
             },
             {
                 "id": 3,
                 "name": "여행지 명3",
                 "location": "지역(분류)",
-                "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
+                "image": "https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=080df1f5-0b3c-40ad-b2d7-8bc4f0e04e51"
             },
             {
                 "id": 4,
                 "name": "여행지 명4",
                 "location": "지역(분류)",
-                "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
+                "image": "https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=96e86c56-ad37-467f-b17f-099b563ba33e"
             },
             {
                 "id": 5,
                 "name": "여행지 명5",
                 "location": "지역(분류)",
-                "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
+                "image": "https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=63fc8a33-3b88-45fd-8390-398c638802b1"
             },
             {
                 "id": 6,
