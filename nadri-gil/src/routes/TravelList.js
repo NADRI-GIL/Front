@@ -20,7 +20,7 @@ margin:auto;
 margin-top:3vh;
 `
 const Content = styled.div`
-width:23.5%;
+width:25%;
 height:25vh;
 padding:5px;
 text-align:center;
@@ -72,6 +72,31 @@ const Hr = styled.hr`
 border:0;
 height:2px;
 background-color:#f4f4f4;
+`
+
+const Pagination = styled.div`
+width:100%;
+height:4vh;
+margin: 7vh 0 20vh 0;
+// background-color:yellow;
+// display:flex;
+// vertical-align:middle;
+text-align:center;
+`
+
+const PageButton = styled.button`
+font-family: 'SUIT';
+border:none;
+border-radius:5px;
+width:2vw;
+height:2vw;
+margin:0 0.3vw 0 0.3vw;
+padding:0;
+text-align: center;
+`
+const CurrentPageButton = styled(PageButton)`
+border:1px solid #3366ff;
+background-color:white;
 `
 function TravelList() {
     const { isLoading, data } = useQuery("travelData", getTravelsAll, {
@@ -171,6 +196,10 @@ function TravelList() {
     const [travelList, setTravelList] = useState(data);
     const [fieldValue, setFieldValue] = useState([]);
     const [selectState, setSelectState] = useState(false);
+    const [limit, setLimit] = useState(24);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageList, setPageList] = useState([1, 2, 3, 4, 5])
+    const offset = (currentPage - 1) * limit;
 
     const selectedData = (field) => {
         if (fieldValue.indexOf(field) === -1) {
@@ -192,6 +221,18 @@ function TravelList() {
             setTravelList(data.list)
         }
     }
+    const previousPageList=()=>{
+        let tmp = pageList.map((item)=> item-5)
+        setPageList([...tmp])
+        setCurrentPage(tmp[0])
+    }
+    const nextPageList=()=>{
+        let tmp = pageList.map((item)=> item+5)
+        setPageList([...tmp])
+        setCurrentPage(tmp[0])
+
+    }
+
     return (
         <Container>
             <SelectContainer>
@@ -215,29 +256,37 @@ function TravelList() {
             </SelectContainer>
             <ContentList>
 
-                {isLoading ? 'loading...' : travelList.map((item) => {
+                {isLoading ? 'loading...' : travelList.slice(offset, offset+limit).map((item) => {
                     return (
-
                         <Content>
                             <a href={`/TravelDetail2/${item.id}`}>
                                 <img src={item.image}></img>
                                 <p>{item.name}</p>
                             </a>
                         </Content>
+                        
                     )
                 })
                 }
-                {/* {travelList.map((item) => {
-                    return (
-                        <Content>
-                            <a href={`/TravelDetail2/${item.id}`}>
-                                <img src={item.image}></img>
-                                <p>{item.name}</p>
-                            </a>
-                        </Content>
+                {isLoading?
+                ''
+            :
+            <Pagination>
+                {currentPage>5?<PageButton onClick={previousPageList}>&lt;</PageButton>:''}
+                {pageList.map((item)=>{
+                    if(item === currentPage){
+                        return(
+                            <CurrentPageButton onClick={()=>setCurrentPage(item)}>{item}</CurrentPageButton>
+                        )
+                    }
+                    else{
+                    return(
+                    <PageButton onClick={()=>setCurrentPage(item)}>{item}</PageButton>
                     )
-                })
-                } */}
+                    }
+                })}
+                <PageButton onClick={nextPageList}>&gt;</PageButton>
+            </Pagination>}
             </ContentList>
         </Container>
     )
