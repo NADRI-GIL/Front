@@ -352,7 +352,7 @@ function CreateCourse() {
             </Menu>
             <TotalDistance>
                 {targetData!=null?targetData.summary.duration>3600000?'총 '+(targetData.summary.distance/1000).toFixed(2)+'km':'총'+(targetData.summary.distance).toFixed(2)+"m":''}
-            {targetData!=null?targetData.summary.duration>3600000?', '+(targetData.summary.duration/3600000).toFixed(2)+'시간 소요':', '+(targetData.summary.duration/60000).toFixed(2)+"분 소요":''}
+            {targetData!=null?targetData.summary.duration>3600000?', '+(parseInt(targetData.summary.duration/3600000))+'시간 '+((targetData.summary.duration%3600000)/60000).toFixed(0)+'분 소요':', '+(targetData.summary.duration/60000).toFixed(2)+"분 소요":''}
             </TotalDistance>
             <Hr/>
             <ContentList>
