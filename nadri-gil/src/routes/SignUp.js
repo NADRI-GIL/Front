@@ -84,7 +84,6 @@ function SignUp() {
     const [nickname, setNickname] = useState("")
 
     let navigate = useNavigate();
-    console.log(id, password);
 
     const { mutate, isLoading } = useMutation(postSignup, {
         onSuccess: data => {

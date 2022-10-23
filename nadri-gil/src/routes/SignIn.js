@@ -81,7 +81,7 @@ function SignIn(){
             setIsLoginedFn(true)
             setLoginIdFn(id)
             // 메인 페이지로 이동
-            // navigate('/')
+            navigate('/')
           }
           else{
             alert(data.resultMsg)
