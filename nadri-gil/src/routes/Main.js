@@ -63,10 +63,10 @@ function Rank() {
             <Swiper spaceBetween={0} slidesPerView={4} onSlideChange={() => console.log('slide change')} onSwiper={(swiper) => console.log(swiper)}>
               {data?.data.list.map((e)=> {
               return( <SwiperSlide>
-              <Link className="text_link" to = "../TravelDetail" state={e}>
-                  <div className ="swipe_div">
-                    <div className ="swipe_imgbox">
-                        <img className="swipe_img"  key={e.id}  src={e.image} alt="Second slide"/>
+              <Link className="text_link" to = {`/TravelDetail/${e.id}`} state={e}>
+                  <div class ="swipe_div">
+                    <div class ="swipe_imgbox">
+                        <img class="swipe_img"  key={e.id}  src={e.image} alt="Second slide"/>
                     </div>
                         <div>
                             <h5  className="swipe_h5" key={e.id}>{e.location} {e.name}</h5>
@@ -102,9 +102,9 @@ function Recommend() {
             <Swiper spaceBetween={0} slidesPerView={4} onSlideChange={() => console.log('slide change')} onSwiper={(swiper) => console.log(swiper)}>
               {data?.data.list.map((e)=> {
               return( <SwiperSlide>
-              <Link className="text_link" to = "../TravelDetail" state={e}>
-                  <div className ="swipe_div">
-                        <img className="swipe_img"  key={e.id}  src={e.image} alt="Second slide"/>
+              <Link className="text_link" to = {`/TravelDetail/${e.id}`}state={e}>
+                  <div class ="swipe_div">
+                        <img class="swipe_img"  key={e.id}  src={e.image} alt="Second slide"/>
                         <div>
                             <h5  className="swipe_h5" key={e.id}>{e.location} {e.name}</h5>
                         </div>
