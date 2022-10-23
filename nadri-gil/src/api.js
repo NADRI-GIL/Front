@@ -98,3 +98,27 @@ export const getCart = async (data) => {
   })
     .then((response) => response.json());
 }
+
+export const postCourse = async (data) => {
+  return fetch(`${URL}/courses/add`, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => response.json());
+}
+
+
+
+export const getCourse = async (data) => {
+  return fetch(`${URL}/courses/myList`, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => response.json());
+}

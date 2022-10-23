@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import styled from "styled-components";
-import { useQuery } from "react-query";
-import { directions5api } from "../api.js"
+import { useMutation, useQuery } from "react-query";
+import { directions5api, postCourse } from "../api.js"
+import { useLocation} from 'react-router-dom';
 import "../index.css"
+
 
 const Container = styled.div`
     width:60%;
@@ -101,44 +103,118 @@ padding:0 7vh 0 7vh;
 margin: 8vh auto 8vh auto;
 // margin-top:2vh;
 `
-function CreateCourse() {
-    const points = [
-        {
-            name: "청주 시외버스터미널",
-            lng: 127.43202481650647,
-            lat: 36.62576080594968,
-            add:"충북 청주시 흥덕구 풍산로 6",
-            "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
-        },
-        {
-            name: "충북대학교",
-            lng: 127.45739630160224,
-            lat: 36.6284055465184,
-            add:"충북 청주시 서원구 충대로 1 충북대학교",
-            "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
-        },
-        {
-            name: "투썸플레이스 동남지구점",
-            lng: 127.5170063098491,
-            lat: 36.61543334257298,
-            add:"충북 청주시 서원구 충대로 1 충북대학교",
-            "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
-        },
-        {
-            name: "청주고등학교",
-            lng: 127.45537018595921,
-            lat: 36.63558179683339,
-            add:"충북 청주시 서원구 충대로 1 충북대학교",
-            "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
-        },
-        {
-            name: "청주고등학교",
-            lng: 127.65537018595921,
-            lat: 36.63558179683339,
-            add:"충북 청주시 서원구 충대로 1 충북대학교",
-            "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
-        }
-    ]
+
+const Popupdiv = styled.div`
+font-family: 'SUIT';
+backdrop-filter: blur;
+background-color: white;
+border:2px solid rgb(245 244 244);
+box-shadow: 0 5px 18px -7px rgba(0,0,0,1);
+z-index: 10;
+top: 30%;
+left: 38%;
+position: fixed;
+height: 250px;
+width: 400px;
+border-radius : 20px;
+text-align: center;
+align-item: center;
+    h2{
+        
+    }
+`
+
+const Header = styled.div`
+font-family: 'SUIT';
+height: 40%;
+align-items: center;
+display: flex;
+justify-content: center;
+`
+
+const Main = styled.div`
+font-family: 'SUIT';
+height: 35%;
+align-items: center;
+justify-content: center;
+    input{
+        background-color :rgb(240, 237, 237);
+        border-radius: 10px;
+        border: none;
+        width: 80%;
+        height: 50%;
+    }
+
+`
+
+const Footer = styled.div`
+height: 25%;
+align-items: center;
+display: flex;
+justify-content: center;
+
+    button{
+font-family: 'SUIT';
+box-sizing: border-box;
+background-color:#3366ff;
+color:#ffffff;
+border:none;
+border-radius: 10px;
+height: 6vh;
+font-size:0.8vw;
+padding:0 5vh 0 5vh;
+margin: 8vh auto 8vh auto;
+// margin-top:2vh;
+    }
+
+`
+
+function CreateCourse(props) {
+    // const points = [
+    //     {
+    //         travelId : 1,
+    //         name: "청주 시외버스터미널",
+    //         lng: 127.43202481650647,
+    //         lat: 36.62576080594968,
+    //         add:"충북 청주시 흥덕구 풍산로 6",
+    //         "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
+    //     },
+    //     {
+    //         travelId : 2,
+    //         name: "충북대학교",
+    //         lng: 127.45739630160224,
+    //         lat: 36.6284055465184,
+    //         add:"충북 청주시 서원구 충대로 1 충북대학교",
+    //         "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
+    //     },
+    //     {
+    //         travelId : 3,
+    //         name: "투썸플레이스 동남지구점",
+    //         lng: 127.5170063098491,
+    //         lat: 36.61543334257298,
+    //         add:"충북 청주시 서원구 충대로 1 충북대학교",
+    //         "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
+    //     },
+    //     {
+    //         travelId : 4,
+    //         name: "청주고등학교",
+    //         lng: 127.45537018595921,
+    //         lat: 36.63558179683339,
+    //         add:"충북 청주시 서원구 충대로 1 충북대학교",
+    //         "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
+    //     },
+    //     {
+    //         travelId : 5,
+    //         name: "청주고등학교",
+    //         lng: 127.65537018595921,
+    //         lat: 36.63558179683339,
+    //         add:"충북 청주시 서원구 충대로 1 충북대학교",
+    //         "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
+    //     }
+    // ]
+    const location = useLocation();
+    const state = location.state;
+
     const [courseData, setCourseData] = useState(null)
     const [courseOption, setCourseOption] = useState(0)
     //0:trafast, 1:tracomfort, 2:traoptimal
@@ -148,7 +224,7 @@ function CreateCourse() {
     const [courseInfo, setCourseInfo] = useState([])
 
 
-    const { isLoading, data } = useQuery("createCourse", () => directions5api(points), {
+    const { isLoading, data } = useQuery("createCourse", () => directions5api(state), {
         cacheTime: Infinity,
         staleTime: Infinity,
         refetchOnMount: false,
@@ -180,7 +256,7 @@ function CreateCourse() {
             let map = new naver.maps.Map('map', mapOptions);
             let markers = []
             let infowindows = []
-            points.forEach((item, i) => {
+            state.forEach((item, i) => {
                 console.log(i)
                 let marker = new naver.maps.Marker({
                     position: new naver.maps.LatLng(item.lat, item.lng),
@@ -278,7 +354,7 @@ function CreateCourse() {
             let map = new naver.maps.Map('map', mapOptions);
             let markers = []
             let infowindows = []
-            points.forEach((item, i) => {
+            state.forEach((item, i) => {
                 console.log(i)
                 let marker = new naver.maps.Marker({
                     position: new naver.maps.LatLng(item.lat, item.lng),
@@ -358,6 +434,101 @@ function CreateCourse() {
 
     }
 
+    const loginid = JSON.parse(localStorage.getItem("recoil-persist"));
+
+
+
+    const {} = props;
+    const[popup, handlePopup] = useState(false);
+    const[coursesave, setcoursesave] = useState([]);
+       
+    const Popup = (props) =>{
+    
+        const [name, setName] = useState("")
+
+        const {onClose} = props;
+        const onNameHandler = (event) => {
+            setName(event.currentTarget.value)
+        }
+        const { mutate } = useMutation(postCourse, {
+            onSuccess: data => {
+              // console.log(data);
+              if (data.resultCode === 0) {
+                alert(data.resultMsg)
+              }
+              else {
+                alert(data.resultMsg)
+              }
+            },
+            onError: () => {
+                console.log("error");
+            },
+        
+          });
+
+        const onClickshare = () => {
+            console.log(loginid.loginId, name,state[0].travelId)
+
+            let tmp = []
+            state.forEach((item, index)=>{
+
+                index = index+1;
+                tmp.push(
+                    {id:item.travelId, orderno:index});}
+                )
+                console.log(tmp);
+                
+                setcoursesave(tmp);
+                
+            mutate({
+                    "loginId":  loginid.loginId,
+                    "name": name,
+
+                    "courseOrders": coursesave
+                    // [
+                    //     {
+                    //         "travelId": points[0].travelId,
+                    //         "orderNo" : 1
+                    //     },
+                    //     {
+                    //         "travelId":  points[1].travelId,
+                    //         "orderNo" : 2
+                    //     },
+                    //     {
+                    //         "travelId":  points[2].travelId,
+                    //         "orderNo" : 3
+                    //     },
+                    //     {
+                    //         "travelId":  points[3].travelId,
+                    //         "orderNo" : 4
+                    //     },
+                    //     {
+                    //         "travelId":  points[4].travelId,
+                    //         "orderNo" : 5
+                    //     }
+                    // ]
+
+            })
+        }
+
+        return(
+            <Popupdiv>
+                <Header>
+                    <h4>코스만들기</h4>
+                </Header>
+                <Main>
+                <h5>제목을 입력하세요</h5>
+                <input type ="text" onChange={onNameHandler} ></input>
+                </Main>
+                <Footer>
+                <button onClick={() => {
+                    onClose(false)
+                     onClickshare()}} >제출</button>
+                    </Footer>
+            </Popupdiv>
+        )
+    }
+
     return (
         <Container>
             <Menu>
@@ -371,7 +542,7 @@ function CreateCourse() {
             </TotalDistance>
             <Hr/>
             <ContentList>
-            {points.map((item, i) => {
+            {state.map((item, i) => {
                     return (
                         <CourseContent>
                             <Distance>{courseInfo[i-1]!=undefined?courseInfo[i-1].distance>1000?'-'+(courseInfo[i-1].distance/1000).toFixed(2)+'km'+'→':'-'+(courseInfo[i-1].distance).toFixed(2)+"m→":''}<br>
@@ -386,7 +557,8 @@ function CreateCourse() {
                 })}
             </ContentList>
             <MapContainer id="map"></MapContainer>
-            <CompleteButton>내가 만든 코스 공유하기 -&gt;</CompleteButton>
+            <CompleteButton onClick = {()=>{handlePopup(true);}}>내가 만든 코스 공유하기 -&gt;</CompleteButton>
+            {popup && <Popup onClose ={handlePopup}/>}
         </Container>
     )
 };
