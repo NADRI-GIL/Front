@@ -46,7 +46,7 @@ const Header = () => {
                     :
                     <ul>
                         <Link to="/signIn">
-                        <li>로그인</li>
+                        <li style={{color:"black"}}>로그인</li>
                         </Link>
                     </ul>}
             </nav>

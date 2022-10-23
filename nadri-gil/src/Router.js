@@ -9,6 +9,7 @@ import PutData from "./routes/PutData";
 import Notice from "./routes/Notice/Notice";
 import TravelList from "./routes/TravelList";
 import CreateCourse from "./routes/CreateCourse";
+import Course from "./routes/Course";
 
 import MyPageLayout from "./routes/MyPage/MyPageLayout"
 import MyPageInfo from "./routes/MyPage/MyPageInfo";
@@ -31,6 +32,8 @@ function Router() {
                     <Route path="/Notice" element={<Notice/>}></Route>
                     <Route path="/travelList" element={<TravelList/>}></Route>
                 <Route path="/createcourse" element={<CreateCourse/>}></Route>
+                <Route path="/course" element={<Course/>}></Route>
+            
             
                 <Route path="/mypage" element={<MyPageLayout/>}>
                     <Route path="/mypage/mypageinfo" element={<MyPageInfo/>}></Route>

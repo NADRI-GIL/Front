@@ -4,6 +4,7 @@ header{
  margin: 0 auto;   
  padding-top: 40px;
  padding-bottom: 10px;
+ color: black;
 }
 
 nav{
@@ -24,6 +25,7 @@ header ul >li{
 	display: flex;
 	align-items: center;
     margin-right: 20px;
+    color: black;
   
 }
 header ul >div>li{

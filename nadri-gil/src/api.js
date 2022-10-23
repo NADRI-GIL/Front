@@ -88,12 +88,13 @@ export const directions5api = async (direction) => {
     .then((response) => response.json());
 }
 
-export const getCart = async () => {
+export const getCart = async (data) => {
   return fetch(`${URL}/carts/myList`, {
-    method: "get",
+    method: "post",
     headers: {
       "Content-Type": "application/json",
     },
+    body: JSON.stringify(data),
   })
     .then((response) => response.json());
 }

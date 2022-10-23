@@ -84,7 +84,11 @@ function Rank() {
 
 function Recommend() {
   const { isLoading, isError, error, data } = useQuery('Main', getMain,{
-    retry : 0,
+ 
+    staleTime: Infinity,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    retry: 0,
     onSuccess: data => {
       // 성공시 호출
       console.log(data);
