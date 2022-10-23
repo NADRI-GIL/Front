@@ -22,7 +22,7 @@ margin:auto;
 margin-top:3vh;
 `
 const Content = styled.div`
-width:23.5%;
+width:25%;
 height:20vh;
 padding:5px;
 text-align:center;
@@ -50,8 +50,33 @@ top:0;
 left:0;
 // opacity:0.5;
 `
-const Banner = styled.div`
-
+const Info = styled.div`
+float:right;
+font-family: 'SUIT';
+font-size:1.3w;
+margin:1vh;
+button{
+    background-color:#3366ff;
+    color:#ffffff;
+    border:none;
+    border-radius: 10px;
+    margin-left:0.5vw;
+    padding: 0 0.5vw 0 0.5vw;
+}
+`
+const CompleteButton = styled.button`
+float:right;
+font-family: 'SUIT';
+box-sizing: border-box;
+background-color:#3366ff;
+color:#ffffff;
+border:none;
+border-radius: 10px;
+height: 6vh;
+font-size:0.8vw;
+padding:0 7vh 0 7vh;
+margin:auto;
+margin-top:2vh;
 `
 function MyPageCourse(){
     const data = [
@@ -118,17 +143,25 @@ function MyPageCourse(){
             setCourseData([...tmp])
         }
     }
+    const ss=(e)=>{
+        e.target.src= null
+    }
     return(
         <Container>
         <h3>코스 만들기</h3>
         <Hr></Hr>
+        {/* <Info>
+        <span>선택한 여행지로 코스 만들러 가기</span>
+        <button>&gt;</button>
+        </Info> */}
         <ContentList>
                 {data.map((item) => {
                     return (
                         <Content onClick={()=>addCourseData(item.id)}>
                             <div style={{position:"relative"}}>
                                 <BackImage src={item.image}/>
-                                <FrontImage src={image[courseData.indexOf(item.id)]}/>
+                                {image[courseData.indexOf(item.id)]!=undefined?
+                                <FrontImage src={image[courseData.indexOf(item.id)]} onError={ss}/>:''}
                                 </div>
                                 <img src={item.image}/>
                                 <p>{item.name}</p>
@@ -136,7 +169,9 @@ function MyPageCourse(){
                     )
                 })
                 }
-            </ContentList>
+        </ContentList>
+        <CompleteButton>선택한 여행지로 코스 만들러 가기 -&gt;</CompleteButton>
+
         </Container>
     )
 
