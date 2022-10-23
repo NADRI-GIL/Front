@@ -155,7 +155,7 @@ const TravelDetail=()=>{
               
 {data?.data.list.map((e)=> {
           return(<>
-                <h5>상세정보</h5>
+                <h5 style={{borderBottom:"0.5vh solid white", paddingBottom:"1vh"}}>상세정보</h5>
                 <div ><h6>{e.info}</h6></div>
                 </>)
         })}
@@ -193,8 +193,8 @@ function Location() {
   return( <div  className="detail_component">
     {data?.data.list.map((e)=> {
           return(<>
-                   <h6>주소</h6>
-                <div ><h6>{e.address}</h6></div>
+                <h4>오시는 길</h4>
+                <div ><h6>주소 {e.address}</h6></div>
                 </>)
         })}
     <div ref={mapElement} id ="map"style={{ minHeight: '400px' }} ></div></div>);
@@ -243,37 +243,10 @@ const Comment =() =>{
     </div>
   )
 }
-  const obj = {
-    0: <TravelDetail />,
-    1: <Location />,
-    2: <TravelReview />,
-  }
+  
 
-class A extends React.Component{
- state = {
-    activeId: 0
-  }
-
-  clickHandler = (id) => {
-    this.setState({ activeId: id })
-  }
-  render(){
-    return(
-    <div> <hr></hr>
-      <ul className="tabs">
-        <li className={`${this.state.activeId === 0? 'active': ''}`} onClick={() => this.clickHandler(0)}>상세정보</li>
-        <li className={`${this.state.activeId === 1? 'active': ''}`} onClick={() => this.clickHandler(1)}>오시는 길</li>
-        <li className={`${this.state.activeId === 2? 'active': ''}`} onClick={() => this.clickHandler(2)}>리뷰</li>
-      </ul>
-        <div>{obj[this.state.activeId]}</div>
-      </div>
-     );
-    }
-}
-
-
-class Detail extends React.Component{
-    render(){
+function Detail(){
+  
         return (
       <div className="detail">
         <TravelUser/>
@@ -289,7 +262,7 @@ class Detail extends React.Component{
       {/* <A/> */}
       </div>
         );
-    }
+    
 }
 
 export default Detail;

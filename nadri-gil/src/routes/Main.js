@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useQuery } from "react-query";
 import Carousel from 'react-bootstrap/Carousel';
-import 'bootstrap/dist/css/bootstrap.min.css';
+// import 'bootstrap/dist/css/bootstrap.min.css';
 import {Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "./Main.css";
-import axios from "axios";
 import mypic from './iconsearch.png';
-// import { useQuery } from "react-query";
 import { getMain } from "../api.js";
 
 
@@ -28,8 +26,6 @@ function ControlledCarousel() {
     setIndex(selectedIndex);
   };
 
-  console.log(data1.image);
-
   return (
     <Carousel style={{height:"280px"}} activeIndex={index} onSelect={handleSelect}>
        {data1.map((e)=> {
@@ -44,10 +40,12 @@ function ControlledCarousel() {
 }
 
 function Rank() {
-
-  console.log("dfsf");
-
   const { isLoading, isError, error, data } = useQuery('Main', getMain,{
+    cacheTime: Infinity,
+    staleTime: Infinity,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    retry : 0,
     onSuccess: data => {
       // 성공시 호출
       console.log(data);
@@ -60,18 +58,18 @@ function Rank() {
 
   return(
     <div >
-     <div class="title"><h4>인기순</h4><Link className="text_link" to= "./"><h6>전체보기</h6></Link></div>
-      <div class="swipe">
+     <div className="title"><h4>인기순</h4><Link className="text_link" to= "./"><h6>전체보기</h6></Link></div>
+      <div className="swipe">
             <Swiper spaceBetween={0} slidesPerView={4} onSlideChange={() => console.log('slide change')} onSwiper={(swiper) => console.log(swiper)}>
               {data?.data.list.map((e)=> {
               return( <SwiperSlide>
               <Link className="text_link" to = "../TravelDetail" state={e}>
-                  <div class ="swipe_div">
-                    <div class ="swipe_imgbox">
-                        <img class="swipe_img"  key={e.id}  src={e.image} alt="Second slide"/>
+                  <div className ="swipe_div">
+                    <div className ="swipe_imgbox">
+                        <img className="swipe_img"  key={e.id}  src={e.image} alt="Second slide"/>
                     </div>
                         <div>
-                            <h5  class="swipe_h5" key={e.id}>{e.location} {e.name}</h5>
+                            <h5  className="swipe_h5" key={e.id}>{e.location} {e.name}</h5>
                         </div>
                     </div>
                 </Link>
@@ -85,10 +83,8 @@ function Rank() {
 }
 
 function Recommend() {
-
-  console.log("dfsf");
-
   const { isLoading, isError, error, data } = useQuery('Main', getMain,{
+    retry : 0,
     onSuccess: data => {
       // 성공시 호출
       console.log(data);
@@ -101,16 +97,16 @@ function Recommend() {
 
   return(
     <div>
-     <div class="title"><h4>추천순</h4><Link className="text_link" to= "./"><h6>전체보기</h6></Link></div>
-      <div class="swipe">
+     <div className="title"><h4>추천순</h4><Link className="text_link" to= "./"><h6>전체보기</h6></Link></div>
+      <div className="swipe">
             <Swiper spaceBetween={0} slidesPerView={4} onSlideChange={() => console.log('slide change')} onSwiper={(swiper) => console.log(swiper)}>
               {data?.data.list.map((e)=> {
               return( <SwiperSlide>
               <Link className="text_link" to = "../TravelDetail" state={e}>
-                  <div class ="swipe_div">
-                        <img class="swipe_img"  key={e.id}  src={e.image} alt="Second slide"/>
+                  <div className ="swipe_div">
+                        <img className="swipe_img"  key={e.id}  src={e.image} alt="Second slide"/>
                         <div>
-                            <h5  class="swipe_h5" key={e.id}>{e.location} {e.name}</h5>
+                            <h5  className="swipe_h5" key={e.id}>{e.location} {e.name}</h5>
                         </div>
                     </div>
                 </Link>
@@ -178,7 +174,7 @@ function Course(){
 class Main extends React.Component{
   render(){
       return (
-          <div class="main" >
+          <div className="main" >
               <ControlledCarousel/>
               <Rank/>
               <Recommend/>

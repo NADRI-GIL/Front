@@ -7,11 +7,11 @@
 
 a {
     text-decoration: none;
-    color: inherit;
+    color: black;
 }
 a:link { 
     text-decoration: none;
-    color : inherit;
+    color : black;
    }
     
 a:visited { 
@@ -42,7 +42,7 @@ color: inherit;
 
 .swipe_div{
     margin: 0 auto; 
-    height:300px;
+    height:320px;
     text-align: center;
     overflow: hidden;
 }
@@ -59,8 +59,8 @@ overflow: hidden;
  }
 
 .swipe_img{
-   min-height:270px;
-    Width:240px;
+   height:260px;
+    Width:230px;
     margin: 0 auto;
 }
 
@@ -69,7 +69,7 @@ overflow: hidden;
     justify-content:center;
     margin:0 auto;
     position: static;
-
+    color: black;
 }
 /* 
 travel_detail.js */
@@ -83,7 +83,7 @@ travel_detail.js */
 
 .detail_component{
     /* margin-top: 30px; */
-    min-height: 500px;
+    min-height: 150px;
 }
 
 .button_user{
