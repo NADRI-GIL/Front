@@ -40,9 +40,11 @@ header ul >Link>li{
 	display: flex;
 	align-items: center;
     margin-right: 10px;
-   
 }
 
+header ul li a{
+    color: black;
+}
 
 
 .search {

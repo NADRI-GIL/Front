@@ -97,4 +97,3 @@ export const getCart = async () => {
   })
     .then((response) => response.json());
 }
-
