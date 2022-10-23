@@ -2,15 +2,15 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, Link, useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { AiOutlineHeart, AiFillStar, AiFillHeart, AiFillFilter } from 'react-icons/ai';
-import { BsCartPlus, BsCartPlusFill } from "react-icons/bs";
-import { useMutation, useQuery } from "react-query";
-import { getTravelDetail, postCart, getCart } from "../api.js";
+import { RiRoadMapLine, RiRoadMapFill } from "react-icons/ri";
+import { QueryClient, useMutation, useQuery } from "react-query";
+import { getTravelDetail, postCart } from "../api.js";
 import "./Main.css";
 import mypic from './gyeoungbuk.jpg';
 
 
-const { kakao } = window;
 
+const { kakao } = window;
 
 
 
@@ -47,6 +47,7 @@ const { kakao } = window;
 function Detail() {
   let {id} = useParams();
   // const [travelDetail, setTravelDetail] = useState();
+  
   const { data } = useQuery('TravelDetail', () => getTravelDetail(id), {
     cacheTime: Infinity,
         staleTime: Infinity,
@@ -95,14 +96,14 @@ function Detail() {
           <button className='review_upload'>올리기</button>
           <input className="review_box" placeholder='리뷰를 남겨주세요' type="text"></input>
         </div>
-        <div className="comment">
+        {/* <div className="comment">
           {data.map((e) => {
             return (<div className="comment_one">
               <h6>{e.nikname}</h6>
               <div className="comment_detail"><h6>{e.content}</h6><img src={mypic}></img></div>
             </div>)
           })}
-        </div>
+        </div> */}
       </div>
     )
   }
@@ -139,14 +140,13 @@ function Detail() {
     const state = location.state;
     const [cart, setCart] = useState(true);
     // const [userid, setUserid] = useState();
-  
+
     const loginid = JSON.parse(localStorage.getItem("recoil-persist"));
-    const { data } = useQuery('getCart', () => getCart);
-    console.log(data);
-  
+
+
     const { mutate, isLoading } = useMutation(postCart, {
       onSuccess: data => {
-        console.log(data);
+        // console.log(data);
         if (data.resultCode === 0) {
           alert(data.resultMsg)
         }
@@ -155,24 +155,26 @@ function Detail() {
         }
       },
       onError: () => {
-  
+      
       },
   
     });
+
+  
   
     const handleCart = () => {
       console.log(cart);
-      setCart(!cart);
-  
+      
       if (cart == false) {
         console.log(cart);
       }
       else {
-        console.log(loginid.loginId)
-        console.log("loginId :" + loginid.loginId + "travelId :" + state.id);
+        console.log(loginid.loginId);
+        console.log(id);
+        console.log("loginId :" + loginid.loginId + "travelId :" + id);
         mutate({
           "loginId": loginid.loginId,
-          "travelId": state.id
+          "travelId": id
         })
       }
     }
@@ -180,8 +182,8 @@ function Detail() {
     return (
       <button className='button_user' onClick={handleCart}>
         {
-          cart ? (<BsCartPlus size="30" className="bookmarkFillIcon" />) :
-            (<BsCartPlusFill size="30" className="bookmarkIcon" />)
+          cart ? (<RiRoadMapLine size="30" className="bookmarkFillIcon" />) :
+            (<RiRoadMapFill size="30" className="bookmarkIcon" />)
         }
       </button>
     )
