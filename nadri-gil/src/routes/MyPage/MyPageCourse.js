@@ -1,8 +1,14 @@
-import { useState } from "react";
-import { Link } from "react-router-dom"
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom"
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 import "../../index.css"
+
+import { getCart} from "../../api.js"
+import { useMutation } from "react-query";
+
+import { isLoginedAtom, loginIdAtom } from "../../atom.js"
+import { useRecoilValue } from "recoil";
 
 const Container = styled.div`
 h3{font-family: 'SUIT';}
@@ -23,7 +29,7 @@ margin-top:3vh;
 `
 const Content = styled.div`
 width:25%;
-height:20vh;
+height:22vh;
 padding:5px;
 text-align:center;
 
@@ -79,50 +85,6 @@ margin:auto;
 margin-top:2vh;
 `
 function MyPageCourse(){
-    const data = [
-            {
-                "id": 1,
-                "name": "여행지 명1",
-                "location": "지역(분류)",
-                "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
-            },
-            {
-                "id": 2,
-                "name": "여행지 명2",
-                "location": "지역(분류)",
-                "image": "https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=3a7a695b-499c-472d-b767-32b23b71ce55"
-            },
-            {
-                "id": 3,
-                "name": "여행지 명3",
-                "location": "지역(분류)",
-                "image": "https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=080df1f5-0b3c-40ad-b2d7-8bc4f0e04e51"
-            },
-            {
-                "id": 4,
-                "name": "여행지 명4",
-                "location": "지역(분류)",
-                "image": "https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=96e86c56-ad37-467f-b17f-099b563ba33e"
-            },
-            {
-                "id": 5,
-                "name": "여행지 명5",
-                "location": "지역(분류)",
-                "image": "https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=63fc8a33-3b88-45fd-8390-398c638802b1"
-            },
-            {
-                "id": 6,
-                "name": "여행지 명6",
-                "location": "지역(분류)",
-                "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
-            },
-            {
-                "id": 7,
-                "name": "여행지 명7",
-                "location": "지역(분류)",
-                "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
-            },
-        ]
     const image = [
         'https://user-images.githubusercontent.com/58421346/194632471-9da92ca4-b580-4526-a71f-1f169e0f4633.png', 
         "https://user-images.githubusercontent.com/58421346/194632534-3a77eca2-5adf-4a74-9df1-76999ad9ff71.png",
@@ -130,22 +92,44 @@ function MyPageCourse(){
         "https://user-images.githubusercontent.com/58421346/194632655-cece31a3-2d0f-4e69-8161-4e421ec66094.png",
         "https://user-images.githubusercontent.com/58421346/194632660-2b3ee8fe-4d64-42d6-92e2-b307d0ba2bb5.png"
     ]
+    let navigate = useNavigate();
+    const isLogined = useRecoilValue(isLoginedAtom);
+    const loginId = useRecoilValue(loginIdAtom)
+    const [cartData, setCartData] = useState([]);
     const [courseData, setCourseData] = useState([]);
+    const { mutate, isLoading } = useMutation(getCart, {
+        onSuccess: data => {
+            console.log(data);
+            if (data.resultCode === 0) {
+                setCartData(data.list)
+            }
+            else {
+                alert(data.resultMsg)
+            }
+        },
+        onError: () => {
+            alert("there was an error")
+        },
 
-    const addCourseData = (id) => {
-        if(courseData.indexOf(id) === -1 ){
-            if(courseData.length < 5) setCourseData([...courseData, id])
+    });
+    useEffect(()=>{
+        mutate({"loginId":loginId})
+    }, [])
+    const addCourseData = (travel) => {
+        if(courseData.findIndex(i=>i.travelId == travel.travelId) === -1 ){
+            if(courseData.length < 5) setCourseData([...courseData, travel])
             else alert("최대 5개까지 등록할 수 있습니다.")
         }
         else{
             let tmp = [...courseData]
-            tmp.splice(courseData.indexOf(id), 1)
+            tmp.splice(courseData.findIndex(i=>i.travelId == travel.travelId), 1)
             setCourseData([...tmp])
         }
     }
-    const ss=(e)=>{
-        e.target.src= null
+    const createCourseButton = () =>{
+        // navigate('/createcourse', {coursePoints:{courseData}})
     }
+ 
     return(
         <Container>
         <h3>코스 만들기</h3>
@@ -155,13 +139,13 @@ function MyPageCourse(){
         <button>&gt;</button>
         </Info> */}
         <ContentList>
-                {data.map((item) => {
+                {cartData?.map((item) => {
                     return (
-                        <Content onClick={()=>addCourseData(item.id)}>
+                        <Content onClick={()=>addCourseData(item)}>
                             <div style={{position:"relative"}}>
                                 <BackImage src={item.image}/>
-                                {image[courseData.indexOf(item.id)]!=undefined?
-                                <FrontImage src={image[courseData.indexOf(item.id)]} onError={ss}/>:''}
+                                {image[courseData.findIndex(i=>i.travelId ==item.travelId)]!=undefined?
+                                <FrontImage src={image[courseData.findIndex(i=>i.travelId ==item.travelId)]} />:''}
                                 </div>
                                 <img src={item.image}/>
                                 <p>{item.name}</p>
@@ -170,8 +154,9 @@ function MyPageCourse(){
                 })
                 }
         </ContentList>
-        <CompleteButton>선택한 여행지로 코스 만들러 가기 -&gt;</CompleteButton>
-
+        <Link to='/createcourse' state={courseData}>
+        <CompleteButton type='button' onClick={createCourseButton}>선택한 여행지로 코스 만들러 가기 -&gt;</CompleteButton>
+        </Link>
         </Container>
     )
 
