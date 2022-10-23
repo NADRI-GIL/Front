@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 import "../../index.css"
 
-import { getCart} from "../../api.js"
+import { getCourse} from "../../api.js"
 import { useMutation } from "react-query";
 
 import { isLoginedAtom, loginIdAtom } from "../../atom.js"
@@ -97,7 +97,7 @@ function MyPageCourse(){
     const loginId = useRecoilValue(loginIdAtom)
     const [cartData, setCartData] = useState([]);
     const [courseData, setCourseData] = useState([]);
-    const { mutate, isLoading } = useMutation(getCart, {
+    const { mutate, isLoading } = useMutation(getCourse, {
         onSuccess: data => {
             console.log(data);
             if (data.resultCode === 0) {
@@ -114,6 +114,7 @@ function MyPageCourse(){
     });
     useEffect(()=>{
         mutate({"loginId":loginId})
+        console.log("SFD");
     }, [])
     const addCourseData = (travel) => {
         if(courseData.findIndex(i=>i.travelId == travel.travelId) === -1 ){
@@ -141,22 +142,13 @@ function MyPageCourse(){
         <ContentList>
                 {cartData?.map((item) => {
                     return (
-                        <Content onClick={()=>addCourseData(item)}>
-                            <div style={{position:"relative"}}>
-                                <BackImage src={item.image}/>
-                                {image[courseData.findIndex(i=>i.travelId ==item.travelId)]!=undefined?
-                                <FrontImage src={image[courseData.findIndex(i=>i.travelId ==item.travelId)]} />:''}
-                                </div>
-                                <img src={item.image}/>
+                        <Content >
                                 <p>{item.name}</p>
                         </Content>
                     )
                 })
                 }
         </ContentList>
-        <Link to='/createcourse' state={courseData}>
-        <CompleteButton type='button' onClick={createCourseButton}>선택한 여행지로 코스 만들러 가기 -&gt;</CompleteButton>
-        </Link>
         </Container>
     )
 
