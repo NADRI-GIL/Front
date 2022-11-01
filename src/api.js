@@ -59,7 +59,7 @@ export const postLogin = async (data) => {
   }
   
 export const getTravelsAll = async () => {
-  return fetch(`${URL}/travels/random`, {
+  return fetch(`${URL}/travels/all`, {
     method: "get",
     headers: {
       "Content-Type": "application/json",
@@ -68,12 +68,12 @@ export const getTravelsAll = async () => {
     .then((response) => response.json());
 }
 export const directions5api = async (direction) => {
-  let start = direction[0].lng + ',' + direction[0].lat;
-  let goal = direction[direction.length-1].lng + ',' + direction[direction.length-1].lat;
+  let start = direction[0].longitude + ',' + direction[0].latitude;
+  let goal = direction[direction.length-1].longitude + ',' + direction[direction.length-1].latitude;
   let waypoints = ''
   if(direction.length > 2){
     for(let i = 1; i < direction.length -1; i++){
-      waypoints += direction[i].lng + ',' + direction[i].lat;
+      waypoints += direction[i].longitude + ',' + direction[i].latitude;
       if(i < direction.length - 2) waypoints += '|'
     }
   }
@@ -122,3 +122,27 @@ export const getCourse = async (data) => {
   })
     .then((response) => response.json());
 }
+
+export const postHeart = async (data) => {
+  return fetch(`${URL}/hearts/add`, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => response.json());
+}
+
+
+export const getHeart = async (data) => {
+  return fetch(`${URL}/hearts/myList`, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => response.json());
+}
+

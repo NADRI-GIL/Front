@@ -15,6 +15,7 @@ import MyPageLayout from "./routes/MyPage/MyPageLayout"
 import MyPageInfo from "./routes/MyPage/MyPageInfo";
 import MyPageHeartList from "./routes/MyPage/MyPageHeartList";
 import MyPageCourse from "./routes/MyPage/MyPageCourse";
+import MyPageCourseList from "./routes/MyPage/MyPageCourseList";
 
 import NoticeContent from "./routes/Notice/NoticeContent";
 import NoticeWrite from "./routes/Notice/NoticeWrite";
@@ -39,6 +40,7 @@ function Router() {
                     <Route path="/mypage/mypageinfo" element={<MyPageInfo/>}></Route>
                     <Route path="/mypage/mypageheartlist" element={<MyPageHeartList/>}></Route>
                     <Route path="/mypage/mypagecourse" element={<MyPageCourse/>}></Route>
+                    <Route path="/mypage/mypagecourselist" element={<MyPageCourseList/>}></Route>
                     </Route>
                 <Route path="/notice/noticecontent" element={<NoticeContent/>}></Route>
                 <Route path="/notice/noticewrite" element={<NoticeWrite/>}></Route>

@@ -4,294 +4,303 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { AiOutlineHeart, AiFillStar, AiFillHeart, AiFillFilter } from 'react-icons/ai';
 import { RiRoadMapLine, RiRoadMapFill } from "react-icons/ri";
 import { QueryClient, useMutation, useQuery } from "react-query";
-import { getTravelDetail, postCart } from "../api.js";
+import { getTravelDetail, postCart,getHeart, postHeart } from "../api.js";
 import "./Main.css";
-import mypic from './gyeoungbuk.jpg';
+import styled from "styled-components";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+const Container = styled.div`
+width: 50%;
+margin: 0 auto;
+font-family: 'SUIT';
+@media screen and (max-width: 900px) {
+width: 100%;
+}
+`;
 
+const Content = styled.div`
+// height:25vh;
+padding:5px;
 
+    img{
+        width:100%;
+        object-fit: cover;
+        height: 100%;
+
+    }
+    a{
+        text-decoration: none;
+        color:black;
+    }
+    p{
+        font-family: 'SUIT';
+        font-size:0.8vw;
+        margin-top:1vh;
+    }
+`;
+const User = styled.div`  
+text-align:center;
+    div{
+      display: flex;
+      justify-content: space-between;
+    }
+
+    button{
+    background-color: transparent;
+    border: 0;
+    }
+
+`;
+const Image = styled.h4`
+font-family: 'SUIT';
+`
+const TravelDetail = styled.div`
+
+font-family: 'SUIT';
+        font-size:0.6vw;
+        margin:auto;
+
+        h5{
+          font-weight: bolder;
+        }
+`
+const Location = styled.div`
+    width:100%;
+    margin-bottom:3vh;
+    
+    h5{
+      font-weight: bolder;
+    }
+`;
+
+const Review = styled.div`
+    div{
+      position: relative !important;
+    }
+    input{
+      margin: 10px auto; 
+      border: none;
+      background-color :rgb(240, 237, 237);
+      border-radius: 10px;
+      width: 100%;
+      height: 70px;
+    }
+    button{
+      position: absolute;
+      right: 15px;
+      font-size: 15px;
+      top: 30px;
+      margin: 0 auto;
+      border: 0;
+      background-color: transparent;
+    }
+    
+    h5{
+      font-weight: bolder;
+    }
+`
+const StarContainer = styled.div`
+  border: none;
+  background-color: white;
+`
+
+const HiddenReview = styled.div`
+${({ show }) => (show ? `display:block` : `display: none`)}
+`
+const Hr = styled.hr`
+border: 0;
+height: 1px;
+margin: 1vh 0 1vh 0;  
+background-color: #595959;
+`
 
 const { kakao } = window;
+const loginid = JSON.parse(localStorage.getItem("recoil-persist"));
 
+function Detail(){
+    let {id} = useParams();
+    const loginid = JSON.parse(localStorage.getItem("recoil-persist"));
 
+    const { data } = useQuery('TravelDetail', () => getTravelDetail(id), {
+        cacheTime: Infinity,
+            staleTime: Infinity,
+            refetchOnMount: false,
+            refetchOnWindowFocus: false,
+            retry: 0,
+            onSuccess: data => {
+                console.log(data);
+            },
+      })
 
-
-// const obj = {
-//   0: <TravelDetail />,
-//   1: <Location />,
-//   2: <TravelReview />,
-// }
-
-// class A extends React.Component {
-//   state = {
-//     activeId: 0
-//   }
-
-//   clickHandler = (id) => {
-//     this.setState({ activeId: id })
-//   }
-//   render() {
-//     return (
-//       <div> <hr></hr>
-//         <ul className="tabs">
-//           <li className={`${this.state.activeId === 0 ? 'active' : ''}`} onClick={() => this.clickHandler(0)}>상세정보</li>
-//           <li className={`${this.state.activeId === 1 ? 'active' : ''}`} onClick={() => this.clickHandler(1)}>오시는 길</li>
-//           <li className={`${this.state.activeId === 2 ? 'active' : ''}`} onClick={() => this.clickHandler(2)}>리뷰</li>
-//         </ul>
-//         <div>{obj[this.state.activeId]}</div>
-//       </div>
-//     );
-//   }
-// }
-
-
-function Detail() {
-  let {id} = useParams();
-  // const [travelDetail, setTravelDetail] = useState();
-  
-  const { data } = useQuery('TravelDetail', () => getTravelDetail(id), {
-    cacheTime: Infinity,
-        staleTime: Infinity,
-        refetchOnMount: false,
-        refetchOnWindowFocus: false,
-        retry: 0,
-        onSuccess: data => {
-            // 성공시 호출
-            // setTravelDetail(data)
-            console.log(data);
-        },
-  })
-  const mapElement = useRef(null);
-  
     useEffect(() => {
-      const { naver } = window;
-      if (!mapElement.current || !naver) return;
-  
-      data?.data.list.forEach((e) => {
+    const { naver } = window;
+    if (!mapElement.current || !naver) return;
+
+    data?.data.list.forEach((e) => {
         new naver.maps.Marker({
-          map: new naver.maps.Map(mapElement.current, naver.maps.MapOptions = {
+        map: new naver.maps.Map(mapElement.current, naver.maps.MapOptions = {
             center: new naver.maps.LatLng(e.latitude, e.longitude),
             zoom: 14,
             zoomControl: true,
             zoomControlOptions: {
-              position: naver.maps.Position.TOP_RIGHT,
+            position: naver.maps.Position.TOP_RIGHT,
             },
-          }),
-          position: new naver.maps.LatLng(e.latitude, e.longitude),
-          title: e.name,
+        }),
+        position: new naver.maps.LatLng(e.latitude, e.longitude),
+        title: e.name,
         });
-      })
+    })
     }, [data]);
 
-  const TravelReview = () => {
+    const mapElement = useRef(null);
 
-    const data = [
-      { nikname: "dd", content: "좋아요~세계도시로 성장한 서울이 어떻게 탄생했으며 어떻게 변해서 오늘에 이르렀는지를 배우고 앞으로 어떻게 바뀔 것인지를 가늠해보는 곳이 서울역사박물관이다. 서울의 뿌리와 서울 사람의 생활, 현대 서울로의 변화를 보여주는 상설전시와 함께 서울의 역사·문화를 증언하는 다양한 기증유물이 전시되어 있다. 또한 어린이와 가족, 어른들을 위한 각종 체험교실과 문화행사들이 풍성하게 마련되어 있다." },
-      { nikname: "dd", content: "좋아요~세계도시로 성장한 서울이 어떻게 탄생했으며 어떻게 변해서 오늘에 이르렀는지를 배우고 앞으로 어떻게 바뀔 것인지를 가늠해보는 곳이 서울역사박물관이다. 서울의 뿌리와 서울 사람의 생활, 현대 서울로의 변화를 보여주는 상설전시와 함께 서울의 역사·문화를 증언하는 다양한 기증유물이 전시되어 있다. 또한 어린이와 가족, 어른들을 위한 각종 체험교실과 문화행사들이 풍성하게 마련되어 있다." },
-  
-    ]
-    return (
-      <div className="detail_component">
-        <h5>리뷰</h5>
-        <div className="review">
-          <button className='review_upload'>올리기</button>
-          <input className="review_box" placeholder='리뷰를 남겨주세요' type="text"></input>
-        </div>
-        {/* <div className="comment">
-          {data.map((e) => {
-            return (<div className="comment_one">
-              <h6>{e.nikname}</h6>
-              <div className="comment_detail"><h6>{e.content}</h6><img src={mypic}></img></div>
-            </div>)
-          })}
-        </div> */}
-      </div>
-    )
-  }
-  
-  const Like = () => {
-    const location = useLocation();
-    const state = location.state;
-  
-    const [like, setLike] = useState(true);
-  
-    const handleLike = () => {
-  
-      setLike(!like);
-      if (like == false) {
-        console.log(like);
-      }
-      else {
-        console.log(like);
-      }
-    }
-  
-    return (
-      <button className="button_user" onClick={handleLike}>
-        {
-          like ? (<AiOutlineHeart size="30" className="bookmarkFillIcon" />) :
-            (<AiFillHeart size="30" color="red" className="bookmarkIcon" />)
-        }
-      </button>
-    )
-  }
-  
-  const Cart = () => {
-    const location = useLocation();
-    const state = location.state;
-    const [cart, setCart] = useState(true);
-    // const [userid, setUserid] = useState();
-
-    const loginid = JSON.parse(localStorage.getItem("recoil-persist"));
-
-
-    const { mutate, isLoading } = useMutation(postCart, {
-      onSuccess: data => {
-        // console.log(data);
-        if (data.resultCode === 0) {
-          alert(data.resultMsg)
-        }
-        else {
-          alert(data.resultMsg)
-        }
-      },
-      onError: () => {
+    // 좋아요
+    const Like = () => {
+        const [like, setLike] = useState(true);
       
-      },
-  
-    });
-
-  
-  
-    const handleCart = () => {
-      console.log(cart);
-      
-      if (cart == false) {
-        console.log(cart);
-      }
-      else {
-        console.log(loginid.loginId);
-        console.log(id);
-        console.log("loginId :" + loginid.loginId + "travelId :" + id);
-        mutate({
-          "loginId": loginid.loginId,
-          "travelId": id
-        })
-      }
-    }
-  
-    return (
-      <button className='button_user' onClick={handleCart}>
-        {
-          cart ? (<RiRoadMapLine size="30" className="bookmarkFillIcon" />) :
-            (<RiRoadMapFill size="30" className="bookmarkIcon" />)
+        const handleLike = () => {
+            likepost.mutate({
+              "loginId": loginid.loginId,
+              "travelId": id})
         }
-      </button>
-    )
-  }
-  
-  
-  
-  const TravelImage = (props) => {
+        const likepost = useMutation(postHeart, {
+          onSuccess: data => {
+              console.log(data);
+              if (data.resultCode == 0 && like==false) {
+                  setLike(true);
+                  alert(data.resultMsg);
+                 
+              }
+              else {
+                  alert(data.resultMsg)
+                  setLike(false);
+              }
+          },
+        });
+   
+        const likemutation = useMutation(getHeart, {
+          onSuccess: data => {
+              console.log(data);
+              if (data.resultCode == 0) {
+                  // setLike(true);
+                  for (let i = 0; i<data.list.length; i++)
+                  {
+                    if(data.list[i].travelId == id)
+                    {
+                      setLike(false);
+                      break;
+                    }
+                  }
+              }
+          },
+      });
 
-    return (
-      <div style={{ textAlign: 'center', justifiyCenter: "center", width: "100%", marign: "0 auto" }} >
-        {data?.data.list.map((e) => {
-          return (
-            <img style={{ textAlign: "center", width: "100%", height: "100%" }} src={e.image} alt={e.name} />
-          )
-        })}
-      </div>
-    )
-  }
-  
-  
-  const TravelDetail = () => {
+      useEffect(()=>{
+          likemutation.mutate({
+            "loginId": loginid.loginId,
+            "travelId": id})
+      }, [])
 
-    return (
-      <div className="detail_component" >
-  
-        {data?.data.list.map((e) => {
-          return (<>
-            <h5>상세정보</h5>
-            <div ><h6>{e.info}</h6></div>
-          </>)
-        })}
-      </div>
-    )
-  }
-  
-  function Location() {
+        return (
+          <button onClick={handleLike}>
+            {
+              like ? (<AiOutlineHeart size="30" className="bookmarkFillIcon" />) :
+                (<AiFillHeart size="30" color="red" className="bookmarkIcon" />)
+            }
+          </button>
+        )
+      }
 
+    // 장바구니
+    const Cart = () => {
+        const [cart, setCart] = useState(true);
     
-  
-    return (<div className="detail_component">
-      {data?.data.list.map((e) => {
-        return (<>
-          <h6>주소</h6>
-          <div ><h6>{e.address}</h6></div>
-        </>)
-      })}
-      <div ref={mapElement} id="map" style={{ minHeight: '400px' }} ></div></div>);
-  }
-  function TravelUser() {
+        const { mutate, isLoading } = useMutation(postCart, {
+          onSuccess: data => {
+            if (data.resultCode === 0) {
+              alert(data.resultMsg)
+            }
+            else {
+              alert(data.resultMsg)
+            }
+          },  
+        });
+    
+        const handleCart = () => {
+          if (cart == false) {
+            console.log(cart);
+          }
+          else {
+         mutate({
+              "loginId": loginid.loginId,
+              "travelId": id
+            })
+          }
+        }
+        return (
+          <button onClick={handleCart}>
+            {
+              cart ? (<RiRoadMapLine size="30" className="bookmarkFillIcon" />) :
+                (<RiRoadMapFill size="30" className="bookmarkIcon" />)
+            }
+          </button>
+        )
+      }
 
-    return (
-      <div>
-        {data?.data.list.map((e) => {
-          return (<div>
-            <div style={{ textAlign: "center" }}>
-              <h4>{e.name}</h4>
-              <h6>{e.address}</h6>
-            </div>
-  
-            <div className="T_userbutton" >
-              <div className="T_userbutton_2">
-                <Like />
-                <h5>{e.likeCount}</h5>
-              </div>
-              <div>
-                <Cart />
-              </div>
-            </div>
-          </div>
-          )
+      const [hovered, setHovered] = useState(null);
+      const [clicked, setClicked] = useState(null);
+      
+    return(
+        <Container>
+                    {data?.data.list.map((e) => {
+          return (
+            <Content>
+                <User>
+                    <h4>{e.name}</h4> <h6>{e.address}</h6>
+                    <div>
+                      <div><Like /> <h5>{e.likeCount}</h5></div>
+                      <Cart />
+                    </div>
+                </User>
+                <Hr/>
+                <Image>
+                    <img src={e.image} alt={e.name} />
+                </Image>
+                <Hr/>
+                <TravelDetail>
+                    <h5>상세정보</h5>
+                    <div ><h6>{e.info}</h6></div>
+                </TravelDetail>
+                <Hr/>
+                <Location>
+                  <h5>오시는 길</h5>
+                    <div style={{display:'flex', marginRight: '10px'}}> <h6>주소 : {e.address}</h6></div>
+                    <div ref={mapElement} id="map" style={{ minHeight: '400px', width:"100%" }} ></div>
+                </Location>
+                <Hr/>
+                <Review>
+                <h5>리뷰</h5>
+                <StarContainer>
+              {[1, 2, 3, 4, 5].map(el => (
+                <FontAwesomeIcon  icon ={faStar}  size="2x" style={{color:(clicked>=el | hovered >=el) ? '#ffda38':'#b9b9b9'}}  
+                  key={el}
+                  onMouseEnter={() => setHovered(el)}
+                  onMouseLeave={() => setHovered(null)}
+                  onClick={() => setClicked(el)} 
+                />
+              ))}
+            </StarContainer>
+            {[1, 2, 3, 4, 5].map(num => ( <HiddenReview key={num} show={clicked === num}>
+                    <button>올리기</button>
+                    <input placeholder='리뷰를 남겨주세요' type="text"></input>
+                    </HiddenReview>
+                    ))}
+                </Review>
+            </Content>
+            )
         })}
-      </div>
+        </Container>
     )
-  }
-  const Comment = () => {
-    const data = [
-      { nikname: "dd", content: "좋아요~세계도시로 성장한 서울이 어떻게 탄생했으며 어떻게 변해서 오늘에 이르렀는지를 배우고 앞으로 어떻게 바뀔 것인지를 가늠해보는 곳이 서울역사박물관이다. 서울의 뿌리와 서울 사람의 생활, 현대 서울로의 변화를 보여주는 상설전시와 함께 서울의 역사·문화를 증언하는 다양한 기증유물이 전시되어 있다. 또한 어린이와 가족, 어른들을 위한 각종 체험교실과 문화행사들이 풍성하게 마련되어 있다." },
-      { nikname: "dd", content: "좋아요~세계도시로 성장한 서울이 어떻게 탄생했으며 어떻게 변해서 오늘에 이르렀는지를 배우고 앞으로 어떻게 바뀔 것인지를 가늠해보는 곳이 서울역사박물관이다. 서울의 뿌리와 서울 사람의 생활, 현대 서울로의 변화를 보여주는 상설전시와 함께 서울의 역사·문화를 증언하는 다양한 기증유물이 전시되어 있다. 또한 어린이와 가족, 어른들을 위한 각종 체험교실과 문화행사들이 풍성하게 마련되어 있다." },
-  
-    ]
-    return (
-      <div className="comment">
-        {data.map((e) => {
-          return (<div className="comment_one">
-            <h6>{e.nikname}</h6>
-            <div className="comment_detail"><h6>{e.content}</h6><img src={mypic}></img></div>
-          </div>)
-        })}
-      </div>
-    )
-  }
-
-  return (
-    <div className="detail">
-      <TravelUser />
-      <hr></hr>
-      <TravelImage />
-      <hr></hr>
-      <TravelDetail />
-      <hr></hr>
-      <Location />
-      <hr></hr>
-      <TravelReview />
-
-      {/* <A/> */}
-    </div>
-  );
 }
 
 export default Detail;

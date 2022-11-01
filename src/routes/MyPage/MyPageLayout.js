@@ -51,7 +51,7 @@ function MyPage() {
         {
             id: 3,
             title: "제작한 코스",
-            to: "./mypageheartlist"
+            to: "./mypagecourselist"
         },
         {
             id: 4,

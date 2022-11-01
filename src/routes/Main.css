@@ -1,10 +1,18 @@
 
+
 .main{
     width: 62%;
     margin: 0 auto;
     font-family: 'SUIT';
 }
 
+@media all and (max-width: 768px){
+    .main{
+        width: 100%;
+        }
+    
+    }
+    
 a {
     text-decoration: none;
     color: black;
@@ -27,7 +35,7 @@ color: inherit;
 .title{
     display : flex;
     justify-content:space-between;
-    margin-top: 100px;
+    margin-top: 70px;
 }
 
 .title > .text_link> h6{
@@ -36,8 +44,8 @@ color: inherit;
 
 
 .swipe{
-    margin-top: 50px;
-    margin-bottom: 150px;
+    margin-top: 30px;
+    margin-bottom: 50px;
 }
 
 .swipe_div{
@@ -71,97 +79,5 @@ overflow: hidden;
     position: static;
     color: black;
 }
-/* 
-travel_detail.js */
 
-.detail{
-    width: 50%;
-    margin: 0 auto;
-    font-family: 'SUIT';
-    margin-top: 70px;
-}
 
-.detail_component{
-    /* margin-top: 30px; */
-    min-height: 150px;
-}
-
-.button_user{
-    border: 0;
-    background-color: transparent;
-}
-
-.T_userbutton{
-    justify-content: space-between;
-    display: flex;
-}
-
-.T_userbutton_2{
-   display: flex;
-   
-}
-.review{
-    position: relative !important;
-    text-align: center;
-    /* width: 300px; */
-    /* margin: 0 auto; */
-    /* margin-left:30px; */
-}
-
-.review_box{
-    margin: 10px auto; 
-    border: none;
-    background-color :rgb(240, 237, 237);
-    border-radius: 10px;
-    width: 100%;
-    height: 70px;
-
-}
-
-.review_upload{
-    position: absolute;
-    right: 15px;
-    font-size: 15px;
-    top: 30px;
-    margin: 0 auto;
-    border: 0;
-    background-color: transparent;
-
-}
-.comment{
-    width: 100%;
-    height: 50px;
-    /* margin-top: 20px; */
-}
-
-.comment_one{
-    margin-top: 20px;
-}
-.comment_detail{
-    /* display: flex;
-    justify-content: space-between; */
-    /* height: 100%; */
-}
-
-.comment_detail > img{
-    margin:auto;
-    display: block;
-}
-
-.tabs{
-    margin-top: 20px;
-}
-
-.tabs.active{
-    border-bottom: 2px solid #369fff;
-}
-.tabs li{
-    font-size: 1rem;
-    font-weight: bold;
-    display: inline-block;
-    padding: 1rem;
-}
-.tabs li.active{
-    border-bottom : 2px solid #369fff;
-    
-}

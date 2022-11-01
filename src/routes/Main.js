@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import { useQuery } from "react-query";
 import Carousel from 'react-bootstrap/Carousel';
-// import 'bootstrap/dist/css/bootstrap.min.css';
 import {Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "./Main.css";
-import mypic from './iconsearch.png';
 import { getMain } from "../api.js";
 
 
@@ -16,9 +14,9 @@ function ControlledCarousel() {
   const [index, setIndex] = useState(0);
 
   const data1 = [
-        { id : 0, name : '경복궁'},
-        { id : 1, name : '경복궁1'},
-        { id : 2, name : '경복궁2'},
+        { id : 0, src : 'img/banner1.png'},
+        { id : 1, src : 'img/banner2.png'},
+        { id : 2, src : 'img/banner3.png'},
     ]
 
 
@@ -27,11 +25,11 @@ function ControlledCarousel() {
   };
 
   return (
-    <Carousel style={{height:"280px"}} activeIndex={index} onSelect={handleSelect}>
+    <Carousel fade >
        {data1.map((e)=> {
           return(
-      <Carousel.Item style={{}}>
-        <img src={mypic} style={{height:"280px", widht:"100%"}}alt="f slide"/>
+      <Carousel.Item >
+        <img  className="d-block w-100" src={e.src} style={{objectFit: "contain", borderRadius : "20px"}} alt=""/>
       </Carousel.Item>
         )
       })}
@@ -60,7 +58,7 @@ function Rank() {
     <div >
      <div className="title"><h4>인기순</h4><Link className="text_link" to= "./"><h6>전체보기</h6></Link></div>
       <div className="swipe">
-            <Swiper spaceBetween={0} slidesPerView={4} onSlideChange={() => console.log('slide change')} onSwiper={(swiper) => console.log(swiper)}>
+            <Swiper spaceBetween={10} slidesPerView={4} onSlideChange={() => console.log('slide change')} onSwiper={(swiper) => console.log(swiper)}>
               {data?.data.list.map((e)=> {
               return( <SwiperSlide>
               <Link className="text_link" to = {`/TravelDetail/${e.id}`} state={e}>
@@ -103,12 +101,14 @@ function Recommend() {
     <div>
      <div className="title"><h4>추천순</h4><Link className="text_link" to= "./"><h6>전체보기</h6></Link></div>
       <div className="swipe">
-            <Swiper spaceBetween={0} slidesPerView={4} onSlideChange={() => console.log('slide change')} onSwiper={(swiper) => console.log(swiper)}>
+            <Swiper spaceBetween={10} slidesPerView={4} onSlideChange={() => console.log('slide change')} onSwiper={(swiper) => console.log(swiper)}>
               {data?.data.list.map((e)=> {
               return( <SwiperSlide>
               <Link className="text_link" to = {`/TravelDetail/${e.id}`}state={e}>
                   <div class ="swipe_div">
+                  <div class ="swipe_imgbox">
                         <img class="swipe_img"  key={e.id}  src={e.image} alt="Second slide"/>
+                        </div>
                         <div>
                             <h5  className="swipe_h5" key={e.id}>{e.location} {e.name}</h5>
                         </div>
@@ -183,8 +183,9 @@ class Main extends React.Component{
               <Rank/>
               <Recommend/>
                <div style={{width: "50%", margin:"0 auto"}}>
-              <Notice />
-              <Course/>
+              {/* <Notice />
+              <Course/> */}
+        
               </div> 
           </div>
       );
