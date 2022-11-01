@@ -22,6 +22,8 @@ padding:5px;
 text-align:center;
     img{
         width:100%;
+        object-fit: cover;
+        height:12vh;
     }
     a{
         text-decoration: none;
@@ -215,6 +217,8 @@ function CreateCourse(props) {
     const location = useLocation();
     const state = location.state;
 
+    console.log(state);
+
     const [courseData, setCourseData] = useState(null)
     const [courseOption, setCourseOption] = useState(0)
     //0:trafast, 1:tracomfort, 2:traoptimal
@@ -259,7 +263,7 @@ function CreateCourse(props) {
             state.forEach((item, i) => {
                 console.log(i)
                 let marker = new naver.maps.Marker({
-                    position: new naver.maps.LatLng(item.lat, item.lng),
+                    position: new naver.maps.LatLng(item.latitude, item.longitude),
                     map,
                 });
 
@@ -357,7 +361,7 @@ function CreateCourse(props) {
             state.forEach((item, i) => {
                 console.log(i)
                 let marker = new naver.maps.Marker({
-                    position: new naver.maps.LatLng(item.lat, item.lng),
+                    position: new naver.maps.LatLng(item.latitude, item.longitude),
                     map,
                 });
 
@@ -471,7 +475,6 @@ function CreateCourse(props) {
 
             let tmp = []
             state.forEach((item, index)=>{
-
                 index = index+1;
                 tmp.push(
                     {id:item.travelId, orderno:index});}
@@ -485,29 +488,6 @@ function CreateCourse(props) {
                     "name": name,
 
                     "courseOrders": coursesave
-                    // [
-                    //     {
-                    //         "travelId": points[0].travelId,
-                    //         "orderNo" : 1
-                    //     },
-                    //     {
-                    //         "travelId":  points[1].travelId,
-                    //         "orderNo" : 2
-                    //     },
-                    //     {
-                    //         "travelId":  points[2].travelId,
-                    //         "orderNo" : 3
-                    //     },
-                    //     {
-                    //         "travelId":  points[3].travelId,
-                    //         "orderNo" : 4
-                    //     },
-                    //     {
-                    //         "travelId":  points[4].travelId,
-                    //         "orderNo" : 5
-                    //     }
-                    // ]
-
             })
         }
 
