@@ -1,0 +1,78 @@
+header{
+ font-family: 'SUIT';
+ width: 62%;
+ margin: 0 auto;   
+ padding-top: 40px;
+ padding-bottom: 10px;
+ color: black;
+}
+
+nav{
+    display: flex;
+    justify-content: space-around;
+}
+
+ul {
+    list-style: none;
+    display:flex;
+    justify-content: space-around;
+    margin: auto !important;
+}
+
+header ul >li{
+    text-decoration: none; 
+    height: 100%;
+	display: flex;
+	align-items: center;
+    margin-right: 20px;
+    color: black;
+  
+}
+header ul >div>li{
+    text-decoration: none; 
+    height: 100%;
+	display: flex;
+	align-items: center;
+    margin-right: 10px;
+}
+
+header ul >Link>li{
+    text-decoration: none; 
+    height: 100%;
+	display: flex;
+	align-items: center;
+    margin-right: 10px;
+}
+
+header ul li a{
+    color: black;
+}
+
+
+.search {
+    position: relative;
+    width: 300px;
+    margin:auto;
+  }
+  
+ .search input {
+    width: 90%;
+    border: none;
+    background-color:  rgb(245, 245, 245);
+    border-radius: 20px;
+    padding: 10px 12px;
+    font-size: 14px;
+    float: right;
+  }
+  
+  .search_button {
+    position : absolute;
+    width: 17px;
+    top: 5px;
+    right: 12px;
+    margin: 0;
+  }
+
+  .group{
+    display: flex;
+  }
