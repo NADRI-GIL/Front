@@ -60,7 +60,7 @@ font-family: 'SUIT';
         font-size:0.6vw;
         margin:auto;
 
-        h5{
+        h5{g
           font-weight: bolder;
         }
 `
