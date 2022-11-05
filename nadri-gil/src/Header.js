@@ -23,7 +23,7 @@ const Header = () => {
             <nav>
                 <div className="group">
                 <div>
-                    <h1><a style={{color:"black"}} href="../">나드리길</a></h1>
+                    <h1><a style={{color:"black"}} href="/">나드리길</a></h1>
                 </div>
                 <ul>
                 <li><a href="/travelList">지역</a></li>
