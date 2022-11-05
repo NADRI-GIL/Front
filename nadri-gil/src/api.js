@@ -146,3 +146,28 @@ export const getHeart = async (data) => {
     .then((response) => response.json());
 }
 
+export const postReviewImage = async () => {
+  return fetch(`${URL}/upload`, {
+    method: "post",
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  })
+    .then((response) => response.json());
+}
+
+
+// export const getMostHeart = async () => {
+//   return fetch(`${URL}/travels/heart`, {
+//     method: "get",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+
+//   })
+//     .then((response) => response.json());
+// }
+
+export const  getMostHeart  = async (data) => {
+  return axios.get(`${URL}/travels/heart`);
+}

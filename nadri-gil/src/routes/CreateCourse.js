@@ -515,7 +515,7 @@ function CreateCourse(props) {
             {courseOption === 0? <Menus onClick={() => {setCourseOption(0)}}><p style={{borderBottom:"0.5vh solid #3366ff", paddingBottom:"1vh"}}>실시간 빠른길</p></Menus>:<Menus onClick={() => {setCourseOption(0); optionhaddle(0)}}><p style={{borderBottom:"0.5vh solid white", paddingBottom:"1vh"}}>실시간 빠른길</p></Menus>}
             {courseOption === 1? <Menus onClick={() =>{setCourseOption(1)}}><p style={{borderBottom:"0.5vh solid #3366ff", paddingBottom:"1vh"}}>실시간 편한길</p></Menus>:<Menus onClick={() =>{setCourseOption(1); optionhaddle(1)}}><p style={{borderBottom:"0.5vh solid white", paddingBottom:"1vh"}}>실시간 편한길</p></Menus>}
             {courseOption === 2? <Menus onClick={() => {setCourseOption(2)}}><p style={{borderBottom:"0.5vh solid #3366ff", paddingBottom:"1vh"}}>실시간 최적</p></Menus>:<Menus onClick={() =>{setCourseOption(2); optionhaddle(2)}}><p style={{borderBottom:"0.5vh solid white", paddingBottom:"1vh"}}>실시간 최적</p></Menus>}
-            </Menu>
+            </Menu> 
             <TotalDistance>
                 {targetData!=null?targetData.summary.duration>3600000?'총 '+(targetData.summary.distance/1000).toFixed(2)+'km':'총'+(targetData.summary.distance).toFixed(2)+"m":''}
             {targetData!=null?targetData.summary.duration>3600000?', '+(parseInt(targetData.summary.duration/3600000))+'시간 '+((targetData.summary.duration%3600000)/60000).toFixed(0)+'분 소요':', '+(targetData.summary.duration/60000).toFixed(2)+"분 소요":''}

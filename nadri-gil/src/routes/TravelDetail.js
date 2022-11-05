@@ -3,12 +3,15 @@ import { useLocation, Link, useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { AiOutlineHeart, AiFillStar, AiFillHeart, AiFillFilter } from 'react-icons/ai';
 import { RiRoadMapLine, RiRoadMapFill } from "react-icons/ri";
-import { QueryClient, useMutation, useQuery } from "react-query";
-import { getTravelDetail, postCart,getHeart, postHeart } from "../api.js";
+import { Mutation, QueryClient, useMutation, useQuery } from "react-query";
+import { getTravelDetail, postCart,getHeart, postHeart, postReviewImage } from "../api.js";
 import "./Main.css";
 import styled from "styled-components";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
+import axios from 'axios';
+
 const Container = styled.div`
 width: 50%;
 margin: 0 auto;
@@ -179,6 +182,11 @@ function Detail(){
         });
    
         const likemutation = useMutation(getHeart, {
+          cacheTime: Infinity,
+          staleTime: Infinity,
+          refetchOnMount: false,
+          refetchOnWindowFocus: false,
+          retry: 0,
           onSuccess: data => {
               console.log(data);
               if (data.resultCode == 0) {
@@ -216,6 +224,7 @@ function Detail(){
         const [cart, setCart] = useState(true);
     
         const { mutate, isLoading } = useMutation(postCart, {
+         
           onSuccess: data => {
             if (data.resultCode === 0) {
               alert(data.resultMsg)
@@ -249,7 +258,64 @@ function Detail(){
 
       const [hovered, setHovered] = useState(null);
       const [clicked, setClicked] = useState(null);
+      const [ImgLoading,setImgLoading] =useState(null);
+
+ 
+
+    const PutImage = ()=> {
+
+         const postImage = useMutation(postReviewImage, {
+          retry:2,
+      onSuccess: data => {
+        if (data.resultCode == 0) {
+          setImg(img);
+          alert(data.resultMsg)
+        }
+        else {
+          alert(data.resultMsg)
+        }
+      },  
+    });
+
+      const [img, setImg] = useState('');
+      const [imgdata , setImgdata] = useState([])
       
+      const uploadProfile = (e) =>{
+        const img = e.target.files[0];
+        const formData = new FormData();
+
+        formData.append('s3upload', img);
+        console.log(formData);
+
+    axios.post(`http://13.124.150.86:8080/upload`,
+    formData,{
+      headers:{
+        "Content-Type": "multipart/form-data",
+      }
+    }).then(function(response){
+      console.log(response);
+      console.log("daa");
+      setImgdata(response.data);
+      console.log(imgdata);
+      console.log("datalist확인");
+    })
+      .catch(err=>{
+        console.log(err);
+      });
+       
+      console.log(imgdata);
+          }
+
+      return (
+        <div>
+            <img src={img}></img>
+                    <input enctype="multipart/form-data"  onChange ={uploadProfile} type='file' accept='image/*' id = 'file' name = 'file' />
+        </div>
+      )
+
+    }
+
+
     return(
         <Container>
                     {data?.data.list.map((e) => {
@@ -295,7 +361,9 @@ function Detail(){
                     <input placeholder='리뷰를 남겨주세요' type="text"></input>
                     </HiddenReview>
                     ))}
-                </Review>
+                </Review>   
+                {/* <button onClick = {handleButtonClick}>파일업로드</button> */}
+                  <PutImage></PutImage>
             </Content>
             )
         })}
