@@ -121,7 +121,7 @@ function Detail(){
     let {id} = useParams();
     const loginid = JSON.parse(localStorage.getItem("recoil-persist"));
 
-    const { data } = useQuery('TravelDetail', () => getTravelDetail(id), {
+    const { data } = useQuery(['TravelDetail', id], () => getTravelDetail(id), {
         cacheTime: Infinity,
             staleTime: Infinity,
             refetchOnMount: false,
