@@ -155,3 +155,13 @@ export const getInfo = async (loginId) => {
   })
     .then((response) => response.json());
 }
+
+export const getViewCourse = async (courseId) => {
+  return fetch(`${URL}/courses/detail/${courseId}`, {
+    method: "get",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json());
+}
