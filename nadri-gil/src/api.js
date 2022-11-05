@@ -146,3 +146,12 @@ export const getHeart = async (data) => {
     .then((response) => response.json());
 }
 
+export const getInfo = async (loginId) => {
+  return fetch(`${URL}/users/mypage/${loginId}`, {
+    method: "get",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json());
+}
