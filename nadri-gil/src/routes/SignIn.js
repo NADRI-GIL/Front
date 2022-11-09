@@ -125,7 +125,7 @@ function SignIn(){
             <div style={{ textAlign: "center"}}>
             <CompleteButton onClick={onClickLogin}>로그인</CompleteButton>
             <br></br>
-            <Text href="/signUp">회원가입</Text>
+            <Link to="/signUp"><Text>회원가입</Text></Link>
             </div>
             
             </LoginContainer>
