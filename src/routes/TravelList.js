@@ -1,9 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import "../index.css"
-import {Link } from 'react-router-dom';
-
 
 
 import { getTravelsAll } from "../api.js"
@@ -101,7 +99,7 @@ border:1px solid #3366ff;
 background-color:white;
 `
 function TravelList() {
-    const { isLoading, data, isFetching } = useQuery("travelData", getTravelsAll, {
+    const { isLoading, data } = useQuery("travelData", getTravelsAll, {
         cacheTime: Infinity,
         staleTime: Infinity,
         refetchOnMount: false,
@@ -119,11 +117,83 @@ function TravelList() {
         }
     });
 
-    
+    // const data = [
+    //     {
+    //         "id": 1,
+    //         "name": "여행지 명1",
+    //         "location": "지역(분류)",
+    //         "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
+    //     },
+    //     {
+    //         "id": 2,
+    //         "name": "여행지 명2",
+    //         "location": "지역(분류)",
+    //         "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
+    //     },
+    //     {
+    //         "id": 3,
+    //         "name": "여행지 명3",
+    //         "location": "지역(분류)",
+    //         "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
+    //     },
+    //     {
+    //         "id": 4,
+    //         "name": "여행지 명4",
+    //         "location": "지역(분류)",
+    //         "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
+    //     },
+    //     {
+    //         "id": 1,
+    //         "name": "여행지 명1",
+    //         "location": "지역(분류)",
+    //         "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
+    //     },
+    //     {
+    //         "id": 2,
+    //         "name": "여행지 명2",
+    //         "location": "지역(분류)",
+    //         "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
+    //     },
+    //     {
+    //         "id": 3,
+    //         "name": "여행지 명3",
+    //         "location": "지역(분류)",
+    //         "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
+    //     },
+    //     {
+    //         "id": 4,
+    //         "name": "여행지 명4",
+    //         "location": "지역(분류)",
+    //         "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
+    //     }, {
+    //         "id": 1,
+    //         "name": "여행지 명1",
+    //         "location": "지역(분류)",
+    //         "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
+    //     },
+    //     {
+    //         "id": 2,
+    //         "name": "여행지 명2",
+    //         "location": "지역(분류)",
+    //         "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
+    //     },
+    //     {
+    //         "id": 3,
+    //         "name": "여행지 명3",
+    //         "location": "지역(분류)",
+    //         "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
+    //     },
+    //     {
+    //         "id": 4,
+    //         "name": "여행지 명4",
+    //         "location": "지역(분류)",
+    //         "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
+    //     }
+    // ]
     const OPTIONS = ['경기', '경북', '경남', '서울', '부산', '대구', '인천', '광주', '대전', '울산', '세종', '강원',
         '충북', '충남', '전북', '전남', '제주'];
 
-    const [travelList, setTravelList] = useState([]);
+    const [travelList, setTravelList] = useState(data);
     const [fieldValue, setFieldValue] = useState([]);
     const [selectState, setSelectState] = useState(false);
     const [limit, setLimit] = useState(24);
@@ -162,13 +232,6 @@ function TravelList() {
         setCurrentPage(tmp[0])
 
     }
-    useEffect(()=>{
-        if(data&&travelList.length===0){
-            setTravelList(data.list)
-        }
-        console.log(travelList)
-
-    },[travelList])
 
     return (
         <Container>
@@ -193,13 +256,13 @@ function TravelList() {
             </SelectContainer>
             <ContentList>
 
-                {travelList.length===0 ? 'loading...' : travelList.slice(offset, offset+limit).map((item) => {
+                {isLoading ? 'loading...' : travelList.slice(offset, offset+limit).map((item) => {
                     return (
                         <Content>
-                            <Link to={`/TravelDetail/${item.id}`}>
+                            <a href={`/TravelDetail/${item.id}`}>
                                 <img src={item.image}></img>
                                 <p>{item.name}</p>
-                            </Link>
+                            </a>
                         </Content>
                         
                     )

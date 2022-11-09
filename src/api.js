@@ -77,7 +77,7 @@ export const directions5api = async (direction) => {
       if(i < direction.length - 2) waypoints += '|'
     }
   }
-  return fetch(`/api/map-direction-15/v1/driving?start=${start}&goal=${goal}&option=trafast:tracomfort:traoptimal&waypoints=${waypoints}`, {
+  return fetch(`/api/map-direction/v1/driving?start=${start}&goal=${goal}&option=trafast:tracomfort:traoptimal&waypoints=${waypoints}`, {
     method: "get",
     headers: {
       "Content-Type": "application/json",
@@ -146,22 +146,3 @@ export const getHeart = async (data) => {
     .then((response) => response.json());
 }
 
-export const getInfo = async (loginId) => {
-  return fetch(`${URL}/users/mypage/${loginId}`, {
-    method: "get",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-    .then((response) => response.json());
-}
-
-export const getViewCourse = async (courseId) => {
-  return fetch(`${URL}/courses/detail/${courseId}`, {
-    method: "get",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-    .then((response) => response.json());
-}

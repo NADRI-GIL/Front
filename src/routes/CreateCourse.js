@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from "styled-components";
 import { useMutation, useQuery } from "react-query";
 import { directions5api, postCourse } from "../api.js"
-import { useLocation } from 'react-router-dom';
+import { useLocation} from 'react-router-dom';
 import "../index.css"
 
 
@@ -330,24 +330,22 @@ function CreateCourse(props) {
                 map: map           //오버레이할 지도
             });
             let info = []
-            courseData.trafast[0].summary.waypoints.forEach((item) => {
-                info.push({
-                    distance: item.distance,
-                    duration: item.duration
-                })
+            courseData.trafast[0].summary.waypoints.forEach((item)=>{
+                info.push({distance:item.distance,
+                duration:item.duration})
             })
-            info.push({ distance: courseData.trafast[0].summary.goal.distance, duration: courseData.trafast[0].summary.goal.duration })
+            info.push({distance:courseData.trafast[0].summary.goal.distance, duration:courseData.trafast[0].summary.goal.duration})
             setCourseInfo([...info])
         }
 
     }, [courseData])
     const optionhaddle = (index) => {
         let target = null
-        if (index === 0) target = courseData.trafast[0];
-        else if (index === 1) target = courseData.tracomfort[0]
-        else if (index === 2) target = courseData.traoptimal[0]
+        if(index===0) target=courseData.trafast[0];
+        else if(index===1) target=courseData.tracomfort[0]
+        else if(index===2) target=courseData.traoptimal[0]
         setTargetData(target)
-        console.log(target, index)
+        console.log(target,index)
         if (target != null) {
             const { naver } = window;
 
@@ -430,13 +428,11 @@ function CreateCourse(props) {
                 map: map           //오버레이할 지도
             });
             let info = []
-            target.summary.waypoints.forEach((item) => {
-                info.push({
-                    distance: item.distance,
-                    duration: item.duration
-                })
+            target.summary.waypoints.forEach((item)=>{
+                info.push({distance:item.distance,
+                duration:item.duration})
             })
-            info.push({ distance: target.summary.goal.distance, duration: target.summary.goal.duration })
+            info.push({distance:target.summary.goal.distance, duration:target.summary.goal.duration})
             setCourseInfo([...info])
         }
 
@@ -446,66 +442,69 @@ function CreateCourse(props) {
 
 
 
-    const { } = props;
-    const [popup, handlePopup] = useState(false);
-    const [coursesave, setcoursesave] = useState([]);
-
-    const Popup = (props) => {
-
+    const {} = props;
+    const[popup, handlePopup] = useState(false);
+    const[coursesave, setcoursesave] = useState([]);
+       
+    const Popup = (props) =>{
+    
         const [name, setName] = useState("")
 
-        const { onClose } = props;
+        const {onClose} = props;
         const onNameHandler = (event) => {
             setName(event.currentTarget.value)
         }
         const { mutate } = useMutation(postCourse, {
             onSuccess: data => {
-                // console.log(data);
-                if (data.resultCode === 0) {
-                    alert(data.resultMsg)
-                }
-                else {
-                    alert(data.resultMsg)
-                }
+              // console.log(data);
+              if (data.resultCode === 0) {
+                alert(data.resultMsg)
+              }
+              else {
+                alert(data.resultMsg)
+              }
             },
             onError: () => {
                 console.log("error");
             },
-
-        });
+        
+          });
 
         const onClickshare = () => {
-            console.log(loginid.loginId, name, state[0].travelId)
+            console.log(loginid.loginId, name,state[0].travelId)
 
             let tmp = []
-            state.forEach((item, index) => {
+            state.forEach((item, index)=>{
+                index = index+1;
                 tmp.push(
-                    { travelId: item.travelId, orderNo: index + 1 });
-            }
-            )
-            setcoursesave(tmp);
+                    {id:item.travelId, orderno:index});}
+                )
+                console.log(tmp);
+                
+                setcoursesave(tmp);
+                
             mutate({
-                "loginId": loginid.loginId,
-                "name": name,
-                "courseOrders": tmp
+                    "loginId":  loginid.loginId,
+                    "name": name,
+
+                    "courseOrders": coursesave
             })
         }
 
-        return (
+        return(
             <Popupdiv>
                 <Header>
                     <h4>코스만들기</h4>
                 </Header>
                 <Main>
-                    <h5>제목을 입력하세요</h5>
-                    <input type="text" onChange={onNameHandler} ></input>
+                <h5>제목을 입력하세요</h5>
+                <input type ="text" onChange={onNameHandler} ></input>
                 </Main>
                 <Footer>
-                    <button onClick={() => {
-                        onClose(false)
-                        onClickshare()
-                    }} >제출</button>
-                </Footer>
+                <button onClick={() => {
+                    onClose(false)
+                     onClickshare()}} >제출</button>
+                    </Footer>
             </Popupdiv>
         )
     }
@@ -513,33 +512,33 @@ function CreateCourse(props) {
     return (
         <Container>
             <Menu>
-                {courseOption === 0 ? <Menus onClick={() => { setCourseOption(0) }}><p style={{ borderBottom: "0.5vh solid #3366ff", paddingBottom: "1vh" }}>실시간 빠른길</p></Menus> : <Menus onClick={() => { setCourseOption(0); optionhaddle(0) }}><p style={{ borderBottom: "0.5vh solid white", paddingBottom: "1vh" }}>실시간 빠른길</p></Menus>}
-                {courseOption === 1 ? <Menus onClick={() => { setCourseOption(1) }}><p style={{ borderBottom: "0.5vh solid #3366ff", paddingBottom: "1vh" }}>실시간 편한길</p></Menus> : <Menus onClick={() => { setCourseOption(1); optionhaddle(1) }}><p style={{ borderBottom: "0.5vh solid white", paddingBottom: "1vh" }}>실시간 편한길</p></Menus>}
-                {courseOption === 2 ? <Menus onClick={() => { setCourseOption(2) }}><p style={{ borderBottom: "0.5vh solid #3366ff", paddingBottom: "1vh" }}>실시간 최적</p></Menus> : <Menus onClick={() => { setCourseOption(2); optionhaddle(2) }}><p style={{ borderBottom: "0.5vh solid white", paddingBottom: "1vh" }}>실시간 최적</p></Menus>}
+            {courseOption === 0? <Menus onClick={() => {setCourseOption(0)}}><p style={{borderBottom:"0.5vh solid #3366ff", paddingBottom:"1vh"}}>실시간 빠른길</p></Menus>:<Menus onClick={() => {setCourseOption(0); optionhaddle(0)}}><p style={{borderBottom:"0.5vh solid white", paddingBottom:"1vh"}}>실시간 빠른길</p></Menus>}
+            {courseOption === 1? <Menus onClick={() =>{setCourseOption(1)}}><p style={{borderBottom:"0.5vh solid #3366ff", paddingBottom:"1vh"}}>실시간 편한길</p></Menus>:<Menus onClick={() =>{setCourseOption(1); optionhaddle(1)}}><p style={{borderBottom:"0.5vh solid white", paddingBottom:"1vh"}}>실시간 편한길</p></Menus>}
+            {courseOption === 2? <Menus onClick={() => {setCourseOption(2)}}><p style={{borderBottom:"0.5vh solid #3366ff", paddingBottom:"1vh"}}>실시간 최적</p></Menus>:<Menus onClick={() =>{setCourseOption(2); optionhaddle(2)}}><p style={{borderBottom:"0.5vh solid white", paddingBottom:"1vh"}}>실시간 최적</p></Menus>}
             </Menu>
             <TotalDistance>
-                {targetData != null ? targetData.summary.duration > 3600000 ? '총 ' + (targetData.summary.distance / 1000).toFixed(2) + 'km' : '총' + (targetData.summary.distance).toFixed(2) + "m" : ''}
-                {targetData != null ? targetData.summary.duration > 3600000 ? ', ' + (parseInt(targetData.summary.duration / 3600000)) + '시간 ' + ((targetData.summary.duration % 3600000) / 60000).toFixed(0) + '분 소요' : ', ' + (targetData.summary.duration / 60000).toFixed(2) + "분 소요" : ''}
+                {targetData!=null?targetData.summary.duration>3600000?'총 '+(targetData.summary.distance/1000).toFixed(2)+'km':'총'+(targetData.summary.distance).toFixed(2)+"m":''}
+            {targetData!=null?targetData.summary.duration>3600000?', '+(parseInt(targetData.summary.duration/3600000))+'시간 '+((targetData.summary.duration%3600000)/60000).toFixed(0)+'분 소요':', '+(targetData.summary.duration/60000).toFixed(2)+"분 소요":''}
             </TotalDistance>
-            <Hr />
+            <Hr/>
             <ContentList>
-                {state.map((item, i) => {
+            {state.map((item, i) => {
                     return (
                         <CourseContent>
-                            <Distance>{courseInfo[i - 1] != undefined ? courseInfo[i - 1].distance > 1000 ? '-' + (courseInfo[i - 1].distance / 1000).toFixed(2) + 'km' + '→' : '-' + (courseInfo[i - 1].distance).toFixed(2) + "m→" : ''}<br>
-                            </br>
-                                {courseInfo[i - 1] != undefined ? courseInfo[i - 1].duration > 3600000 ? '-' + (courseInfo[i - 1].duration / 3600000).toFixed(0) + '시간' + '→' : '-' + (courseInfo[i - 1].duration / 60000).toFixed(0) + "분→" : ''}</Distance>
-                            <Content>
+                            <Distance>{courseInfo[i-1]!=undefined?courseInfo[i-1].distance>1000?'-'+(courseInfo[i-1].distance/1000).toFixed(2)+'km'+'→':'-'+(courseInfo[i-1].distance).toFixed(2)+"m→":''}<br>
+                        </br>
+                        {courseInfo[i-1]!=undefined?courseInfo[i-1].duration>3600000?'-'+(courseInfo[i-1].duration/3600000).toFixed(0)+'시간'+'→':'-'+(courseInfo[i-1].duration/60000).toFixed(0)+"분→":''}</Distance>
+                        <Content>
                                 <img src={item.image}></img>
-                                <p>{item.name}</p>
-                            </Content>
+                                <p>{item.name}</p>    
+                        </Content>
                         </CourseContent>
                     )
                 })}
             </ContentList>
             <MapContainer id="map"></MapContainer>
-            <CompleteButton onClick={() => { handlePopup(true); }}>내가 만든 코스 공유하기 -&gt;</CompleteButton>
-            {popup && <Popup onClose={handlePopup} />}
+            <CompleteButton onClick = {()=>{handlePopup(true);}}>내가 만든 코스 공유하기 -&gt;</CompleteButton>
+            {popup && <Popup onClose ={handlePopup}/>}
         </Container>
     )
 };

@@ -23,13 +23,13 @@ const Header = () => {
             <nav>
                 <div className="group">
                 <div>
-                    <h1><Link style={{color:"black"}} to="/">나드리길</Link></h1>
+                    <h1><a style={{color:"black"}} href="../">나드리길</a></h1>
                 </div>
                 <ul>
-                <li><Link to="/travelList">지역</Link></li>
-                <li><Link to="/">인기</Link></li>
-                <li><Link to="/">코스</Link></li>
-                <li><Link to="/Notice">공지사항</Link></li>
+                <li><a href="/travelList">지역</a></li>
+                <li><a href="/">인기</a></li>
+                <li><a href="/">코스</a></li>
+                <li><a href="/Notice">공지사항</a></li>
             </ul>
             
             <div className="search">
@@ -38,7 +38,7 @@ const Header = () => {
   </div></div>
                 {isLogined ?
                     <ul>
-                        <li><Link to="/mypage/mypageinfo">마이페이지</Link></li>
+                        <li><a href="/mypage/mypageinfo">마이페이지</a></li>
                         <div onClick={onClickLogOut}>
                         <li>로그아웃</li>
                         </div>
