@@ -201,12 +201,12 @@ function TravelListHeart() {
                 {pageList.map((item)=>{
                     if(item === currentPage){
                         return(
-                            <CurrentPageButton onClick={()=>{setCurrentPage(item);window.scrollTo(0, 0);}}>{item}</CurrentPageButton>
+                            <CurrentPageButton onClick={()=>{window.scrollTo(0, 0);setCurrentPage(item);}}>{item}</CurrentPageButton>
                         )
                     }
                     else{
                     return(
-                    <PageButton onClick={()=>{setCurrentPage(item);window.scrollTo(0, 0);}}>{item}</PageButton>
+                    <PageButton onClick={()=>{window.scrollTo(0, 0);setCurrentPage(item);}}>{item}</PageButton>
                     )
                     }
                 })}
