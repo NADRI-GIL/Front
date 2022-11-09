@@ -152,11 +152,13 @@ function TravelList() {
         }
     }
     const previousPageList=()=>{
+        window.scrollTo(0, 0);
         let tmp = pageList.map((item)=> item-5)
         setPageList([...tmp])
         setCurrentPage(tmp[0])
     }
     const nextPageList=()=>{
+        window.scrollTo(0, 0);
         let tmp = pageList.map((item)=> item+5)
         setPageList([...tmp])
         setCurrentPage(tmp[0])
@@ -213,12 +215,12 @@ function TravelList() {
                 {pageList.map((item)=>{
                     if(item === currentPage){
                         return(
-                            <CurrentPageButton onClick={()=>setCurrentPage(item)}>{item}</CurrentPageButton>
+                            <CurrentPageButton onClick={()=>{window.scrollTo(0, 0);setCurrentPage(item);}}>{item}</CurrentPageButton>
                         )
                     }
                     else{
                     return(
-                    <PageButton onClick={()=>setCurrentPage(item)}>{item}</PageButton>
+                    <PageButton onClick={()=>{window.scrollTo(0, 0);setCurrentPage(item);}}>{item}</PageButton>
                     )
                     }
                 })}
