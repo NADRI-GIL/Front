@@ -127,6 +127,7 @@ function MyPageCourse(){
         }
     }
     const createCourseButton = () =>{
+        console.log(courseData)
         // navigate('/createcourse', {coursePoints:{courseData}})
     }
  
