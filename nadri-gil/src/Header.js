@@ -27,7 +27,7 @@ const Header = () => {
                 </div>
                 <ul>
                 <li><Link to="/travelList">지역</Link></li>
-                <li><Link to="/">인기</Link></li>
+                <li><Link to="/travelListHeart">인기</Link></li>
                 <li><Link to="/">코스</Link></li>
                 <li><Link to="/Notice">공지사항</Link></li>
             </ul>
