@@ -1,8 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom"
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 import "../../index.css"
+
+import { getHeart} from "../../api.js"
+import { useMutation } from "react-query";
+
+import { loginIdAtom } from "../../atom.js"
+import { useRecoilValue } from "recoil";
 
 const Container = styled.div`
 h3{font-family: 'SUIT';}
@@ -42,50 +48,42 @@ text-align:center;
     }
 `;
 function MyPageHeartList(){
-    const data = [
-            {
-                "id": 1,
-                "name": "여행지 명1",
-                "location": "지역(분류)",
-                "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
-            },
-            {
-                "id": 2,
-                "name": "여행지 명2",
-                "location": "지역(분류)",
-                "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
-            },
-            {
-                "id": 3,
-                "name": "여행지 명3",
-                "location": "지역(분류)",
-                "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
-            },
-            {
-                "id": 4,
-                "name": "여행지 명4",
-                "location": "지역(분류)",
-                "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
-            },
-            {
-                "id": 1,
-                "name": "여행지 명1",
-                "location": "지역(분류)",
-                "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
-            },]
+    const loginId = useRecoilValue(loginIdAtom)
+    const [heartData, setHeartData] = useState([]);
+
+    const { mutate, isLoading } = useMutation(getHeart, {
+        onSuccess: data => {
+            console.log(data);
+            if (data.resultCode === 0) {
+                setHeartData(data.list)
+            }
+            else {
+                alert(data.resultMsg)
+            }
+        },
+        onError: () => {
+            alert("there was an error")
+        },
+
+    });
+
+    useEffect(()=>{
+        mutate({"loginId":loginId})
+    }, [])
+    
     return(
         <Container>
         <h3>찜한 여행지</h3>
         <Hr></Hr>
         <ContentList>
                 
-                {data.map((item) => {
+                {heartData?.map((item) => {
                     return (
                         <Content>
-                            <a href="">
+                            <Link to={`/TravelDetail/${item.travelId}`}>
                                 <img src={item.image}></img>
                                 <p>{item.name}</p>
-                            </a>
+                            </Link>
                         </Content>
                     )
                 })
