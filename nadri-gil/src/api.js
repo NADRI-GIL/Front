@@ -133,6 +133,16 @@ export const getCourse = async (data) => {
     .then((response) => response.json());
 }
 
+export const deleteCourse = async (courseId) => {
+  return fetch(`${URL}/courses/delete/${courseId}`, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json());
+}
+
 export const postHeart = async (data) => {
   return fetch(`${URL}/hearts/add`, {
     method: "post",

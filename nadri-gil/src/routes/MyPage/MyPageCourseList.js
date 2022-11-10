@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 import "../../index.css"
 
-import { getCourse} from "../../api.js"
+import { getCourse, deleteCourse} from "../../api.js"
 import { useMutation } from "react-query";
 
 import { isLoginedAtom, loginIdAtom } from "../../atom.js"
@@ -98,9 +98,24 @@ function MyPageCourse(){
 
     const { mutate, isLoading } = useMutation(getCourse, {
         onSuccess: data => {
-            console.log(data);
             if (data.resultCode === 0) {
                 setCourseData(data.list)
+            }
+            else {
+                alert(data.resultMsg)
+            }
+        },
+        onError: () => {
+            alert("there was an error")
+        },
+
+    });
+
+    const { mutate:deleteMutate, isLoading:isDeleteLoading } = useMutation(deleteCourse, {
+        onSuccess: data => {
+            if (data.resultCode === 0) {
+                alert('삭제되었습니다.')
+                mutate({"loginId":loginId})
             }
             else {
                 alert(data.resultMsg)
@@ -115,6 +130,13 @@ function MyPageCourse(){
     useEffect(()=>{
         mutate({"loginId":loginId})
     }, [])
+
+    const onClinkDeleteCourse = (courseId, courseName) => {
+        if(window.confirm(`"${courseName}"을 삭제하시겠습니까?`)){
+            deleteMutate(courseId)
+        }
+        
+    }
  
     return(
         <Container>
@@ -129,7 +151,7 @@ function MyPageCourse(){
                                 <StyledLink to ={`/viewcourse/${item.id}`}>
                                 <Title>{item.name}</Title>
                                 </StyledLink>
-                                <Delete>삭제</Delete>
+                                <Delete onClick={()=>{onClinkDeleteCourse(item.id, item.name)}}>삭제</Delete>
                                 </div>
                                 <StyledLink to ={`/viewcourse/${item.id}`}>
                                 <div style={{ borderLeft: "0.2vw solid #3366ff", marginTop:"2vh"}}>
