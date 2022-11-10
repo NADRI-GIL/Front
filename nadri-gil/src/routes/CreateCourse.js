@@ -228,7 +228,7 @@ function CreateCourse(props) {
     const [courseInfo, setCourseInfo] = useState([])
 
 
-    const { isLoading, data } = useQuery("createCourse", () => directions5api(state), {
+    const { isLoading, data } = useQuery(["createCourse", state], () => directions5api(state), {
         cacheTime: Infinity,
         staleTime: Infinity,
         refetchOnMount: false,
@@ -272,7 +272,7 @@ function CreateCourse(props) {
                 ${item.name}
                 </p>
                 <span style="font-family: 'SUIT'; font-size:0.6vw; display:inline-block;margin-bottom:0;">
-                ${item.add}
+                ${item.address}
                 <span>
                 </div>`
 
@@ -372,7 +372,7 @@ function CreateCourse(props) {
                 ${item.name}
                 </p>
                 <span style="font-family: 'SUIT'; font-size:0.6vw; display:inline-block;margin-bottom:0;">
-                ${item.add}
+                ${item.address}
                 <span>
                 </div>`
 
@@ -530,8 +530,11 @@ function CreateCourse(props) {
                             </br>
                                 {courseInfo[i - 1] != undefined ? courseInfo[i - 1].duration > 3600000 ? '-' + (courseInfo[i - 1].duration / 3600000).toFixed(0) + '시간' + '→' : '-' + (courseInfo[i - 1].duration / 60000).toFixed(0) + "분→" : ''}</Distance>
                             <Content>
+                            <a href={`/TravelDetail/${item.travelId}`} target='_blank' rel='noreferrer'>
+
                                 <img src={item.image}></img>
                                 <p>{item.name}</p>
+                                </a>
                             </Content>
                         </CourseContent>
                     )
