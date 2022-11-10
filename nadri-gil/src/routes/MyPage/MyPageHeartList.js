@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 import "../../index.css"
@@ -12,6 +12,7 @@ import { useRecoilValue } from "recoil";
 
 const Container = styled.div`
 h3{font-family: 'SUIT';}
+p{font-family: 'SUIT';}
 width:100%;
 padding-left:2vw;
 `
@@ -47,9 +48,24 @@ text-align:center;
         margin-top:1vh;
     }
 `;
+const CompleteButton = styled.button`
+float:right;
+font-family: 'SUIT';
+box-sizing: border-box;
+background-color:#3366ff;
+color:#ffffff;
+border:none;
+border-radius: 10px;
+height: 6vh;
+font-size:0.8vw;
+padding:0 7vh 0 7vh;
+margin:auto;
+margin-top:2vh;
+`
 function MyPageHeartList(){
     const loginId = useRecoilValue(loginIdAtom)
     const [heartData, setHeartData] = useState([]);
+    let navigate = useNavigate();
 
     const { mutate, isLoading } = useMutation(getHeart, {
         onSuccess: data => {
@@ -77,7 +93,13 @@ function MyPageHeartList(){
         <Hr></Hr>
         <ContentList>
                 
-                {heartData?.map((item) => {
+                {heartData?.length === 0 ?
+                <div>
+                <p>아직 찜한 여행지가 없습니다.</p>
+                <CompleteButton type='button' onClick={()=>navigate('/travelList')}>여행지 보러가기 -&gt;</CompleteButton>
+                </div>
+                :
+                heartData.map((item) => {
                     return (
                         <Content>
                             <Link to={`/TravelDetail/${item.travelId}`}>

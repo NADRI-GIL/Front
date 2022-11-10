@@ -12,6 +12,8 @@ import { useRecoilValue } from "recoil";
 
 const Container = styled.div`
 h3{font-family: 'SUIT';}
+p{font-family: 'SUIT';}
+
 width:100%;
 padding-left:2vw;
 `
@@ -140,7 +142,13 @@ function MyPageCourse(){
         <button>&gt;</button>
         </Info> */}
         <ContentList>
-                {cartData?.map((item) => {
+                {cartData?.length === 0?
+                <div>
+                <p>아직 담은 여행지가 없습니다.</p>
+                <CompleteButton type='button' onClick={()=>navigate('/travelList')}>여행지 보러가기 -&gt;</CompleteButton>
+                </div>
+                :
+                cartData?.map((item) => {
                     return (
                         <Content onClick={()=>addCourseData(item)}>
                             <div style={{position:"relative"}}>
@@ -155,9 +163,10 @@ function MyPageCourse(){
                 })
                 }
         </ContentList>
+        {cartData?.length === 0?'':
         <Link to='/createcourse' state={courseData}>
         <CompleteButton type='button' onClick={createCourseButton}>선택한 여행지로 코스 만들러 가기 -&gt;</CompleteButton>
-        </Link>
+        </Link>}
         </Container>
     )
 
