@@ -29,9 +29,10 @@ margin-top:3vh;
 `
 const Content = styled.div`
 width:25%;
-height:22vh;
+// height:22vh;
 padding:5px;
-text-align:center;
+// text-align:center;
+color:black;
 
     img{
         object-fit: cover;
@@ -44,7 +45,7 @@ text-align:center;
 const Title = styled.p`
 margin-top:1vh;
 font-family: 'SUIT';
-font-size:0.8vw;
+font-size:1vw;
 `
 const Name = styled.p`
 font-size:0.6vw;
@@ -108,13 +109,14 @@ function MyPageCourse(){
         <ContentList>
                 {courseData?.map((item) => {
                     return (
-                        <Link to ={`/viewcourse/${item.id}`}>
                         <Content >
+                            <Link to ={`/viewcourse/${item.id}`}>
                                 <Title>{item.name}</Title>
                                 {item.courseTravels.map((travelname)=>
                                 <Name>{travelname.travelName}</Name>)}
+                            </Link>
                         </Content>
-                        </Link>
+                        
                     )
                 })
                 }

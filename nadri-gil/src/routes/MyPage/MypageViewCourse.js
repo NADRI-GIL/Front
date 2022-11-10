@@ -192,7 +192,6 @@ function ViewCourse(props) {
         onSuccess: data => {
             // 성공시 호출
             setviewCourse(data.list[0])
-            console.log('상세 정보 불러오기 성공', data.list[0].courseTravels);
         },
         onError: e => {
             // 실패시 호출 (401, 404 같은 error가 아니라 정말 api 호출이 실패한 경우만 호출됩니다.)
@@ -210,7 +209,6 @@ function ViewCourse(props) {
         onSuccess: data => {
             // 성공시 호출
             setCourseData(data.route)
-            console.log(data.route);
         },
         onError: e => {
             // 실패시 호출 (401, 404 같은 error가 아니라 정말 api 호출이 실패한 경우만 호출됩니다.)
@@ -218,9 +216,20 @@ function ViewCourse(props) {
             console.log(e.message);
         }
     });
+    useEffect(()=>{
+        if(viewCourseData&&viewCourse===null){
+            setviewCourse(viewCourseData.list[0])
+        }
+    },[viewCourseData])
+    
     useEffect(() => {
         console.log(courseData)
+        
+        if(data&&courseData===null){
+            setCourseData(data.route)
+        }
         if (courseData != null) {
+            console.log("qq", courseData)
             setTargetData(courseData.trafast[0])
             const { naver } = window;
 
@@ -496,7 +505,7 @@ function ViewCourse(props) {
             </TotalDistance>
             <Hr />
             <ContentList>
-                {isViewCourseLoading?'loading':viewCourse.courseTravels.map((item, i) => {
+                {isViewCourseLoading?'loading':viewCourse?.courseTravels.map((item, i) => {
                     return (
                         <CourseContent>
                             <Distance>{courseInfo[i - 1] != undefined ? courseInfo[i - 1].distance > 1000 ? '-' + (courseInfo[i - 1].distance / 1000).toFixed(2) + 'km' + '→' : '-' + (courseInfo[i - 1].distance).toFixed(2) + "m→" : ''}<br>
