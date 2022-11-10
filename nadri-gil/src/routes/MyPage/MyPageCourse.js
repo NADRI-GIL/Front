@@ -4,8 +4,9 @@ import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 import "../../index.css"
 
-import { getCart} from "../../api.js"
+import { getCart, deleteCart } from "../../api.js"
 import { useMutation } from "react-query";
+import { RiDeleteBin5Fill } from 'react-icons/ri';
 
 import { isLoginedAtom, loginIdAtom } from "../../atom.js"
 import { useRecoilValue } from "recoil";
@@ -86,9 +87,14 @@ padding:0 7vh 0 7vh;
 margin:auto;
 margin-top:2vh;
 `
-function MyPageCourse(){
+const DeleteImage = styled.div`
+position:absolute;
+right:2%;
+
+`
+function MyPageCourse() {
     const image = [
-        'https://user-images.githubusercontent.com/58421346/194632471-9da92ca4-b580-4526-a71f-1f169e0f4633.png', 
+        'https://user-images.githubusercontent.com/58421346/194632471-9da92ca4-b580-4526-a71f-1f169e0f4633.png',
         "https://user-images.githubusercontent.com/58421346/194632534-3a77eca2-5adf-4a74-9df1-76999ad9ff71.png",
         "https://user-images.githubusercontent.com/58421346/194632615-aaab4544-ed1f-4b45-9c06-d3c6da718b8c.png",
         "https://user-images.githubusercontent.com/58421346/194632655-cece31a3-2d0f-4e69-8161-4e421ec66094.png",
@@ -114,59 +120,79 @@ function MyPageCourse(){
         },
 
     });
-    useEffect(()=>{
-        mutate({"loginId":loginId})
+    const { mutate: deleteMutate, isLoading: isDeleteLoading } = useMutation(deleteCart, {
+        onSuccess: data => {
+            if (data.resultCode === 0) {
+                alert('삭제되었습니다.')
+                mutate({ "loginId": loginId })
+            }
+            else {
+                alert(data.resultMsg)
+            }
+        },
+        onError: () => {
+            alert("there was an error")
+        },
+
+    });
+    useEffect(() => {
+        mutate({ "loginId": loginId })
     }, [])
     const addCourseData = (travel) => {
-        if(courseData.findIndex(i=>i.travelId == travel.travelId) === -1 ){
-            if(courseData.length < 17) setCourseData([...courseData, travel])
+        if (courseData.findIndex(i => i.travelId == travel.travelId) === -1) {
+            if (courseData.length < 17) setCourseData([...courseData, travel])
             else alert("최대 17개까지 등록할 수 있습니다.")
         }
-        else{
+        else {
             let tmp = [...courseData]
-            tmp.splice(courseData.findIndex(i=>i.travelId == travel.travelId), 1)
+            tmp.splice(courseData.findIndex(i => i.travelId == travel.travelId), 1)
             setCourseData([...tmp])
         }
     }
-    const createCourseButton = () =>{
+    const createCourseButton = () => {
         console.log(courseData)
         // navigate('/createcourse', {coursePoints:{courseData}})
     }
- 
-    return(
+
+    const onClinkDeleteCart = (cartId, travelName) => {
+        if (window.confirm(`"${travelName}"을 삭제하시겠습니까?`)) {
+            deleteMutate(cartId)
+        }
+    }
+    return (
         <Container>
-        <h3>코스 만들기</h3>
-        <Hr></Hr>
-        {/* <Info>
-        <span>선택한 여행지로 코스 만들러 가기</span>
-        <button>&gt;</button>
-        </Info> */}
-        <ContentList>
-                {cartData?.length === 0?
-                <div>
-                <p>아직 담은 여행지가 없습니다.</p>
-                <CompleteButton type='button' onClick={()=>navigate('/travelList')}>여행지 보러가기 -&gt;</CompleteButton>
-                </div>
-                :
-                cartData?.map((item) => {
-                    return (
-                        <Content onClick={()=>addCourseData(item)}>
-                            <div style={{position:"relative"}}>
-                                <BackImage src={item.image}/>
-                                {image[courseData.findIndex(i=>i.travelId ==item.travelId)]!=undefined?
-                                <FrontImage src={image[courseData.findIndex(i=>i.travelId ==item.travelId)]} />:''}
+            <h3>코스 만들기</h3>
+            <Hr></Hr>
+            <ContentList>
+                {cartData?.length === 0 ?
+                    <div>
+                        <p>아직 담은 여행지가 없습니다.</p>
+                        <CompleteButton type='button' onClick={() => navigate('/travelList')}>여행지 보러가기 -&gt;</CompleteButton>
+                    </div>
+                    :
+                    cartData?.map((item) => {
+                        return (
+
+                            <Content>
+                                <div style={{ position: "relative" }}>
+                                    <BackImage src={item.image} onClick={() => addCourseData(item)}/>
+                                    {image[courseData.findIndex(i => i.travelId == item.travelId)] !== undefined ?
+                                        <FrontImage onClick={() => addCourseData(item)} src={image[courseData.findIndex(i => i.travelId == item.travelId)]} /> : <DeleteImage>
+                                            <RiDeleteBin5Fill onClick={() => { onClinkDeleteCart(item.id, item.name) }} size="30" style={{ cursor: 'pointer' }} className="bookmarkFillIcon" />
+                                        </DeleteImage>
+                                    }
                                 </div>
-                                <img src={item.image}/>
-                                <p>{item.name}</p>
-                        </Content>
-                    )
-                })
+                                <img src={item.image}  />
+                                <p  onClick={() => addCourseData(item)}>{item.name}</p>
+                            </Content>
+                        )
+                    })
                 }
-        </ContentList>
-        {cartData?.length === 0?'':
-        <Link to='/createcourse' state={courseData}>
-        <CompleteButton type='button' onClick={createCourseButton}>선택한 여행지로 코스 만들러 가기 -&gt;</CompleteButton>
-        </Link>}
+            </ContentList>
+            {cartData?.length === 0 ? '' :
+                <Link to='/createcourse' state={courseData}>
+                    <CompleteButton type='button' onClick={createCourseButton}>선택한 여행지로 코스 만들러 가기 -&gt;</CompleteButton>
+                </Link>}
         </Container>
     )
 

@@ -109,6 +109,16 @@ export const getCart = async (data) => {
     .then((response) => response.json());
 }
 
+export const deleteCart = async (cartId) => {
+  return fetch(`${URL}/carts/delete/${cartId}`, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json());
+}
+
 export const postCourse = async (data) => {
   return fetch(`${URL}/courses/add`, {
     method: "post",
@@ -165,6 +175,8 @@ export const getHeart = async (data) => {
   })
     .then((response) => response.json());
 }
+
+
 
 export const getInfo = async (loginId) => {
   return fetch(`${URL}/users/mypage/${loginId}`, {
