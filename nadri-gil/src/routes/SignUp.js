@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom"
 import styled from "styled-components";
 import { useMutation } from "react-query";
 import { postSignup } from "../api.js"
+import { isLoginedAtom, loginIdAtom } from "../atom.js"
+import { useSetRecoilState, useRecoilValue } from "recoil";
 import { BsFileX } from 'react-icons/bs';
 
 
@@ -84,15 +86,16 @@ function SignUp() {
     const [nickname, setNickname] = useState("")
 
     let navigate = useNavigate();
-    console.log(id, password);
-
+    const setIsLoginedFn = useSetRecoilState(isLoginedAtom)
+    const setLoginIdFn = useSetRecoilState(loginIdAtom)
     const { mutate, isLoading } = useMutation(postSignup, {
         onSuccess: data => {
-            console.log(data);
             if (data.resultCode === 0) {
                 alert(data.resultMsg)
                 // 로그인 페이지로 이동
-                navigate('/signIn')
+                setIsLoginedFn(true)
+                setLoginIdFn(id)
+                navigate('/preferenceSurvey')
             }
             else {
                 alert(data.resultMsg)

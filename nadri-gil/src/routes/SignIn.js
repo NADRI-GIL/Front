@@ -81,7 +81,7 @@ function SignIn(){
             setIsLoginedFn(true)
             setLoginIdFn(id)
             // 메인 페이지로 이동
-            // navigate('/')
+            navigate('/')
           }
           else{
             alert(data.resultMsg)
@@ -125,7 +125,7 @@ function SignIn(){
             <div style={{ textAlign: "center"}}>
             <CompleteButton onClick={onClickLogin}>로그인</CompleteButton>
             <br></br>
-            <Text href="/signUp">회원가입</Text>
+            <Link to="/signUp"><Text>회원가입</Text></Link>
             </div>
             
             </LoginContainer>
