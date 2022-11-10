@@ -28,6 +28,7 @@ margin:auto;
 margin-top:3vh;
 `
 const Content = styled.div`
+margin-top:1vh;
 width:25%;
 // height:22vh;
 padding:5px;
@@ -43,12 +44,22 @@ color:black;
 
 `;
 const Title = styled.p`
-margin-top:1vh;
+margin:auto 0;
 font-family: 'SUIT';
 font-size:1vw;
 `
 const Name = styled.p`
 font-size:0.6vw;
+padding-left:0.6vw;
+`
+const Delete = styled.p`
+font-size:0.6vw;
+margin:auto 0;
+color:#B8B8B8;
+margin-left: auto;
+block:inline;
+padding-right:1vw;
+cursor:pointer;
 `
 const Info = styled.div`
 float:right;
@@ -78,6 +89,9 @@ padding:0 7vh 0 7vh;
 margin:auto;
 margin-top:2vh;
 `
+const StyledLink = styled(Link)`
+	color:black;
+`;
 function MyPageCourse(){
     const loginId = useRecoilValue(loginIdAtom)
     const [courseData, setCourseData] = useState([]);
@@ -110,13 +124,22 @@ function MyPageCourse(){
                 {courseData?.map((item) => {
                     return (
                         <Content >
-                            <Link to ={`/viewcourse/${item.id}`}>
+                            
+                                <div style={{display:'flex'}}>
+                                <StyledLink to ={`/viewcourse/${item.id}`}>
                                 <Title>{item.name}</Title>
+                                </StyledLink>
+                                <Delete>삭제</Delete>
+                                </div>
+                                <StyledLink to ={`/viewcourse/${item.id}`}>
+                                <div style={{ borderLeft: "0.2vw solid #3366ff", marginTop:"2vh"}}>
                                 {item.courseTravels.map((travelname)=>
                                 <Name>{travelname.travelName}</Name>)}
-                            </Link>
+                                </div>
+                                </StyledLink>
+
+                            
                         </Content>
-                        
                     )
                 })
                 }
