@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 import "../../index.css"
-
-import { getHeart} from "../../api.js"
+import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
+import { getHeart, postHeart} from "../../api.js"
 import { useMutation } from "react-query";
 
 import { loginIdAtom } from "../../atom.js"
@@ -12,6 +12,7 @@ import { useRecoilValue } from "recoil";
 
 const Container = styled.div`
 h3{font-family: 'SUIT';}
+p{font-family: 'SUIT';}
 width:100%;
 padding-left:2vw;
 `
@@ -47,9 +48,28 @@ text-align:center;
         margin-top:1vh;
     }
 `;
+const CompleteButton = styled.button`
+float:right;
+font-family: 'SUIT';
+box-sizing: border-box;
+background-color:#3366ff;
+color:#ffffff;
+border:none;
+border-radius: 10px;
+height: 6vh;
+font-size:0.8vw;
+padding:0 7vh 0 7vh;
+margin:auto;
+margin-top:2vh;
+`
+const HeartImage = styled.div`
+position:absolute;
+
+`
 function MyPageHeartList(){
     const loginId = useRecoilValue(loginIdAtom)
     const [heartData, setHeartData] = useState([]);
+    let navigate = useNavigate();
 
     const { mutate, isLoading } = useMutation(getHeart, {
         onSuccess: data => {
@@ -66,20 +86,49 @@ function MyPageHeartList(){
         },
 
     });
+    const { mutate:deleteMutate, isLoading:isDeleteLoading } = useMutation(postHeart, {
+        onSuccess: data => {
+            if (data.resultCode === 0) {
+                alert('삭제되었습니다.')
+                mutate({"loginId":loginId})
+            }
+            else {
+                alert(data.resultMsg)
+            }
+        },
+        onError: () => {
+            alert("there was an error")
+        },
+
+    });
 
     useEffect(()=>{
         mutate({"loginId":loginId})
     }, [])
-    
+
+    const onClinkDeleteHeart = (travelId, travelName) => {
+        if(window.confirm(`"${travelName}"을 삭제하시겠습니까?`)){
+            deleteMutate({"loginId":loginId, "travelId":travelId})
+        }  
+    }
     return(
         <Container>
         <h3>찜한 여행지</h3>
         <Hr></Hr>
         <ContentList>
                 
-                {heartData?.map((item) => {
+                {heartData?.length === 0 ?
+                <div>
+                <p>아직 찜한 여행지가 없습니다.</p>
+                <CompleteButton type='button' onClick={()=>navigate('/travelList')}>여행지 보러가기 -&gt;</CompleteButton>
+                </div>
+                :
+                heartData.map((item) => {
                     return (
                         <Content>
+                            <HeartImage>
+                            <AiFillHeart onClick={()=>{onClinkDeleteHeart(item.travelId, item.name)}} size="30" color="red" style={{cursor:'pointer'}}className="bookmarkFillIcon" />
+                            </HeartImage>
                             <Link to={`/TravelDetail/${item.travelId}`}>
                                 <img src={item.image}></img>
                                 <p>{item.name}</p>

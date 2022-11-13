@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 import "../../index.css"
 
-import { getCourse} from "../../api.js"
+import { getCourse, deleteCourse} from "../../api.js"
 import { useMutation } from "react-query";
 
 import { isLoginedAtom, loginIdAtom } from "../../atom.js"
@@ -28,10 +28,12 @@ margin:auto;
 margin-top:3vh;
 `
 const Content = styled.div`
+margin-top:1vh;
 width:25%;
-height:22vh;
+// height:22vh;
 padding:5px;
-text-align:center;
+// text-align:center;
+color:black;
 
     img{
         object-fit: cover;
@@ -42,12 +44,22 @@ text-align:center;
 
 `;
 const Title = styled.p`
-margin-top:1vh;
+margin:auto 0;
 font-family: 'SUIT';
-font-size:0.8vw;
+font-size:1vw;
 `
 const Name = styled.p`
 font-size:0.6vw;
+padding-left:0.6vw;
+`
+const Delete = styled.p`
+font-size:0.6vw;
+margin:auto 0;
+color:#B8B8B8;
+margin-left: auto;
+block:inline;
+padding-right:1vw;
+cursor:pointer;
 `
 const Info = styled.div`
 float:right;
@@ -77,14 +89,32 @@ padding:0 7vh 0 7vh;
 margin:auto;
 margin-top:2vh;
 `
+const StyledLink = styled(Link)`
+	color:black;
+`;
 function MyPageCourse(){
     const loginId = useRecoilValue(loginIdAtom)
     const [courseData, setCourseData] = useState([]);
     const { mutate, isLoading } = useMutation(getCourse, {
         onSuccess: data => {
-            console.log(data);
             if (data.resultCode === 0) {
                 setCourseData(data.list)
+            }
+            else {
+                alert(data.resultMsg)
+            }
+        },
+        onError: () => {
+            alert("there was an error")
+        },
+
+    });
+
+    const { mutate:deleteMutate, isLoading:isDeleteLoading } = useMutation(deleteCourse, {
+        onSuccess: data => {
+            if (data.resultCode === 0) {
+                alert('삭제되었습니다.')
+                mutate({"loginId":loginId})
             }
             else {
                 alert(data.resultMsg)
@@ -99,6 +129,13 @@ function MyPageCourse(){
     useEffect(()=>{
         mutate({"loginId":loginId})
     }, [])
+
+    const onClinkDeleteCourse = (courseId, courseName) => {
+        if(window.confirm(`"${courseName}"을 삭제하시겠습니까?`)){
+            deleteMutate(courseId)
+        }
+        
+    }
  
     return(
         <Container>
@@ -107,13 +144,23 @@ function MyPageCourse(){
         <ContentList>
                 {courseData?.map((item) => {
                     return (
-                        <Link to ={`/viewcourse/${item.id}`}>
                         <Content >
+                            
+                                <div style={{display:'flex'}}>
+                                <StyledLink to ={`/viewcourse/${item.id}`}>
                                 <Title>{item.name}</Title>
+                                </StyledLink>
+                                <Delete onClick={()=>{onClinkDeleteCourse(item.id, item.name)}}>삭제</Delete>
+                                </div>
+                                <StyledLink to ={`/viewcourse/${item.id}`}>
+                                <div style={{ borderLeft: "0.2vw solid #3366ff", marginTop:"2vh"}}>
                                 {item.courseTravels.map((travelname)=>
                                 <Name>{travelname.travelName}</Name>)}
+                                </div>
+                                </StyledLink>
+
+                            
                         </Content>
-                        </Link>
                     )
                 })
                 }
