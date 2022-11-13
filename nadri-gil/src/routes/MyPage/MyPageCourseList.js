@@ -95,7 +95,6 @@ const StyledLink = styled(Link)`
 function MyPageCourse(){
     const loginId = useRecoilValue(loginIdAtom)
     const [courseData, setCourseData] = useState([]);
-
     const { mutate, isLoading } = useMutation(getCourse, {
         onSuccess: data => {
             if (data.resultCode === 0) {
