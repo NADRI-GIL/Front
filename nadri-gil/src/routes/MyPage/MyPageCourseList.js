@@ -80,7 +80,6 @@ margin-top:2vh;
 function MyPageCourse(){
     const loginId = useRecoilValue(loginIdAtom)
     const [courseData, setCourseData] = useState([]);
-
     const { mutate, isLoading } = useMutation(getCourse, {
         onSuccess: data => {
             console.log(data);

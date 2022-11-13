@@ -14,3 +14,10 @@ export const loginIdAtom = atom({
     effects_UNSTABLE: [persistAtom],
 })
 
+export const nikNameAtom = atom({
+    key:"nikname",
+    default:"",
+    effects_UNSTABLE: [persistAtom],
+})
+
+

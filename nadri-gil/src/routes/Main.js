@@ -6,17 +6,17 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import "./Main.css";
-import { getMain } from "../api.js";
+// import "./Main.css";
+import { getMain , getMostHeart} from "../api.js";
 
 
 function ControlledCarousel() {
   const [index, setIndex] = useState(0);
 
   const data1 = [
-        { id : 0, src : 'img/banner1.png'},
-        { id : 1, src : 'img/banner2.png'},
-        { id : 2, src : 'img/banner3.png'},
+        { id : 0, src : 'img/banner1.png', link : '/Course'},
+        { id : 1, src : 'img/banner2.png', link : '/Heart'},
+        { id : 2, src : 'img/banner3.png', link : '/Notice'},
     ]
 
 
@@ -38,7 +38,7 @@ function ControlledCarousel() {
 }
 
 function Rank() {
-  const { isLoading, isError, error, data } = useQuery('Main', getMain,{
+  const { isLoading, isError, error, data } = useQuery('mostHeart', getMostHeart,{
     cacheTime: Infinity,
     staleTime: Infinity,
     refetchOnMount: false,
@@ -58,7 +58,7 @@ function Rank() {
     <div >
      <div className="title"><h4>인기순</h4><Link className="text_link" to= "./"><h6>전체보기</h6></Link></div>
       <div className="swipe">
-            <Swiper spaceBetween={10} slidesPerView={4} onSlideChange={() => console.log('slide change')} onSwiper={(swiper) => console.log(swiper)}>
+            <Swiper spaceBetween={10} slidesPerView={4}>
               {data?.data.list.map((e)=> {
               return( <SwiperSlide>
               <Link className="text_link" to = {`/TravelDetail/${e.id}`} state={e}>
@@ -101,7 +101,7 @@ function Recommend() {
     <div>
      <div className="title"><h4>추천순</h4><Link className="text_link" to= "./"><h6>전체보기</h6></Link></div>
       <div className="swipe">
-            <Swiper spaceBetween={10} slidesPerView={4} onSlideChange={() => console.log('slide change')} onSwiper={(swiper) => console.log(swiper)}>
+            <Swiper spaceBetween={10} slidesPerView={4} >
               {data?.data.list.map((e)=> {
               return( <SwiperSlide>
               <Link className="text_link" to = {`/TravelDetail/${e.id}`}state={e}>

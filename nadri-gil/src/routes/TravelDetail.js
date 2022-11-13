@@ -1,14 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, Link, useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { AiOutlineHeart, AiFillStar, AiFillHeart, AiFillFilter } from 'react-icons/ai';
+import { AiOutlineHeart, AiOutlineEdit, AiFillStar, AiFillHeart, AiFillFilter, AiOutlineConsoleSql } from 'react-icons/ai';
+import { BsTrash } from 'react-icons/bs';
 import { RiRoadMapLine, RiRoadMapFill } from "react-icons/ri";
-import { QueryClient, useMutation, useQuery } from "react-query";
-import { getTravelDetail, postCart,getHeart, postHeart } from "../api.js";
+import { Mutation, QueryClient, useMutation, useQuery } from "react-query";
+import { getTravelDetail, postCart,getHeart, postHeart, postReview, getInfo } from "../api.js";
 import "./Main.css";
 import styled from "styled-components";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { faStar , faPencilSquare,faTrash} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { loginIdAtom } from "../atom.js"
+import { constSelector, useRecoilValue } from "recoil";
+import axios from 'axios';
+
 const Container = styled.div`
 width: 50%;
 margin: 0 auto;
@@ -24,8 +29,7 @@ padding:5px;
 
     img{
         width:100%;
-        object-fit: cover;
-        height: 100%;
+       
 
     }
     a{
@@ -74,7 +78,7 @@ const Location = styled.div`
 `;
 
 const Review = styled.div`
-    div{
+div{
       position: relative !important;
     }
     input{
@@ -102,10 +106,15 @@ const Review = styled.div`
 const StarContainer = styled.div`
   border: none;
   background-color: white;
+  text-align: center;
+  justify-content: center;
+  display: flex;
 `
 
 const HiddenReview = styled.div`
 ${({ show }) => (show ? `display:block` : `display: none`)}
+display: flex;
+
 `
 const Hr = styled.hr`
 border: 0;
@@ -113,30 +122,106 @@ height: 1px;
 margin: 1vh 0 1vh 0;  
 background-color: #595959;
 `
+const Edit = styled.div`
+  text-align : right;
 
+  button{
+  position :initial;
+
+  border: 0;
+  background-color : transparent;
+  }
+`
+
+const Comment = styled.div`
+min-height: 100px;
+    div{
+      display : flex;
+      justify-content: space-between;
+      
+      h6{
+        margin-right: 20px;
+      }
+
+      button{
+        border: 0;
+      background-color: transparent;
+      }
+    }
+
+  
+`
 const { kakao } = window;
-const loginid = JSON.parse(localStorage.getItem("recoil-persist"));
 
 function Detail(){
     let {id} = useParams();
-    const loginid = JSON.parse(localStorage.getItem("recoil-persist"));
+    const loginId = useRecoilValue(loginIdAtom);
+    const [likeCount, setLikeCount] = useState(0);
+    const [reviewss, setReviewss] = useState(false);
+ 
 
-    const { data } = useQuery(['TravelDetail', id], () => getTravelDetail(id), {
-        cacheTime: Infinity,
-            staleTime: Infinity,
-            refetchOnMount: false,
-            refetchOnWindowFocus: false,
-            retry: 0,
-            onSuccess: data => {
-                console.log(data);
-            },
-      })
+    let writeCheck = false;
+    let num = 0;
+    
+    const {data:res} = useQuery(['userInfo', loginId], () => getInfo(loginId), {
+      cacheTime: Infinity,
+      staleTime: Infinity,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      retry: 0,
+      onSuccess: res => {
+        console.log(res);
+        console.log(res.list[0].nickname);
+      },
+      onError: () =>{
+   
+      }
+  })
+
+  const { data } = useQuery(['TravelDetail', id], () => getTravelDetail(id), {
+      cacheTime: Infinity,
+      staleTime: Infinity,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      retry: 0,
+      onSuccess: data => {
+          console.log(data);
+          setLikeCount(data.list[0].likeCount);
+          console.log(likeCount);
+          // setReviewss(data.list[0].reviews);
+          // console.log(reviewss);
+          // ReviewCheck();
+      },
+    })
+
+    const ReviewCheck= (e) =>{
+
+     console.log("1체크");
+      for (let i = 0; i < e.reviews.length;  i++)
+      {
+        console.log("2체크");
+
+        if(e.reviews[i].nickname == res.list[0].nickname)
+        { 
+          writeCheck = true;
+          console.log("writecheck",writeCheck);
+          setReviewss(writeCheck);
+          console.log("ss1", reviewss);
+          return true;
+        }
+      }
+      return null;
+        
+    }
 
     useEffect(() => {
     const { naver } = window;
     if (!mapElement.current || !naver) return;
-
-    data?.data.list.forEach((e) => {
+    
+    if(loginId != '')
+    setReviewss(ReviewCheck(data.list[0]));
+    
+    data?.list.forEach((e) => {
         new naver.maps.Marker({
         map: new naver.maps.Map(mapElement.current, naver.maps.MapOptions = {
             center: new naver.maps.LatLng(e.latitude, e.longitude),
@@ -160,25 +245,41 @@ function Detail(){
       
         const handleLike = () => {
             likepost.mutate({
-              "loginId": loginid.loginId,
+              "loginId":loginId,
               "travelId": id})
         }
+
         const likepost = useMutation(postHeart, {
           onSuccess: data => {
               console.log(data);
               if (data.resultCode == 0 && like==false) {
                   setLike(true);
                   alert(data.resultMsg);
-                 
+                  console.log("처음",likeCount);
+                  setLikeCount(likeCount-1);
+                  console.log("나중", likeCount);
+              }
+              else if(data.resultCode == -1){
+                  alert(data.resultMsg)
+                  setLike(true);
               }
               else {
-                  alert(data.resultMsg)
-                  setLike(false);
+                alert(data.resultMsg)
+                setLike(false);
+                console.log(like);
+                console.log("처음",likeCount);
+                setLikeCount(likeCount+1);
+                console.log("나중", likeCount);
               }
           },
         });
    
         const likemutation = useMutation(getHeart, {
+          cacheTime: Infinity,
+          staleTime: Infinity,
+          refetchOnMount: false,
+          refetchOnWindowFocus: false,
+          retry: 0,
           onSuccess: data => {
               console.log(data);
               if (data.resultCode == 0) {
@@ -196,18 +297,20 @@ function Detail(){
       });
 
       useEffect(()=>{
-          likemutation.mutate({
-            "loginId": loginid.loginId,
-            "travelId": id})
+        if(loginId != null)
+         { likemutation.mutate({
+            "loginId": loginId,
+         "travelId": id})
+         }
       }, [])
 
         return (
-          <button onClick={handleLike}>
+          <div><button onClick={handleLike}>
             {
               like ? (<AiOutlineHeart size="30" className="bookmarkFillIcon" />) :
                 (<AiFillHeart size="30" color="red" className="bookmarkIcon" />)
             }
-          </button>
+          </button></div>
         )
       }
 
@@ -216,6 +319,7 @@ function Detail(){
         const [cart, setCart] = useState(true);
     
         const { mutate, isLoading } = useMutation(postCart, {
+         
           onSuccess: data => {
             if (data.resultCode === 0) {
               alert(data.resultMsg)
@@ -232,7 +336,7 @@ function Detail(){
           }
           else {
          mutate({
-              "loginId": loginid.loginId,
+              "loginId": loginId,
               "travelId": id
             })
           }
@@ -247,18 +351,82 @@ function Detail(){
         )
       }
 
+      //리뷰
       const [hovered, setHovered] = useState(null);
       const [clicked, setClicked] = useState(null);
-      
+      const [commentArray, setCommentArray] = useState([]);
+      const [comment, setComment] = useState('');
+      const [img, setImg] = useState('');
+      const [commentreview, setCommentreview] = useState(false);
+
+      const uploadProfile = (e) =>{
+        setComment(e.target.value);
+        const img = e.target.files[0];
+        const formData = new FormData();
+
+        formData.append('s3upload', img);
+        console.log(formData);
+
+    axios.post(`http://13.124.150.86:8080/upload`,
+    formData,{
+      headers:{
+        "Content-Type": "multipart/form-data",
+      }
+    }).then(function(response){
+      console.log(response);
+      setImg(response.data.list[0]);
+      console.log(img);
+   
+    })
+      .catch(err=>{
+        console.log(err);
+      });
+   }
+
+   //리뷰 보내기
+
+   const [review, setReview] = useState("")
+   const [check, setCheck] = useState(false);
+
+   const reviewmutation = useMutation(postReview, {
+    onSuccess: data => {
+      if (data.resultCode === 0) {
+        alert(data.resultMsg)
+        console.log(img);
+        setCommentreview(true);
+        setCheck(true);
+      }
+      else {
+        alert(data.resultMsg)
+      }
+    },  
+  });
+   
+   const onReviewHandler = (event) => {
+    setReview(event.currentTarget.value)
+}
+
+const onClickReview = event => {
+  
+  console.log(loginId, id, clicked,review, img)
+  reviewmutation.mutate({
+    "loginId":loginId,
+    "travelId": id,
+    "star" : clicked,
+    "content" : review,
+    "image" : img
+  })
+}
+  
     return(
         <Container>
-                    {data?.data.list.map((e) => {
+                    {data?.list.map((e) => {
           return (
             <Content>
                 <User>
                     <h4>{e.name}</h4> <h6>{e.address}</h6>
                     <div>
-                      <div><Like /> <h5>{e.likeCount}</h5></div>
+                      <div><Like /> <h5>{likeCount}</h5></div>
                       <Cart />
                     </div>
                 </User>
@@ -280,27 +448,85 @@ function Detail(){
                 <Hr/>
                 <Review>
                 <h5>리뷰</h5>
-                <StarContainer>
-              {[1, 2, 3, 4, 5].map(el => (
-                <FontAwesomeIcon  icon ={faStar}  size="2x" style={{color:(clicked>=el | hovered >=el) ? '#ffda38':'#b9b9b9'}}  
-                  key={el}
-                  onMouseEnter={() => setHovered(el)}
-                  onMouseLeave={() => setHovered(null)}
-                  onClick={() => setClicked(el)} 
-                />
-              ))}
-            </StarContainer>
-            {[1, 2, 3, 4, 5].map(num => ( <HiddenReview key={num} show={clicked === num}>
-                    <button>올리기</button>
-                    <input placeholder='리뷰를 남겨주세요' type="text"></input>
-                    </HiddenReview>
-                    ))}
-                </Review>
+       {reviewss == true ?
+       (<>
+       <StarContainer>{[1, 2, 3, 4, 5].map(el => (
+          <FontAwesomeIcon  icon ={faStar}  size="2x" style={{color:el <= e.reviews[num].star ? '#ffda38':'#b9b9b9'}}/>))}
+          <h3 style={{marginLeft:"10px"}}><b>{e.reviewTotal.toFixed(1)}/5.0</b></h3></StarContainer>
+          <Edit style={{justifyContent:"right"}}>
+         <button><AiOutlineEdit size="20"  /></button>
+         <button><BsTrash size="20" /></button>
+          </Edit>
+          <div style ={{textAlign:"center", display:"flex"}}>
+          {e.reviews[num].image != '' ?  <img  style ={{width:"20%"}} src={e.reviews[num].image}/>: ''}              
+          <div style={{width:(e.reviews[num].image != '') ? '80%': '100%',marginLeft:"20px", minHeight:"70px", backgroundColor:"#f4f2f2", borderRadius:"20px",padding : "20px", justifyContent: "right"}}>
+              <h6 style={{position:"absolute", top:"50%", padding:"0 20px",transform:"translateY(-50%)"}}>{e.reviews[num].content}</h6>
+            </div>
+          </div>
+       </>)
+       :  //writecheck
+       ( (check== false ?(
+       <> 
+       <StarContainer> {[1, 2, 3, 4, 5].map(el => (
+        <FontAwesomeIcon  icon ={faStar}  size="2x" style={{color:(clicked>=el | hovered >=el) ? '#ffda38':'#b9b9b9'}}  
+          key={el}
+          onMouseEnter={() => setHovered(el)}
+          onMouseLeave={() => setHovered(null)}
+          onClick={() => setClicked(el)} 
+        />))}
+        <h3 style={{marginLeft:"10px"}}><b>{e.reviewTotal.toFixed(1)}/5.0</b></h3>
+      </StarContainer>
+      <HiddenReview style={{display:"flex"}} show={clicked !=null}>
+        <div style={{textAlign:"center", width:"20%"}}>
+          {img ===''?   <label style={{position:"absolute", top:"50%", transform:"translateY(-50%)"}} for = "fileupload">사진 추가하기</label>
+          :  <div style={{display:"block"}}><img style={{width:"80%"}} src={img} /><label style={{}} for = "fileupload">사진 수정하기</label></div>}
+          <input style={{height:"0px", visibility:"hidden"}} enctype="multipart/form-data"  onChange ={uploadProfile} type='file' value={comment} accept='image/*' id = 'fileupload' name = 'file' />
+        </div>
+        <div style={{width:"80%", height:"fit-content "}}> {check===false ? <>
+          <button onClick={onClickReview}>올리기</button>
+          <input  placeholder='리뷰를 남겨주세요' type="text"  onChange={onReviewHandler}></input></>:<h6>{review}</h6>  }
+        </div>                    
+      </HiddenReview></> )
+      : //check
+     ( <>
+      <StarContainer> {[1, 2, 3, 4, 5].map(el => (
+        <FontAwesomeIcon  icon ={faStar}  size="2x" style={{color:el <= clicked ? '#ffda38':'#b9b9b9'}}/>
+      ))}
+      <h3 style={{marginLeft:"10px"}}><b>{e.reviewTotal.toFixed(1)}/5.0</b></h3></StarContainer>  
+      <div style ={{textAlign:"center", display:"flex"}}>
+          {img != '' ?  <img  style ={{width:"20%"}} src={img}/>: ''}              
+          <div style={{ width:(img != '') ? '80%': '100%',marginLeft:"20px", minHeight:"70px", backgroundColor:"#f4f2f2", borderRadius:"20px",padding : "20px"}}>
+              <h6 style={{position:"absolute", top:"50%", padding:"0 20px",transform:"translateY(-50%)"}}>{review}</h6>
+            </div>
+          </div></>)))}
+  </Review>
+
+        {e.reviews.slice(0).reverse().map((d) => {
+          return(<> <Hr/>
+        <Comment >
+          <div>
+            <div style={{padding : " 5px 5px"}}>
+              <h6>{d.nickname}</h6>
+              <h6>{[1, 2, 3, 4, 5].map(el => (
+                <FontAwesomeIcon  icon ={faStar} style={{color:el <= d.star ? '#ffda38':'#b9b9b9'}}/>
+              ))}</h6>
+              <h6>{d.createdDate}</h6>
+              </div>
+          </div>
+          <div style ={{display: "flex" , padding : "5px 20px"}}>
+              <h6 style={{width:"70%"}}>{d.content}</h6>
+             {d.image === ''?'':<img style ={{width:"30%"}}src={d.image}/>}
+          </div>
+        </Comment>
+       </>
+        )
+      })}
             </Content>
             )
         })}
         </Container>
     )
 }
+
 
 export default Detail;
