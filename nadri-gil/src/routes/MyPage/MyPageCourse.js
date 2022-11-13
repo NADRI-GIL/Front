@@ -90,7 +90,9 @@ margin-top:2vh;
 const DeleteImage = styled.div`
 position:absolute;
 right:2%;
-
+background-color:white;
+border-radius:50%;
+padding:0.2vw;
 `
 function MyPageCourse() {
     const image = [
@@ -178,7 +180,7 @@ function MyPageCourse() {
                                     <BackImage src={item.image} onClick={() => addCourseData(item)}/>
                                     {image[courseData.findIndex(i => i.travelId == item.travelId)] !== undefined ?
                                         <FrontImage onClick={() => addCourseData(item)} src={image[courseData.findIndex(i => i.travelId == item.travelId)]} /> : <DeleteImage>
-                                            <RiDeleteBin5Fill onClick={() => { onClinkDeleteCart(item.id, item.name) }} size="30" style={{ cursor: 'pointer' }} className="bookmarkFillIcon" />
+                                            <RiDeleteBin5Fill onClick={() => { onClinkDeleteCart(item.id, item.name) }} size="25" style={{ cursor: 'pointer' }} className="bookmarkFillIcon" />
                                         </DeleteImage>
                                     }
                                 </div>
