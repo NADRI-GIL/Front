@@ -14,6 +14,7 @@ const Header = () => {
     const onClickLogOut = () => {
         setIsLoginedFn(false);
         setLoginIdFn("");
+        navigate('/')
     }
 
 

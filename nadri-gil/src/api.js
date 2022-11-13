@@ -112,6 +112,16 @@ export const getCart = async (data) => {
     .then((response) => response.json());
 }
 
+export const deleteCart = async (cartId) => {
+  return fetch(`${URL}/carts/delete/${cartId}`, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json());
+}
+
 export const postCourse = async (data) => {
   return fetch(`${URL}/courses/add`, {
     method: "post",
@@ -132,6 +142,16 @@ export const getCourse = async (data) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
+  })
+    .then((response) => response.json());
+}
+
+export const deleteCourse = async (courseId) => {
+  return fetch(`${URL}/courses/delete/${courseId}`, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
   })
     .then((response) => response.json());
 }
@@ -172,6 +192,7 @@ export const postReviewImage = async () => {
 export const  getMostHeart  = async (data) => {
   return axios.get(`${URL}/travels/heart`);
 }
+
 export const getInfo = async (loginId) => {
   return fetch(`${URL}/users/mypage/${loginId}`, {
     method: "get",

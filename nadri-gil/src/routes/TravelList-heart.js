@@ -185,10 +185,10 @@ function TravelListHeart() {
                 {travelList.length===0 ? 'loading...' : travelList.slice(offset, offset+limit).map((item) => {
                     return (
                         <Content>
-                            <Link to={`/TravelDetail/${item.id}`}>
+                            <a href={`/TravelDetail/${item.id}`} target='_blank' rel='noreferrer'>
                                 <img src={item.image}></img>
                                 <p>{item.name}</p>
-                            </Link>
+                            </a>
                         </Content>
                         
                     )
