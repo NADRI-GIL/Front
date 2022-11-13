@@ -70,6 +70,16 @@ export const getTravelsAll = async () => {
   })
     .then((response) => response.json());
 }
+export const getTravelsHeart = async () => {
+  return fetch(`${URL}/travels/heart`, {
+    method: "get",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json());
+}
+
 export const directions5api = async (direction) => {
   let start = direction[0].longitude + ',' + direction[0].latitude;
   let goal = direction[direction.length-1].longitude + ',' + direction[direction.length-1].latitude;
@@ -181,6 +191,16 @@ export const postReview = async (data) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
+  })
+    .then((response) => response.json());
+}
+
+export const getViewCourse = async (courseId) => {
+  return fetch(`${URL}/courses/detail/${courseId}`, {
+    method: "get",
+    headers: {
+      "Content-Type": "application/json",
+    },
   })
     .then((response) => response.json());
 }

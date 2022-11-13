@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom"
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
@@ -62,11 +62,18 @@ function MyPageInfo() {
             console.log(data);
         },
     })
+
+    useEffect(()=>{
+        if(data){
+            setUserInfo(data.list[0])
+        }
+
+    },[userInfo])
     return (
         <Container>
             <h3>나의 정보</h3>
             <Hr></Hr>
-            {isLoading ? 'loading...' :
+            {userInfo === undefined ? 'loading...' :
                 <div>
                     <InfoContainer><Title>닉네임</Title><Text>{userInfo.nickname}</Text></InfoContainer>
                     <InfoContainer><Title>아이디</Title><Text>{userInfo.loginId}</Text></InfoContainer>

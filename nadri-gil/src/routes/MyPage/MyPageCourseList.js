@@ -39,22 +39,15 @@ text-align:center;
         // overflow: hidden;
         width:100%;
     }
-    p{
-        font-family: 'SUIT';
-        font-size:0.8vw;
-        margin-top:1vh;
-    }
+
 `;
-const BackImage = styled.img`
- position:absolute;
- top:0;
- left:0;
+const Title = styled.p`
+margin-top:1vh;
+font-family: 'SUIT';
+font-size:0.8vw;
 `
-const FrontImage = styled.img`
-position:absolute;
-top:0;
-left:0;
-// opacity:0.5;
+const Name = styled.p`
+font-size:0.6vw;
 `
 const Info = styled.div`
 float:right;
@@ -85,24 +78,13 @@ margin:auto;
 margin-top:2vh;
 `
 function MyPageCourse(){
-    const image = [
-        'https://user-images.githubusercontent.com/58421346/194632471-9da92ca4-b580-4526-a71f-1f169e0f4633.png', 
-        "https://user-images.githubusercontent.com/58421346/194632534-3a77eca2-5adf-4a74-9df1-76999ad9ff71.png",
-        "https://user-images.githubusercontent.com/58421346/194632615-aaab4544-ed1f-4b45-9c06-d3c6da718b8c.png",
-        "https://user-images.githubusercontent.com/58421346/194632655-cece31a3-2d0f-4e69-8161-4e421ec66094.png",
-        "https://user-images.githubusercontent.com/58421346/194632660-2b3ee8fe-4d64-42d6-92e2-b307d0ba2bb5.png"
-    ]
-    let navigate = useNavigate();
-    const isLogined = useRecoilValue(isLoginedAtom);
     const loginId = useRecoilValue(loginIdAtom)
-    const [cartData, setCartData] = useState([]);
     const [courseData, setCourseData] = useState([]);
-    
     const { mutate, isLoading } = useMutation(getCourse, {
         onSuccess: data => {
             console.log(data);
             if (data.resultCode === 0) {
-                setCartData(data.list)
+                setCourseData(data.list)
             }
             else {
                 alert(data.resultMsg)
@@ -113,39 +95,25 @@ function MyPageCourse(){
         },
 
     });
+
     useEffect(()=>{
         mutate({"loginId":loginId})
-        console.log("SFD");
     }, [])
-    const addCourseData = (travel) => {
-        if(courseData.findIndex(i=>i.travelId == travel.travelId) === -1 ){
-            if(courseData.length < 5) setCourseData([...courseData, travel])
-            else alert("최대 5개까지 등록할 수 있습니다.")
-        }
-        else{
-            let tmp = [...courseData]
-            tmp.splice(courseData.findIndex(i=>i.travelId == travel.travelId), 1)
-            setCourseData([...tmp])
-        }
-    }
-    const createCourseButton = () =>{
-        // navigate('/createcourse', {coursePoints:{courseData}})
-    }
  
     return(
         <Container>
-        <h3>코스 만들기</h3>
+        <h3>내가 만든 코스</h3>
         <Hr></Hr>
-        {/* <Info>
-        <span>선택한 여행지로 코스 만들러 가기</span>
-        <button>&gt;</button>
-        </Info> */}
         <ContentList>
-                {cartData?.map((item) => {
+                {courseData?.map((item) => {
                     return (
+                        <Link to ={`/viewcourse/${item.id}`}>
                         <Content >
-                                <p>{item.name}</p>
+                                <Title>{item.name}</Title>
+                                {item.courseTravels.map((travelname)=>
+                                <Name>{travelname.travelName}</Name>)}
                         </Content>
+                        </Link>
                     )
                 })
                 }

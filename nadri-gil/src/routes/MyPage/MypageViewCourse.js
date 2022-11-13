@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import styled from "styled-components";
+import { useParams } from 'react-router-dom';
 import { useMutation, useQuery } from "react-query";
-import { directions5api, postCourse } from "../api.js"
+import { directions5api, getViewCourse } from "../../api.js"
 import { useLocation } from 'react-router-dom';
-import "../index.css"
+import "../../index.css"
 
 
 const Container = styled.div`
@@ -171,54 +172,8 @@ margin: 8vh auto 8vh auto;
 
 `
 
-function CreateCourse(props) {
-    // const points = [
-    //     {
-    //         travelId : 1,
-    //         name: "청주 시외버스터미널",
-    //         lng: 127.43202481650647,
-    //         lat: 36.62576080594968,
-    //         add:"충북 청주시 흥덕구 풍산로 6",
-    //         "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
-    //     },
-    //     {
-    //         travelId : 2,
-    //         name: "충북대학교",
-    //         lng: 127.45739630160224,
-    //         lat: 36.6284055465184,
-    //         add:"충북 청주시 서원구 충대로 1 충북대학교",
-    //         "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
-    //     },
-    //     {
-    //         travelId : 3,
-    //         name: "투썸플레이스 동남지구점",
-    //         lng: 127.5170063098491,
-    //         lat: 36.61543334257298,
-    //         add:"충북 청주시 서원구 충대로 1 충북대학교",
-    //         "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
-    //     },
-    //     {
-    //         travelId : 4,
-    //         name: "청주고등학교",
-    //         lng: 127.45537018595921,
-    //         lat: 36.63558179683339,
-    //         add:"충북 청주시 서원구 충대로 1 충북대학교",
-    //         "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
-    //     },
-    //     {
-    //         travelId : 5,
-    //         name: "청주고등학교",
-    //         lng: 127.65537018595921,
-    //         lat: 36.63558179683339,
-    //         add:"충북 청주시 서원구 충대로 1 충북대학교",
-    //         "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
-    //     }
-    // ]
-    const location = useLocation();
-    const state = location.state;
-
-    console.log(state);
-
+function ViewCourse(props) {
+    const [viewCourse, setviewCourse] = useState(null)
     const [courseData, setCourseData] = useState(null)
     const [courseOption, setCourseOption] = useState(0)
     //0:trafast, 1:tracomfort, 2:traoptimal
@@ -227,8 +182,8 @@ function CreateCourse(props) {
     // const [traoptimalInfo, setTraoptimalInfo] = useState([])
     const [courseInfo, setCourseInfo] = useState([])
 
-
-    const { isLoading, data } = useQuery("createCourse", () => directions5api(state), {
+    let {courseId} = useParams();
+    const { isLoading : isViewCourseLoading, data:viewCourseData } = useQuery(["getViewCourse", courseId], () => getViewCourse(courseId), {
         cacheTime: Infinity,
         staleTime: Infinity,
         refetchOnMount: false,
@@ -236,8 +191,26 @@ function CreateCourse(props) {
         retry: 0,
         onSuccess: data => {
             // 성공시 호출
+            setviewCourse(data.list[0])
+            console.log('상세 정보 불러오기 성공', data.list[0].courseTravels);
+        },
+        onError: e => {
+            // 실패시 호출 (401, 404 같은 error가 아니라 정말 api 호출이 실패한 경우만 호출됩니다.)
+            // 강제로 에러 발생시키려면 api단에서 throw Error 날립니다. (참조: https://react-query.tanstack.com/guides/query-functions#usage-with-fetch-and-other-clients-that-do-not-throw-by-default)
+            console.log(e.message);
+        }
+    });
+    const { isLoading, data } = useQuery(["viewCourse", courseId], () => directions5api(viewCourse.courseTravels), {
+        cacheTime: Infinity,
+        staleTime: Infinity,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        retry: 0,
+        enabled: viewCourse!==null,
+        onSuccess: data => {
+            // 성공시 호출
             setCourseData(data.route)
-            console.log(data);
+            console.log(data.route);
         },
         onError: e => {
             // 실패시 호출 (401, 404 같은 error가 아니라 정말 api 호출이 실패한 경우만 호출됩니다.)
@@ -260,7 +233,7 @@ function CreateCourse(props) {
             let map = new naver.maps.Map('map', mapOptions);
             let markers = []
             let infowindows = []
-            state.forEach((item, i) => {
+            viewCourse.courseTravels.forEach((item, i) => {
                 console.log(i)
                 let marker = new naver.maps.Marker({
                     position: new naver.maps.LatLng(item.latitude, item.longitude),
@@ -360,7 +333,7 @@ function CreateCourse(props) {
             let map = new naver.maps.Map('map', mapOptions);
             let markers = []
             let infowindows = []
-            state.forEach((item, i) => {
+            viewCourse.courseTravels.forEach((item, i) => {
                 console.log(i)
                 let marker = new naver.maps.Marker({
                     position: new naver.maps.LatLng(item.latitude, item.longitude),
@@ -450,84 +423,80 @@ function CreateCourse(props) {
     const [popup, handlePopup] = useState(false);
     const [coursesave, setcoursesave] = useState([]);
 
-    const Popup = (props) => {
+    // const Popup = (props) => {
 
-        const [name, setName] = useState("")
+    //     const [name, setName] = useState("")
 
-        const { onClose } = props;
-        const onNameHandler = (event) => {
-            setName(event.currentTarget.value)
-        }
-        const { mutate } = useMutation(postCourse, {
-            onSuccess: data => {
-                // console.log(data);
-                if (data.resultCode === 0) {
-                    alert(data.resultMsg)
-                }
-                else {
-                    alert(data.resultMsg)
-                }
-            },
-            onError: () => {
-                console.log("error");
-            },
+    //     const { onClose } = props;
+    //     const onNameHandler = (event) => {
+    //         setName(event.currentTarget.value)
+    //     }
+    //     const { mutate } = useMutation(postCourse, {
+    //         onSuccess: data => {
+    //             // console.log(data);
+    //             if (data.resultCode === 0) {
+    //                 alert(data.resultMsg)
+    //             }
+    //             else {
+    //                 alert(data.resultMsg)
+    //             }
+    //         },
+    //         onError: () => {
+    //             console.log("error");
+    //         },
 
-        });
+    //     });
 
-        const onClickshare = () => {
-            console.log(loginid.loginId, name, state[0].travelId)
+    //     const onClickshare = () => {
+    //         console.log(loginid.loginId, name, state[0].travelId)
 
-            let tmp = []
-            state.forEach((item, index) => {
-                tmp.push(
+    //         let tmp = []
+    //         state.forEach((item, index) => {
+    //             tmp.push(
+    //                 { travelId: item.travelId, orderNo: index + 1 });
+    //         }
+    //         )
+    //         setcoursesave(tmp);
+    //         mutate({
+    //             "loginId": loginid.loginId,
+    //             "name": name,
+    //             "courseOrders": tmp
+    //         })
+    //     }
 
-                    { travelId: item.travelId, orderNo: index + 1 });
-            }
-            )
-            setcoursesave(tmp);
-            mutate({
-                "loginId": loginid.loginId,
-                "name": name,
-                "courseOrders": tmp
-
-            })
-        }
-
-        return (
-            <Popupdiv>
-                <Header>
-                    <h4>코스만들기</h4>
-                </Header>
-                <Main>
-                    <h5>제목을 입력하세요</h5>
-                    <input type="text" onChange={onNameHandler} ></input>
-                </Main>
-                <Footer>
-                    <button onClick={() => {
-                        onClose(false)
-                        onClickshare()
-                    }} >제출</button>
-                </Footer>
-            </Popupdiv>
-        )
-    }
+    //     return (
+    //         <Popupdiv>
+    //             <Header>
+    //                 <h4>코스만들기</h4>
+    //             </Header>
+    //             <Main>
+    //                 <h5>제목을 입력하세요</h5>
+    //                 <input type="text" onChange={onNameHandler} ></input>
+    //             </Main>
+    //             <Footer>
+    //                 <button onClick={() => {
+    //                     onClose(false)
+    //                     onClickshare()
+    //                 }} >제출</button>
+    //             </Footer>
+    //         </Popupdiv>
+    //     )
+    // }
 
     return (
         <Container>
             <Menu>
-
                 {courseOption === 0 ? <Menus onClick={() => { setCourseOption(0) }}><p style={{ borderBottom: "0.5vh solid #3366ff", paddingBottom: "1vh" }}>실시간 빠른길</p></Menus> : <Menus onClick={() => { setCourseOption(0); optionhaddle(0) }}><p style={{ borderBottom: "0.5vh solid white", paddingBottom: "1vh" }}>실시간 빠른길</p></Menus>}
                 {courseOption === 1 ? <Menus onClick={() => { setCourseOption(1) }}><p style={{ borderBottom: "0.5vh solid #3366ff", paddingBottom: "1vh" }}>실시간 편한길</p></Menus> : <Menus onClick={() => { setCourseOption(1); optionhaddle(1) }}><p style={{ borderBottom: "0.5vh solid white", paddingBottom: "1vh" }}>실시간 편한길</p></Menus>}
                 {courseOption === 2 ? <Menus onClick={() => { setCourseOption(2) }}><p style={{ borderBottom: "0.5vh solid #3366ff", paddingBottom: "1vh" }}>실시간 최적</p></Menus> : <Menus onClick={() => { setCourseOption(2); optionhaddle(2) }}><p style={{ borderBottom: "0.5vh solid white", paddingBottom: "1vh" }}>실시간 최적</p></Menus>}
             </Menu>
-
             <TotalDistance>
                 {targetData != null ? targetData.summary.duration > 3600000 ? '총 ' + (targetData.summary.distance / 1000).toFixed(2) + 'km' : '총' + (targetData.summary.distance).toFixed(2) + "m" : ''}
                 {targetData != null ? targetData.summary.duration > 3600000 ? ', ' + (parseInt(targetData.summary.duration / 3600000)) + '시간 ' + ((targetData.summary.duration % 3600000) / 60000).toFixed(0) + '분 소요' : ', ' + (targetData.summary.duration / 60000).toFixed(2) + "분 소요" : ''}
             </TotalDistance>
             <Hr />
             <ContentList>
-                {state.map((item, i) => {
+                {isViewCourseLoading?'loading':viewCourse.courseTravels.map((item, i) => {
                     return (
                         <CourseContent>
                             <Distance>{courseInfo[i - 1] != undefined ? courseInfo[i - 1].distance > 1000 ? '-' + (courseInfo[i - 1].distance / 1000).toFixed(2) + 'km' + '→' : '-' + (courseInfo[i - 1].distance).toFixed(2) + "m→" : ''}<br>
@@ -543,9 +512,9 @@ function CreateCourse(props) {
             </ContentList>
             <MapContainer id="map"></MapContainer>
             <CompleteButton onClick={() => { handlePopup(true); }}>내가 만든 코스 공유하기 -&gt;</CompleteButton>
-            {popup && <Popup onClose={handlePopup} />}
+            {/* {popup && <Popup onClose={handlePopup} />} */}
         </Container>
     )
 };
 
-export default CreateCourse;
+export default ViewCourse;

@@ -6,7 +6,7 @@ import {Link } from 'react-router-dom';
 
 
 
-import { getTravelsAll } from "../api.js"
+import { getTravelsHeart } from "../api.js"
 import { useQuery } from "react-query";
 
 const Container = styled.div`
@@ -100,8 +100,8 @@ const CurrentPageButton = styled(PageButton)`
 border:1px solid #3366ff;
 background-color:white;
 `
-function TravelList() {
-    const { isLoading, data, isFetching } = useQuery("travelData", getTravelsAll, {
+function TravelListHeart() {
+    const { isLoading, data, isFetching } = useQuery("travelDataHeart", getTravelsHeart, {
         cacheTime: Infinity,
         staleTime: Infinity,
         refetchOnMount: false,
@@ -128,7 +128,7 @@ function TravelList() {
     const [selectState, setSelectState] = useState(false);
     const [limit, setLimit] = useState(24);
     const [currentPage, setCurrentPage] = useState(1);
-    const [pageList, setPageList] = useState([1, 2, 3, 4, 5])
+    const [pageList, setPageList] = useState([1, 2, 3])
     const offset = (currentPage - 1) * limit;
 
     const selectedData = (field) => {
@@ -150,19 +150,6 @@ function TravelList() {
         if (tmp.length === 0) {
             setTravelList(data.list)
         }
-    }
-    const previousPageList=()=>{
-        window.scrollTo(0, 0);
-        let tmp = pageList.map((item)=> item-5)
-        setPageList([...tmp])
-        setCurrentPage(tmp[0])
-    }
-    const nextPageList=()=>{
-        window.scrollTo(0, 0);
-        let tmp = pageList.map((item)=> item+5)
-        setPageList([...tmp])
-        setCurrentPage(tmp[0])
-
     }
     useEffect(()=>{
         if(data&&travelList.length===0){
@@ -211,7 +198,6 @@ function TravelList() {
                 ''
             :
             <Pagination>
-                {currentPage>5?<PageButton onClick={previousPageList}>&lt;</PageButton>:''}
                 {pageList.map((item)=>{
                     if(item === currentPage){
                         return(
@@ -224,7 +210,7 @@ function TravelList() {
                     )
                     }
                 })}
-                <PageButton onClick={nextPageList}>&gt;</PageButton>
+
             </Pagination>}
             </ContentList>
         </Container>
@@ -232,4 +218,4 @@ function TravelList() {
 
 }
 
-export default TravelList;
+export default TravelListHeart;
