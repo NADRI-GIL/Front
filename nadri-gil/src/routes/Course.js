@@ -6,7 +6,7 @@ import SwiperCore, { Navigation, Scrollbar } from 'swiper';
 import { faQuoteLeft, faQuoteRight, faChevronCircleRight ,faChevronCircleLeft} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styled from "styled-components";
-import { getTravelDetail } from "../api.js";
+import { getSharedCourse, getTravelDetail } from "../api.js";
 import { useQuery } from "react-query";
 
 const Container = styled.div`
@@ -110,6 +110,17 @@ function Course(props) {
     const prevRef = useRef(null);
     const nextRef = useRef(null);
     const {  slidesPerView } = 4;
+
+    const { data:shared } = useQuery('SharedCourse', getSharedCourse,{
+ 
+      staleTime: Infinity,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      retry: 0,
+      onSuccess: data => {
+        console.log(data);
+      },
+    });
 
     const { data:course2 } = useQuery(['TravelDetail1', 15993], () => getTravelDetail(15993), {
       cacheTime: Infinity,
@@ -234,6 +245,8 @@ function Course(props) {
             </Content>
             <div>
               <h4>코스 공유 목록</h4>
+              
+
 
             </div>
               

@@ -204,3 +204,13 @@ export const getViewCourse = async (courseId) => {
   })
     .then((response) => response.json());
 }
+
+export const getSharedCourse = async () => {
+  return fetch(`${URL}/courses/getShared`, {
+    method: "get",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json());
+}

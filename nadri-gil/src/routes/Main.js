@@ -9,7 +9,6 @@ import "swiper/css/pagination";
 // import "./Main.css";
 import { getMain , getMostHeart} from "../api.js";
 
-
 function ControlledCarousel() {
   const [index, setIndex] = useState(0);
 
@@ -96,7 +95,6 @@ function Recommend() {
     }
   });
 
-
   return(
     <div>
      <div className="title"><h4>추천순</h4><Link className="text_link" to= "./"><h6>전체보기</h6></Link></div>
@@ -175,20 +173,23 @@ function Course(){
   )
 }
 
-class Main extends React.Component{
-  render(){
-      return (
-          <div className="main" >
-              <ControlledCarousel/>
-              <Rank/>
-              <Recommend/>
-               <div style={{width: "50%", margin:"0 auto"}}>
-              {/* <Notice />
-              <Course/> */}
-        
-              </div> 
-          </div>
-      );
-  }
+function Main() {
+
+  return (
+    <div className="main" >
+    <ControlledCarousel/>
+    <Rank/>
+
+    <Recommend/>
+     <div style={{width: "50%", margin:"0 auto"}}>
+    {/* <Notice />
+    <Course/> */}
+
+    </div> 
+</div>
+  )
 }
+
+
+
 export default Main;
