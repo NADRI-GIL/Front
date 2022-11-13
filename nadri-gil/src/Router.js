@@ -29,7 +29,6 @@ function Router() {
                     <Route path="/signUp" element={<SignUp />}></Route>
                     <Route path="/preferenceSurvey" element={<PreferenceSurvey />}></Route>
                     <Route path="/TravelDetail/:id" element={<TravelDetail/>}></Route>
-                    <Route path="/PutData" element={<PutData/>}></Route>
                     <Route path="/Notice" element={<Notice/>}></Route>
                     <Route path="/travelList" element={<TravelList/>}></Route>
                 <Route path="/createcourse" element={<CreateCourse/>}></Route>

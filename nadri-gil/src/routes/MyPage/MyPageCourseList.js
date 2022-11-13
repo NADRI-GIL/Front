@@ -97,6 +97,7 @@ function MyPageCourse(){
     const loginId = useRecoilValue(loginIdAtom)
     const [cartData, setCartData] = useState([]);
     const [courseData, setCourseData] = useState([]);
+    
     const { mutate, isLoading } = useMutation(getCourse, {
         onSuccess: data => {
             console.log(data);

@@ -5,13 +5,6 @@
     margin: 0 auto;
     font-family: 'SUIT';
 }
-
-@media all and (max-width: 768px){
-    .main{
-        width: 100%;
-        }
-    
-    }
     
 a {
     text-decoration: none;

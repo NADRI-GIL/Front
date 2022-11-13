@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {FaMapMarkerAlt } from 'react-icons/fa';
+import {FaMapMarkerAlt, FaQuoteLeft } from 'react-icons/fa';
+import { SlArrowRight,SlArrowLeft } from 'react-icons/sl';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
+import SwiperCore, { Navigation, Scrollbar } from 'swiper';
+import { faQuoteLeft, faQuoteRight, faChevronCircleRight ,faChevronCircleLeft} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styled from "styled-components";
+import { getTravelDetail } from "../api.js";
+import { useQuery } from "react-query";
 
 const Container = styled.div`
 width: 50%;
@@ -17,7 +20,15 @@ width: 100%;
 
 const Content = styled.div`
 
-border: 1px solid;
+
+button { 
+  border: 0;
+  background-color: transparent;
+
+  h6{
+    margin-top:10px;
+  }
+}
 
 // ::after {
 //     content: '';
@@ -36,60 +47,196 @@ height: 1px;
 margin: 1vh 0 1vh 0;  
 background-color: #595959;
 `
+const NextButton = styled.button`
+padding: 0;
+background: none;
+border:none;
 
-function Course() {
+`
+const PrevButton = styled.button`
+padding: 0;
+background: none;
+border:none;
+`
+function Course(props) {
 
-  const data1 =[
-        {course_id: 1, travel_id : 26343, name : '청계천' },
-        {course_id: 1,travel_id : 27144, name :'광화문'},
-        {course_id: 1,travel_id : 26801, name : '광장시장' },
-        {course_id: 1,travel_id : 27159, name : '남산 케이블카' },
-        {course_id: 1,travel_id : 26195, name : '동대문 종합시장·동대문 쇼핑타운' },
+  const [data1, setData] = useState([
+      {course_id: 1, travel_id : 1831, name : '서우봉둘레길' },
+      {course_id: 1,travel_id : 27161, name :'제주4·3평화공원'},
+      {course_id: 1,travel_id : 25535, name : '쇠소깍' },
+      {course_id: 1,travel_id : 28678, name : '정방폭포' },
+      {course_id: 1,travel_id : 4921, name : '사계해변' },
+      {course_id: 1,travel_id : 29617, name : '알뜨르비행장 및 일본군 비행기 격납고' },
+    ]);
+
+  const [Info, setInfo] = useState( [{course_id : 1, title : "제주올레길", content : "제주 올레길은 골목길들이 크게 하나로 이어지는 제주도 도보 여행 코스이다. 총 26코스 425km으로 이어진 올레길은 겉으로 잘 보이지 않는 제주의 아름다운 속살을 다채롭게 보여준다. 길 따라 걷다 보면 신천 바다목장의 주황색 귤 꽃밭, 제주도 명소인 민물과 바닷물이 만나는 쇠소깍도 만날 수 있다. 제주도가 사시사철 매 순간 다양한 모습을 보여주듯 천천히 걸을수록 더 많은 것을 볼 수 있다."}]
+  );
+
+  const courseInfo = [
+    [{course_id : 1, title : "제주올레길", content : "제주 올레길은 골목길들이 크게 하나로 이어지는 제주도 도보 여행 코스이다. 총 26코스 425km으로 이어진 올레길은 겉으로 잘 보이지 않는 제주의 아름다운 속살을 다채롭게 보여준다. 길 따라 걷다 보면 신천 바다목장의 주황색 귤 꽃밭, 제주도 명소인 민물과 바닷물이 만나는 쇠소깍도 만날 수 있다. 제주도가 사시사철 매 순간 다양한 모습을 보여주듯 천천히 걸을수록 더 많은 것을 볼 수 있다."},
+  ],
+  [{course_id: 2,title: "역사 위에 피어난 봄", content:"익산의 벚꽃 여행지로는 보석박물관과 왕궁리 유적지, 송천마을이 유명하다. 보석박물관은 희귀한 보석과 광물 등 11만 8,000여 점을 소장, 전시한 곳으로, 박물관 옆에 보석을 파는 주얼펠리스에서 나오면 함벽정이 기다린다. 함벽정 아래 벚꽃이 보석처럼 반짝이고, 왕궁저수지에서 불어오는 시원한 바람에 봄꽃 향기가 느껴진다. 웅포관광지에서의 캠핑과 벚꽃의 향연을 놓치지 말자."},
+  ],
+  [  {course_id : 3, title: "아름다운 풍경을 자랑하는 제천 & 단양 여행 코스", content:"사진 촬영 명소인 단양 이끼터널에서 시작하는 충북 여행 코스! 다누리아쿠아리움, 단양구경시장(1,6일)을 지나 도담삼봉, 제천 옥순봉 출렁다리로 이어지는 여행길에 두 눈 가득 단양과 제천의 아름다운 풍경을 담아본다. 청풍호반케이블카에서 자연 풍광을 몸소 체험하고 즐긴 후 명가박달재에서 맛있는 식사를 한다. 의림지에서 휴식을 즐기고 엽연초하우스에서 머물며 알차게 보낸 여행을 마무리한다."}
+  ]  
+]
+
+  const courselist = [
+    [
+      {course_id: 1, travel_id : 1831, name : '서우봉둘레길' },
+      {course_id: 1,travel_id : 27161, name :'제주4·3평화공원'},
+      {course_id: 1,travel_id : 25535, name : '쇠소깍' },
+      {course_id: 1,travel_id : 28678, name : '정방폭포' },
+      {course_id: 1,travel_id : 4921, name : '사계해변' },
+      {course_id: 1,travel_id : 29617, name : '알뜨르비행장 및 일본군 비행기 격납고' },
+    ],
+    [
+        {course_id: 2, travel_id :15993, name : '익산 미륵사지 [유네스코 세계유산]' },
+        {course_id: 2,travel_id : 27850, name :'웅포관광지 캠핑장'},
+        {course_id: 2,travel_id : 29678, name : '함벽정' },
+        {course_id: 2,travel_id : 7279, name : '보석박물관' }
+    ],
+
+    [
+      {course_id: 3, travel_id : 11691, name : '이끼터널' },
+      {course_id: 3,travel_id : 31541, name :'단양구경시장'},
+      {course_id: 3,travel_id : 15992, name : '청풍호반케이블카' },
+      {course_id: 3,travel_id : 32553, name : '명가박달재' },
+      {course_id: 3,travel_id : 16084, name : '제천 의림지와 제림' },
+      {course_id: 3,travel_id : 7645, name : ' 엽연초하우스' },
     ]
-    const data2 =[
-      {course_id: 1, travel_id : 15993, name : '익산 미륵사지 [유네스코 세계유산]' },
-      {course_id: 1,travel_id : 27850, name :'웅포관광지 캠핑장'},
-      {course_id: 1,travel_id : 29678, name : '함벽정' },
-      {course_id: 1,travel_id : 7279, name : '보석박물관' }
   ]
-    const courselist = [
-        {course_id : 1},
-        {course_id : 2},
-        {course_id : 3},
 
-        
-    ]
+    const prevRef = useRef(null);
+    const nextRef = useRef(null);
+    const {  slidesPerView } = 4;
+
+    const { data:course2 } = useQuery(['TravelDetail1', 15993], () => getTravelDetail(15993), {
+      cacheTime: Infinity,
+      staleTime: Infinity,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      retry: 0, 
+      onSuccess: course2 => {
+        // 성공시 호출
+        console.log("1", course2);
+      },
+    })
+
+    const { data:course3 } = useQuery(['TravelDetail2', 1831], () => getTravelDetail(1831), {
+      cacheTime: Infinity,
+      staleTime: Infinity,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      retry: 0,
+      onSuccess: data => {
+        // 성공시 호출
+        console.log("2", data);
+      },
+    })
+
+    const { data:course4 } = useQuery(['TravelDetail', 11691], () => getTravelDetail(11691), {
+      cacheTime: Infinity,
+      staleTime: Infinity,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      retry: 0,
+      onSuccess: data => {
+        // 성공시 호출
+        console.log("3", data);
+      },
+    })
+
+    SwiperCore.use([Navigation]);
+  const [swiperSetting, setSwiperSetting] = useState(null);
+
+  useEffect(() => {
+
+    if (!swiperSetting) {
+      setSwiperSetting({
+        spaceBetween: 0,
+        navigation: {
+          prevEl: prevRef.current, // 이전 버튼
+          nextEl: nextRef.current, // 다음 버튼
+        },
+      
+       slidesPerView: 4,
+        onBeforeInit: (swiper) => {
+          if (typeof swiper.params.navigation !== 'boolean') 
+          {
+            if (swiper.params.navigation) {
+              swiper.params.navigation.prevEl = prevRef.current;
+              swiper.params.navigation.nextEl = nextRef.current;
+            }
+          }
+          swiper.navigation.update();
+        },
+      });
+    }
+  },[swiperSetting, slidesPerView,course2, course3, course4]);
+
+  const navigationChange =(e) => {
+    setData(courselist[e]);
+    setInfo(courseInfo[e]);
+  }
 
     return(
         <Container>
-            <h3>코스</h3>
-            <h5>지자체 추천 코스</h5> 
-                    <h5>코스 이름</h5>
-                    <h6>코스 간단 소개</h6>
-            <Swiper spaceBetween={10} navigation slidesPerView={4} onSlideChange={() => console.log('slide change')} onSwiper={(swiper) => console.log(swiper)}>
-              {data1.map((e)=> {
-              return( <SwiperSlide >
-                    <div style={{textAlign:"center", width:"120px"}}>
-                    <FaMapMarkerAlt color="#3366ff"  size="50"/>
-                    <div><h7>{e.name}</h7></div>
-                    </div>
-                
-            </SwiperSlide>
-              )
-            })}
-          </Swiper>
-
-             <div style={{display: "flex",  justifyContent:"space-around", marginTop:"20px"}}>
-                {courselist.map((el) =>{ return(
-                    <div style={{display:"block", textAlign:"center"}}>
-                    <div style={{width:"180px", height:"180px", borderRadius:"50%",backgroundColor:"grey", display:"block"}}>
-                     </div>
-                     <h5>코스 이름</h5>
-                     </div>
-                )})}
+            <h3><b>코스</b></h3>
+            <Hr/>
+            <h5>지자체 추천 코스</h5>
+            {Info.map((e)=>{return(<>
+             <div style={{display:"flex", marginBottom:"30px",  justifyContent: "center" ,textAlign:"center"}}>
+              <FontAwesomeIcon icon ={faQuoteLeft} /> 
+             <h5 style={{textAlign:"center",background: "linear-gradient(to top, rgb(255 231 56) 50%, transparent 50%)",padding: "5px 10px"}}><b>{e.title}</b></h5>
+             <FontAwesomeIcon icon ={faQuoteRight} /> 
+             </div>
+  
+            <div style={{display:"flex" , marginBottom:"20px", backgroundColor: "#faf7f7", padding: "20px 0", borderRadius: "10px"}}>
+              <PrevButton ref={prevRef}><SlArrowLeft size="20"/></PrevButton>
+              {swiperSetting && (  <Swiper {...swiperSetting}>
+                {data1.map((e)=> {
+                return( <SwiperSlide >
+                      <div style={{textAlign:"center", width:"120px"}}>
+                        <FaMapMarkerAlt color="#3366ff"  size="50"/>
+                        <div ><h7>{e.name}</h7></div>
+                      </div>
+              </SwiperSlide>
+                )
+              })}
+            </Swiper>
+              )}          
+              <NextButton ref={nextRef}><SlArrowRight size="20" /> </NextButton>
+          </div> 
+          <h6>{e.content}</h6>
+              </> )})} 
+            <Content style={{display: "flex", textAlign:"center",  justifyContent:"space-around", marginTop:"20px"}}>
+              <button onClick={()=>navigationChange(0)}>
+                  <div style={{width:"180px",margin:"0 20px", height:"180px", borderRadius:"50%", display:"block", overflow:"hidden"}}>
+                  {course3?.list.map((e)=>{return(<img style={{objectFit:"cover", width:"100%", height:"100%"}} src ={e.image}></img> )}) }
+                  </div>
+                  <h6>제주올레길</h6>
+              </button>
               
-            </div> 
+              <button onClick={()=>navigationChange(1)}>
+                <div style={{width:"180px", margin:"0 20px", height:"180px", borderRadius:"50%", display:"block", overflow:"hidden"}}>
+                 {course2?.list.map((e)=>{return(<img style={{objectFit:"cover", width:"100%", height:"100%"}} src ={e.image}></img> )}) }
+                </div>
+                  <h6>역사 위에 피어난 봄</h6>
+              </button>
 
+                <button onClick={()=>navigationChange(2)}>
+                  <div style={{width:"180px",margin:"0 20px", height:"180px", borderRadius:"50%", display:"block", overflow:"hidden"}}>
+                  {course4?.list.map((e)=>{return(<img style={{objectFit:"cover", width:"100%", height:"100%"}} src ={e.image}></img> )}) }
+                  </div>
+                  <h6>아름다운 풍경을 자랑하는<br></br> 제천 & 단양 여행 코스</h6>
+                  </button>
+            </Content>
+            <div>
+              <h4>코스 공유 목록</h4>
+
+            </div>
+              
         </Container>
     )
 }

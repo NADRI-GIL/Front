@@ -20,8 +20,6 @@ export const postLogin = async (data) => {
       Accept:'application/json',
 
       'Content-Type': 'application/json',
-      
-    
     },
     body: JSON.stringify(data),
   }, { withCredentials: true })
@@ -43,8 +41,13 @@ export const postLogin = async (data) => {
   }
 
   export const getTravelDetail = async (id) => {
-
-    return axios.get(`${URL}/travels/${id}/detail`);
+    return fetch(`${URL}/travels/${id}/detail`, {
+      method: "get",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json());
   }
 
   export const postCart = async (data) => {
@@ -77,7 +80,7 @@ export const directions5api = async (direction) => {
       if(i < direction.length - 2) waypoints += '|'
     }
   }
-  return fetch(`/api/map-direction/v1/driving?start=${start}&goal=${goal}&option=trafast:tracomfort:traoptimal&waypoints=${waypoints}`, {
+  return fetch(`/api/map-direction-15/v1/driving?start=${start}&goal=${goal}&option=trafast:tracomfort:traoptimal&waypoints=${waypoints}`, {
     method: "get",
     headers: {
       "Content-Type": "application/json",
@@ -156,18 +159,28 @@ export const postReviewImage = async () => {
     .then((response) => response.json());
 }
 
-
-// export const getMostHeart = async () => {
-//   return fetch(`${URL}/travels/heart`, {
-//     method: "get",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-
-//   })
-//     .then((response) => response.json());
-// }
-
 export const  getMostHeart  = async (data) => {
   return axios.get(`${URL}/travels/heart`);
+}
+export const getInfo = async (loginId) => {
+  return fetch(`${URL}/users/mypage/${loginId}`, {
+    method: "get",
+    headers: {
+      "Content-Type": "application/json",
+      // "Access-Control-Allow-Origin": `http://localhost:8080`,
+      // 'Access-Control-Allow-Credentials':"true"
+    },
+  })
+    .then((response) => response.json());
+}
+
+export const postReview = async (data) => {
+  return fetch(`${URL}/reviews/save`, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => response.json());
 }

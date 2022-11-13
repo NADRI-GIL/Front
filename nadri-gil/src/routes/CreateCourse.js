@@ -480,13 +480,11 @@ function CreateCourse(props) {
                     {id:item.travelId, orderno:index});}
                 )
                 console.log(tmp);
-                
                 setcoursesave(tmp);
                 
             mutate({
                     "loginId":  loginid.loginId,
                     "name": name,
-
                     "courseOrders": coursesave
             })
         }

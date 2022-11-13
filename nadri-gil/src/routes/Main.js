@@ -6,7 +6,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import "./Main.css";
+// import "./Main.css";
 import { getMain , getMostHeart} from "../api.js";
 
 

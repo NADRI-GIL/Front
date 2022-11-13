@@ -117,8 +117,8 @@ function MyPageCourse(){
     }, [])
     const addCourseData = (travel) => {
         if(courseData.findIndex(i=>i.travelId == travel.travelId) === -1 ){
-            if(courseData.length < 5) setCourseData([...courseData, travel])
-            else alert("최대 5개까지 등록할 수 있습니다.")
+            if(courseData.length < 17) setCourseData([...courseData, travel])
+            else alert("최대 17개까지 등록할 수 있습니다.")
         }
         else{
             let tmp = [...courseData]
