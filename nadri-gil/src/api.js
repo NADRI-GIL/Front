@@ -268,3 +268,14 @@ export const postChangePassword = async (data) => {
   })
     .then((response) => response.json());
 }
+
+export const postUserReview = async (data) => {
+  return fetch(`${URL}/reviews/myList`, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => response.json());
+}

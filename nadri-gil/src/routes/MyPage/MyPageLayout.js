@@ -56,7 +56,7 @@ function MyPage() {
         {
             id: 4,
             title: "남긴 리뷰",
-            to: "./mypageheartlist"
+            to: "./mypagereview"
         }
 
 

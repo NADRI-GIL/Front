@@ -85,7 +85,7 @@ const Header = () => {
                         <ul style={{height:'100%'}}>
                             <li><Link to="/travelList" onClick={() => setSearch('')}>지역</Link></li>
                             <li><Link to="/travelListHeart" onClick={() => setSearch('')}>인기</Link></li>
-                            <li><Link to="/" onClick={() => setSearch('')}>코스</Link></li>
+                            <li><Link to="/course" onClick={() => setSearch('')}>코스</Link></li>
                             <li><Link to="/Notice" onClick={() => setSearch('')}>공지사항</Link></li>
                         </ul>
 
