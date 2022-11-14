@@ -179,8 +179,7 @@ function TravelList() {
         let tmp = pageList.map((item) => item + 5)
         setPageList([...tmp])
         setCurrentPage(tmp[0])
-        setCurrentPage(1)
-        setPageList([1, 2, 3, 4, 5])
+        
     }
     const sortData = (index) => {
         let tmp = [...travelList]
@@ -188,7 +187,8 @@ function TravelList() {
         else if (index === 2) tmp.sort((a, b) => b.likeCount - a.likeCount)
         else if (index === 3) tmp.sort((a, b) => b.reviewTotal - a.reviewTotal)
         setTravelList(tmp)
-
+        setCurrentPage(1)
+        setPageList([1, 2, 3, 4, 5])
     }
     useEffect(() => {
         if (data && travelList.length === 0) {

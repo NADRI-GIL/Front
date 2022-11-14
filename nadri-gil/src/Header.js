@@ -1,4 +1,5 @@
 import { Outlet, Link, useNavigate } from 'react-router-dom';
+import { useState } from "react";
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { isLoginedAtom, loginIdAtom } from './atom';
 import "./Header.css";
@@ -8,6 +9,7 @@ import {FiSearch} from 'react-icons/fi';
 
 const Header = () => {
     let navigate = useNavigate();
+    const [search, setSearch] = useState('')
     const isLogined = useRecoilValue(isLoginedAtom);
     const setIsLoginedFn = useSetRecoilState(isLoginedAtom);
     const setLoginIdFn = useSetRecoilState(loginIdAtom);
@@ -34,8 +36,8 @@ const Header = () => {
             </ul>
             
             <div className="search">
-  <input type="text" placeholder="검색어 입력"/>
-  <FiSearch size="30" className="search_button" /> 
+  <input type="text" value={search} onChange={(v)=>setSearch(v.target.value)} placeholder="검색어 입력"/>
+  <FiSearch onClick={()=>navigate(`/Search/${search}`)} size="30" className="search_button" /> 
   </div></div>
                 {isLogined ?
                     <ul>
