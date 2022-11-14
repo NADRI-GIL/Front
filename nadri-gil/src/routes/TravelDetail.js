@@ -235,6 +235,7 @@ function Detail(){
     retry: 0,
     onSuccess: data => {
         console.log(data);
+        reviewrefetch();
     },
     onError: error =>{
       console.log("d");
@@ -268,12 +269,44 @@ function Detail(){
     useEffect(()=>{
       if(loginId != '' && travelreview!==undefined) setReviewss(ReviewCheck(travelreview));
     }, [travelreview])
+      
+    const [like, setLike] = useState(true);
+
+    // if(loginId != '')
+    // setReviewss(ReviewCheck(travelreview));
+    const {mutate:likemutation} = useMutation(['getHeart', loginId],getHeart, {
+      cacheTime: Infinity,
+      staleTime: Infinity,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      retry: 0,
+      onSuccess: data => {
+          console.log(data);
+         
+              // setLike(true);
+              for (let i = 0; i<data.list.length; i++)
+              {
+                if(data.list[i].travelId == id)
+                {
+                  setLike(false);
+                  break;
+                }
+              }
+          
+      },
+  });
+
+  useEffect(()=>{
+    if(loginId != null)
+     { likemutation({
+        "loginId": loginId,
+     "travelId": id})
+     }
+  }, [likemutation])
+  
     useEffect(() => {
     const { naver } = window;
     if (!mapElement.current || !naver) return;
-    
-    // if(loginId != '')
-    // setReviewss(ReviewCheck(travelreview));
     
     travelall?.list.forEach((e) => {
         new naver.maps.Marker({
@@ -295,7 +328,7 @@ function Detail(){
 
     // 좋아요
     const Like = () => {
-        const [like, setLike] = useState(true);
+        // const [like, setLike] = useState(true);
       
         const handleLike = () => {
             likepost.mutate({
@@ -328,35 +361,15 @@ function Detail(){
           },
         });
    
-        const likemutation = useMutation(getHeart, {
-          cacheTime: Infinity,
-          staleTime: Infinity,
-          refetchOnMount: false,
-          refetchOnWindowFocus: false,
-          retry: 0,
-          onSuccess: data => {
-              console.log(data);
-              if (data.resultCode == 0) {
-                  // setLike(true);
-                  for (let i = 0; i<data.list.length; i++)
-                  {
-                    if(data.list[i].travelId == id)
-                    {
-                      setLike(false);
-                      break;
-                    }
-                  }
-              }
-          },
-      });
 
-      useEffect(()=>{
-        if(loginId != null)
-         { likemutation.mutate({
-            "loginId": loginId,
-         "travelId": id})
-         }
-      }, [])
+
+      // useEffect(()=>{
+      //   if(loginId != null)
+      //    { likemutation({
+      //       "loginId": loginId,
+      //    "travelId": id})
+      //    }
+      // }, [])
 
         return (
           <div><button onClick={handleLike}>
@@ -408,12 +421,9 @@ function Detail(){
       //리뷰
       const [hovered, setHovered] = useState(null);
       const [clicked, setClicked] = useState(null);
-      // const [commentArray, setCommentArray] = useState([]);
       const [comment, setComment] = useState('');
       const [img, setImg] = useState('');
-      // const [commentreview, setCommentreview] = useState(false);
       const [editreview, setEditReview] = useState(false);      
-      // const [deletereview, setDeleteReview] = useState(false);
 
       const uploadProfile = (e) =>{
         setComment(e.target.value);
@@ -432,6 +442,7 @@ function Detail(){
       console.log(response);
       setImg(response.data.list[0]);
       console.log(img);
+      setComment('');
    
     })
       .catch(err=>{
@@ -496,11 +507,13 @@ const onClickReview = event => {
 
 const EditReview = () =>{
   setEditReview(true);
+  console.log("editreview")
 }
 const DeleteReview = () =>{
   // deleteReview(revid);
   deletereview.mutate(revid);
   setReviewss(false);
+  // reviewrefetch();
   
 }
   
@@ -572,7 +585,7 @@ const DeleteReview = () =>{
         </div>
         <div style={{width:"80%", height:"fit-content"}}> 
           <button onClick={()=>{onClickReview()}}>올리기</button>
-          <input  placeholder='리뷰를 남겨주세요' type="text"  onChange={onReviewHandler}></input>
+          <input  placeholder='리뷰를 남겨주세요' type="text"  onChange={onReviewHandler} value={review}></input>
         </div>             
       </HiddenReview></> )
      }
