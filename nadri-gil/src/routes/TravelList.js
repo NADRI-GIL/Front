@@ -118,23 +118,7 @@ color:#868686;
 `
 
 function TravelList() {
-    const { isLoading, data, isFetching } = useQuery("travelData", getTravelsAll, {
-        cacheTime: Infinity,
-        staleTime: Infinity,
-        refetchOnMount: false,
-        refetchOnWindowFocus: false,
-        retry: 0,
-        onSuccess: data => {
-            // 성공시 호출
-            setTravelList(data.list)
-            console.log(data);
-        },
-        onError: e => {
-            // 실패시 호출 (401, 404 같은 error가 아니라 정말 api 호출이 실패한 경우만 호출됩니다.)
-            // 강제로 에러 발생시키려면 api단에서 throw Error 날립니다. (참조: https://react-query.tanstack.com/guides/query-functions#usage-with-fetch-and-other-clients-that-do-not-throw-by-default)
-            console.log(e.message);
-        }
-    });
+
 
 
     const OPTIONS = ['경기', '경북', '경남', '서울', '부산', '대구', '인천', '광주', '대전', '울산', '세종', '강원',
@@ -145,15 +129,37 @@ function TravelList() {
     const [selectState, setSelectState] = useState(false);
     const [limit, setLimit] = useState(24);
     const [currentPage, setCurrentPage] = useState(1);
-    const [pageList, setPageList] = useState([1, 2, 3, 4, 5])
+    const [pageList, setPageList] = useState([])
     const offset = (currentPage - 1) * limit;
 
+    const { isLoading, data, isFetching } = useQuery("travelData", getTravelsAll, {
+        cacheTime: Infinity,
+        staleTime: Infinity,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        retry: 0,
+        onSuccess: data => {
+            // 성공시 호출
+            setTravelList(data.list)
+            let tmp = new Array(Math.ceil(data.list.length / 24)).fill(0)
+            tmp.forEach((e, i) => tmp[i] = i + 1)
+            setPageList(tmp)
+        },
+        onError: e => {
+            // 실패시 호출 (401, 404 같은 error가 아니라 정말 api 호출이 실패한 경우만 호출됩니다.)
+            // 강제로 에러 발생시키려면 api단에서 throw Error 날립니다. (참조: https://react-query.tanstack.com/guides/query-functions#usage-with-fetch-and-other-clients-that-do-not-throw-by-default)
+            console.log(e.message);
+        }
+    });
     const selectedData = (field) => {
         if (fieldValue.indexOf(field) === -1) {
             let tmp = [...fieldValue]
             tmp.push(field)
             setFieldValue([...tmp])
             let tmpdata = data.list.filter((e) => tmp.indexOf(e.location) != -1)
+            let tmppagelist = new Array(Math.ceil(tmpdata.length / 24)).fill(0)
+            tmppagelist.forEach((e, i) => tmppagelist[i] = i + 1)
+            setPageList(tmppagelist)
             setTravelList([...tmpdata])
         }
 
@@ -162,25 +168,33 @@ function TravelList() {
         let tmp = [...fieldValue]
         tmp.splice(index, 1)
         setFieldValue([...tmp])
-        let tmpdata = data.list.filter((e) => tmp.indexOf(e.location) != -1)
-        setTravelList([...tmpdata])
         if (tmp.length === 0) {
             setTravelList(data.list)
+            let tmppagelist = new Array(Math.ceil(data.list.length / 24)).fill(0)
+            tmppagelist.forEach((e, i) => tmppagelist[i] = i + 1)
+            setPageList(tmppagelist)
+        }
+        else{
+            let tmpdata = data.list.filter((e) => tmp.indexOf(e.location) != -1)
+            setTravelList([...tmpdata])
+            let tmppagelist = new Array(Math.ceil(tmpdata.length / 24)).fill(0)
+            tmppagelist.forEach((e, i) => tmppagelist[i] = i + 1)
+            setPageList(tmppagelist)
         }
     }
-    const previousPageList = () => {
-        window.scrollTo(0, 0);
-        let tmp = pageList.map((item) => item - 5)
-        setPageList([...tmp])
-        setCurrentPage(tmp[0])
-    }
-    const nextPageList = () => {
-        window.scrollTo(0, 0);
-        let tmp = pageList.map((item) => item + 5)
-        setPageList([...tmp])
-        setCurrentPage(tmp[0])
-        
-    }
+    // const previousPageList = () => {
+    //     window.scrollTo(0, 0);
+    //     let tmp = pageList.map((item) => item - 5)
+    //     setPageList([...tmp])
+    //     setCurrentPage(tmp[0])
+    // }
+    // const nextPageList = () => {
+    //     window.scrollTo(0, 0);
+    //     let tmp = pageList.map((item) => item + 5)
+    //     setPageList([...tmp])
+    //     setCurrentPage(tmp[0])
+
+    // }
     const sortData = (index) => {
         let tmp = [...travelList]
         if (index === 1) tmp.sort((a, b) => a.id - b.id)
@@ -188,7 +202,6 @@ function TravelList() {
         else if (index === 3) tmp.sort((a, b) => b.reviewTotal - a.reviewTotal)
         setTravelList(tmp)
         setCurrentPage(1)
-        setPageList([1, 2, 3, 4, 5])
     }
     useEffect(() => {
         if (data && travelList.length === 0) {
@@ -231,20 +244,20 @@ function TravelList() {
                         <Content>
                             <a href={`/TravelDetail/${item.id}`} target='_blank' rel='noreferrer'>
                                 <img src={item.image}></img>
-                                <div style={{ display: 'flex' , justifyContent:'space-between', width:'98%', margin:'0.5vh auto'}}>
-                                <p style={{color:'#3366ff'}}>{item.location}</p>
-                                <div style={{ display: 'flex' , alignItems:'center'}}>
-                                    <div style={{ display: 'flex' , alignItems:'center'}}>
-                                        <AiFillStar color='#ffda38' size='20'></AiFillStar><span>{item.reviewTotal.toFixed(1)}</span>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', width: '98%', margin: '0.5vh auto' }}>
+                                    <p style={{ color: '#3366ff' }}>{item.location}</p>
+                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                                            <AiFillStar color='#ffda38' size='20'></AiFillStar><span>{item.reviewTotal.toFixed(1)}</span>
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', marginLeft: '0.3vw' }}>
+                                            <AiFillHeart color='red' size='20'></AiFillHeart><span>{item.likeCount}</span>
+                                        </div>
                                     </div>
-                                    <div style={{ display: 'flex', alignItems:'center', marginLeft:'0.3vw' }}>
-                                        <AiFillHeart color='red' size='20'></AiFillHeart><span>{item.likeCount}</span>
-                                    </div>
-                                    </div>
-                                    
+
                                 </div>
-                                <div style={{ width:'98%', margin:'auto'}}>
-                                <p>{item.name}</p>
+                                <div style={{ width: '98%', margin: 'auto' }}>
+                                    <p>{item.name}</p>
                                 </div>
                             </a>
                         </Content>
@@ -256,8 +269,9 @@ function TravelList() {
                     ''
                     :
                     <Pagination>
-                        {currentPage > 5 ? <PageButton onClick={previousPageList}>&lt;</PageButton> : ''}
-                        {pageList.map((item) => {
+                        {currentPage > 5 ? <PageButton onClick={()=>{window.scrollTo(0, 0); setCurrentPage(1);}}>&lt;&lt;</PageButton> : ''}
+                        {currentPage > 5 ? <PageButton onClick={()=>{window.scrollTo(0, 0); setCurrentPage((parseInt((currentPage-1)/5)*5)-4);}}>&lt;</PageButton> : ''}
+                        {pageList.slice((parseInt((currentPage-1)/5)*5), (parseInt((currentPage-1)/5)*5)+5).map((item) => {
                             if (item === currentPage) {
                                 return (
                                     <CurrentPageButton onClick={() => { window.scrollTo(0, 0); setCurrentPage(item); }}>{item}</CurrentPageButton>
@@ -269,7 +283,8 @@ function TravelList() {
                                 )
                             }
                         })}
-                        <PageButton onClick={nextPageList}>&gt;</PageButton>
+                        {pageList.length > 5 && currentPage <= (parseInt(pageList.length/5))*5? <PageButton onClick={()=>{window.scrollTo(0, 0); setCurrentPage((parseInt((currentPage-1)/5)*5)+6);}}>&gt;</PageButton> : ''}
+                        {pageList.length > 5 && currentPage <= (parseInt(pageList.length/5))*5? <PageButton onClick={()=>{window.scrollTo(0, 0); setCurrentPage(pageList.length)}}>&gt;&gt;</PageButton> : ''}
                     </Pagination>}
             </ContentList>
         </Container>
