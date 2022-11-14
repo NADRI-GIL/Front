@@ -2,16 +2,18 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import "../index.css"
-import {Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
+import { AiFillStar, AiFillHeart } from 'react-icons/ai';
 
 
 import { getTravelsAll } from "../api.js"
 import { useQuery } from "react-query";
 
 const Container = styled.div`
-    width:60%;
+    width:55%;
     margin:auto;
+    
 `;
 
 const ContentList = styled.div`
@@ -23,9 +25,11 @@ margin-top:3vh;
 `
 const Content = styled.div`
 width:25%;
-height:25vh;
+// height:25vh;
+margin-bottom:2vh;
 padding:5px;
-text-align:center;
+
+// text-align:center;
     img{
         object-fit: cover;
         height:18vh;
@@ -38,7 +42,13 @@ text-align:center;
     p{
         font-family: 'SUIT';
         font-size:0.8vw;
-        margin-top:1vh;
+        margin:0;
+        font-weight:500;
+    }
+    span{
+        font-family: 'SUIT';
+        font-size:0.95em;
+        margin-left:0.2vw;
     }
 `;
 const SelectContainer = styled.div`
@@ -79,7 +89,7 @@ background-color:#f4f4f4;
 const Pagination = styled.div`
 width:100%;
 height:4vh;
-margin: 7vh 0 20vh 0;
+margin: 7vh 0 0 0;
 // background-color:yellow;
 // display:flex;
 // vertical-align:middle;
@@ -100,7 +110,28 @@ const CurrentPageButton = styled(PageButton)`
 border:1px solid #3366ff;
 background-color:white;
 `
+const Sort = styled.div`
+font-family: 'SUIT';
+margin:0 0.3vw 0 0.3vw;
+cursor:pointer;
+color:#868686;
+`
+
 function TravelList() {
+
+
+
+    const OPTIONS = ['경기', '경북', '경남', '서울', '부산', '대구', '인천', '광주', '대전', '울산', '세종', '강원',
+        '충북', '충남', '전북', '전남', '제주'];
+
+    const [travelList, setTravelList] = useState([]);
+    const [fieldValue, setFieldValue] = useState([]);
+    const [selectState, setSelectState] = useState(false);
+    const [limit, setLimit] = useState(24);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageList, setPageList] = useState([])
+    const offset = (currentPage - 1) * limit;
+
     const { isLoading, data, isFetching } = useQuery("travelData", getTravelsAll, {
         cacheTime: Infinity,
         staleTime: Infinity,
@@ -110,7 +141,9 @@ function TravelList() {
         onSuccess: data => {
             // 성공시 호출
             setTravelList(data.list)
-            console.log(data);
+            let tmp = new Array(Math.ceil(data.list.length / 24)).fill(0)
+            tmp.forEach((e, i) => tmp[i] = i + 1)
+            setPageList(tmp)
         },
         onError: e => {
             // 실패시 호출 (401, 404 같은 error가 아니라 정말 api 호출이 실패한 경우만 호출됩니다.)
@@ -118,25 +151,15 @@ function TravelList() {
             console.log(e.message);
         }
     });
-
-    
-    const OPTIONS = ['경기', '경북', '경남', '서울', '부산', '대구', '인천', '광주', '대전', '울산', '세종', '강원',
-        '충북', '충남', '전북', '전남', '제주'];
-
-    const [travelList, setTravelList] = useState([]);
-    const [fieldValue, setFieldValue] = useState([]);
-    const [selectState, setSelectState] = useState(false);
-    const [limit, setLimit] = useState(24);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [pageList, setPageList] = useState([1, 2, 3, 4, 5])
-    const offset = (currentPage - 1) * limit;
-
     const selectedData = (field) => {
         if (fieldValue.indexOf(field) === -1) {
             let tmp = [...fieldValue]
             tmp.push(field)
             setFieldValue([...tmp])
             let tmpdata = data.list.filter((e) => tmp.indexOf(e.location) != -1)
+            let tmppagelist = new Array(Math.ceil(tmpdata.length / 24)).fill(0)
+            tmppagelist.forEach((e, i) => tmppagelist[i] = i + 1)
+            setPageList(tmppagelist)
             setTravelList([...tmpdata])
         }
 
@@ -145,32 +168,48 @@ function TravelList() {
         let tmp = [...fieldValue]
         tmp.splice(index, 1)
         setFieldValue([...tmp])
-        let tmpdata = data.list.filter((e) => tmp.indexOf(e.location) != -1)
-        setTravelList([...tmpdata])
         if (tmp.length === 0) {
             setTravelList(data.list)
+            let tmppagelist = new Array(Math.ceil(data.list.length / 24)).fill(0)
+            tmppagelist.forEach((e, i) => tmppagelist[i] = i + 1)
+            setPageList(tmppagelist)
+        }
+        else{
+            let tmpdata = data.list.filter((e) => tmp.indexOf(e.location) != -1)
+            setTravelList([...tmpdata])
+            let tmppagelist = new Array(Math.ceil(tmpdata.length / 24)).fill(0)
+            tmppagelist.forEach((e, i) => tmppagelist[i] = i + 1)
+            setPageList(tmppagelist)
         }
     }
-    const previousPageList=()=>{
-        window.scrollTo(0, 0);
-        let tmp = pageList.map((item)=> item-5)
-        setPageList([...tmp])
-        setCurrentPage(tmp[0])
-    }
-    const nextPageList=()=>{
-        window.scrollTo(0, 0);
-        let tmp = pageList.map((item)=> item+5)
-        setPageList([...tmp])
-        setCurrentPage(tmp[0])
+    // const previousPageList = () => {
+    //     window.scrollTo(0, 0);
+    //     let tmp = pageList.map((item) => item - 5)
+    //     setPageList([...tmp])
+    //     setCurrentPage(tmp[0])
+    // }
+    // const nextPageList = () => {
+    //     window.scrollTo(0, 0);
+    //     let tmp = pageList.map((item) => item + 5)
+    //     setPageList([...tmp])
+    //     setCurrentPage(tmp[0])
 
+    // }
+    const sortData = (index) => {
+        let tmp = [...travelList]
+        if (index === 1) tmp.sort((a, b) => a.id - b.id)
+        else if (index === 2) tmp.sort((a, b) => b.likeCount - a.likeCount)
+        else if (index === 3) tmp.sort((a, b) => b.reviewTotal - a.reviewTotal)
+        setTravelList(tmp)
+        setCurrentPage(1)
     }
-    useEffect(()=>{
-        if(data&&travelList.length===0){
+    useEffect(() => {
+        if (data && travelList.length === 0) {
             setTravelList(data.list)
         }
         console.log(travelList)
 
-    },[travelList])
+    }, [travelList])
 
     return (
         <Container>
@@ -181,9 +220,9 @@ function TravelList() {
                         <Selected onClick={() => deleteData(index)} style={{ margin: '0 0 0 0.5vw' }}>{item}</Selected>
                     )
                 })}
-                
+
                 {selectState ?
-                
+
                     <div>
                         <Hr></Hr>
                         {OPTIONS.map((item) => {
@@ -193,39 +232,60 @@ function TravelList() {
                         })}
                     </div> : ''}
             </SelectContainer>
+            <div style={{ display: "flex", float: "right" }}>
+                <Sort onClick={() => sortData(1)}>최신순</Sort>
+                <Sort onClick={() => sortData(2)}>하트순</Sort>
+                <Sort onClick={() => sortData(3)}>별점순</Sort>
+            </div>
             <ContentList>
 
-                {travelList.length===0 ? 'loading...' : travelList.slice(offset, offset+limit).map((item) => {
+                {travelList.length === 0 ? 'loading...' : travelList.slice(offset, offset + limit).map((item) => {
                     return (
                         <Content>
                             <a href={`/TravelDetail/${item.id}`} target='_blank' rel='noreferrer'>
                                 <img src={item.image}></img>
-                                <p>{item.name}</p>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', width: '98%', margin: '0.5vh auto' }}>
+                                    <p style={{ color: '#3366ff' }}>{item.location}</p>
+                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                                            <AiFillStar color='#ffda38' size='20'></AiFillStar><span>{item.reviewTotal.toFixed(1)}</span>
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', marginLeft: '0.3vw' }}>
+                                            <AiFillHeart color='red' size='20'></AiFillHeart><span>{item.likeCount}</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div style={{ width: '98%', margin: 'auto' }}>
+                                    <p>{item.name}</p>
+                                </div>
                             </a>
                         </Content>
-                        
+
                     )
                 })
                 }
-                {isLoading?
-                ''
-            :
-            <Pagination>
-                {currentPage>5?<PageButton onClick={previousPageList}>&lt;</PageButton>:''}
-                {pageList.map((item)=>{
-                    if(item === currentPage){
-                        return(
-                            <CurrentPageButton onClick={()=>{window.scrollTo(0, 0);setCurrentPage(item);}}>{item}</CurrentPageButton>
-                        )
-                    }
-                    else{
-                    return(
-                    <PageButton onClick={()=>{window.scrollTo(0, 0);setCurrentPage(item);}}>{item}</PageButton>
-                    )
-                    }
-                })}
-                <PageButton onClick={nextPageList}>&gt;</PageButton>
-            </Pagination>}
+                {isLoading ?
+                    ''
+                    :
+                    <Pagination>
+                        {currentPage > 5 ? <PageButton onClick={()=>{window.scrollTo(0, 0); setCurrentPage(1);}}>&lt;&lt;</PageButton> : ''}
+                        {currentPage > 5 ? <PageButton onClick={()=>{window.scrollTo(0, 0); setCurrentPage((parseInt((currentPage-1)/5)*5)-4);}}>&lt;</PageButton> : ''}
+                        {pageList.slice((parseInt((currentPage-1)/5)*5), (parseInt((currentPage-1)/5)*5)+5).map((item) => {
+                            if (item === currentPage) {
+                                return (
+                                    <CurrentPageButton onClick={() => { window.scrollTo(0, 0); setCurrentPage(item); }}>{item}</CurrentPageButton>
+                                )
+                            }
+                            else {
+                                return (
+                                    <PageButton onClick={() => { window.scrollTo(0, 0); setCurrentPage(item); }}>{item}</PageButton>
+                                )
+                            }
+                        })}
+                        {pageList.length > 5 && currentPage <= (parseInt(pageList.length/5))*5? <PageButton onClick={()=>{window.scrollTo(0, 0); setCurrentPage((parseInt((currentPage-1)/5)*5)+6);}}>&gt;</PageButton> : ''}
+                        {pageList.length > 5 && currentPage <= (parseInt(pageList.length/5))*5? <PageButton onClick={()=>{window.scrollTo(0, 0); setCurrentPage(pageList.length)}}>&gt;&gt;</PageButton> : ''}
+                    </Pagination>}
             </ContentList>
         </Container>
     )

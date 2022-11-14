@@ -6,7 +6,7 @@ import "../../index.css"
 
 const Container = styled.div`
 display:flex;
-width:60%;
+width:55%;
 margin:auto;
 `
 const ListContainer = styled.div`
@@ -56,7 +56,7 @@ function MyPage() {
         {
             id: 4,
             title: "남긴 리뷰",
-            to: "./mypageheartlist"
+            to: "./mypagereview"
         }
 
 
