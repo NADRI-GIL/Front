@@ -11,7 +11,7 @@ import { getTravelsAll } from "../api.js"
 import { useQuery } from "react-query";
 
 const Container = styled.div`
-    width:60%;
+    width:55%;
     margin:auto;
     
 `;

@@ -7,7 +7,7 @@ import "../index.css"
 
 
 const Container = styled.div`
-    width:60%;
+    width:55%;
     margin:auto;
 
 `;

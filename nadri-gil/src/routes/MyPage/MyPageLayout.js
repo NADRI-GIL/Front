@@ -6,7 +6,7 @@ import "../../index.css"
 
 const Container = styled.div`
 display:flex;
-width:60%;
+width:55%;
 margin:auto;
 `
 const ListContainer = styled.div`
