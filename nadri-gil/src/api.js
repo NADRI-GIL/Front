@@ -225,3 +225,23 @@ export const getViewCourse = async (courseId) => {
   })
     .then((response) => response.json());
 }
+
+export const postDeleteUser = async (userId) => {
+  return fetch(`${URL}/users/delete/${userId}`, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json());
+}
+export const postChangePassword = async (data) => {
+  return fetch(`${URL}/users/users/edit`, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => response.json());
+}
