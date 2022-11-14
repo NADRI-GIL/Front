@@ -78,9 +78,11 @@ function MyPageInfo() {
                     <InfoContainer><Title>닉네임</Title><Text>{userInfo.nickname}</Text></InfoContainer>
                     <InfoContainer><Title>아이디</Title><Text>{userInfo.loginId}</Text></InfoContainer>
                     <InfoContainer><Title>이메일</Title><Text>{userInfo.email}</Text></InfoContainer>
+                    <Button>비밀번호 변경</Button>
+
                 </div>
+                
             }
-            <Button>비밀번호 변경</Button>
         </Container>
     )
 

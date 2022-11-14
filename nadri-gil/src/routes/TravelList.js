@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import "../index.css"
-import {Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
+import { AiFillStar, AiFillHeart } from 'react-icons/ai';
 
 
 import { getTravelsAll } from "../api.js"
@@ -12,6 +13,7 @@ import { useQuery } from "react-query";
 const Container = styled.div`
     width:60%;
     margin:auto;
+    
 `;
 
 const ContentList = styled.div`
@@ -23,9 +25,11 @@ margin-top:3vh;
 `
 const Content = styled.div`
 width:25%;
-height:25vh;
+// height:25vh;
+margin-bottom:2vh;
 padding:5px;
-text-align:center;
+
+// text-align:center;
     img{
         object-fit: cover;
         height:18vh;
@@ -38,7 +42,13 @@ text-align:center;
     p{
         font-family: 'SUIT';
         font-size:0.8vw;
-        margin-top:1vh;
+        margin:0;
+        font-weight:500;
+    }
+    span{
+        font-family: 'SUIT';
+        font-size:0.95em;
+        margin-left:0.2vw;
     }
 `;
 const SelectContainer = styled.div`
@@ -100,6 +110,13 @@ const CurrentPageButton = styled(PageButton)`
 border:1px solid #3366ff;
 background-color:white;
 `
+const Sort = styled.div`
+font-family: 'SUIT';
+margin:0 0.3vw 0 0.3vw;
+cursor:pointer;
+color:#868686;
+`
+
 function TravelList() {
     const { isLoading, data, isFetching } = useQuery("travelData", getTravelsAll, {
         cacheTime: Infinity,
@@ -119,7 +136,7 @@ function TravelList() {
         }
     });
 
-    
+
     const OPTIONS = ['경기', '경북', '경남', '서울', '부산', '대구', '인천', '광주', '대전', '울산', '세종', '강원',
         '충북', '충남', '전북', '전남', '제주'];
 
@@ -151,26 +168,35 @@ function TravelList() {
             setTravelList(data.list)
         }
     }
-    const previousPageList=()=>{
+    const previousPageList = () => {
         window.scrollTo(0, 0);
-        let tmp = pageList.map((item)=> item-5)
+        let tmp = pageList.map((item) => item - 5)
         setPageList([...tmp])
         setCurrentPage(tmp[0])
     }
-    const nextPageList=()=>{
+    const nextPageList = () => {
         window.scrollTo(0, 0);
-        let tmp = pageList.map((item)=> item+5)
+        let tmp = pageList.map((item) => item + 5)
         setPageList([...tmp])
         setCurrentPage(tmp[0])
-
+        
     }
-    useEffect(()=>{
-        if(data&&travelList.length===0){
+    const sortData = (index) => {
+        let tmp = [...travelList]
+        if (index === 1) tmp.sort((a, b) => a.id - b.id)
+        else if (index === 2) tmp.sort((a, b) => b.likeCount - a.likeCount)
+        else if (index === 3) tmp.sort((a, b) => b.reviewTotal - a.reviewTotal)
+        setTravelList(tmp)
+        setCurrentPage(1)
+        setPageList([1, 2, 3, 4, 5])
+    }
+    useEffect(() => {
+        if (data && travelList.length === 0) {
             setTravelList(data.list)
         }
         console.log(travelList)
 
-    },[travelList])
+    }, [travelList])
 
     return (
         <Container>
@@ -181,9 +207,9 @@ function TravelList() {
                         <Selected onClick={() => deleteData(index)} style={{ margin: '0 0 0 0.5vw' }}>{item}</Selected>
                     )
                 })}
-                
+
                 {selectState ?
-                
+
                     <div>
                         <Hr></Hr>
                         {OPTIONS.map((item) => {
@@ -193,39 +219,58 @@ function TravelList() {
                         })}
                     </div> : ''}
             </SelectContainer>
+            <div style={{ display: "flex", float: "right" }}>
+                <Sort onClick={() => sortData(1)}>최신순</Sort>
+                <Sort onClick={() => sortData(2)}>하트순</Sort>
+                <Sort onClick={() => sortData(3)}>별점순</Sort>
+            </div>
             <ContentList>
 
-                {travelList.length===0 ? 'loading...' : travelList.slice(offset, offset+limit).map((item) => {
+                {travelList.length === 0 ? 'loading...' : travelList.slice(offset, offset + limit).map((item) => {
                     return (
                         <Content>
                             <a href={`/TravelDetail/${item.id}`} target='_blank' rel='noreferrer'>
                                 <img src={item.image}></img>
+                                <div style={{ display: 'flex' , justifyContent:'space-between', width:'98%', margin:'0.5vh auto'}}>
+                                <p style={{color:'#3366ff'}}>{item.location}</p>
+                                <div style={{ display: 'flex' , alignItems:'center'}}>
+                                    <div style={{ display: 'flex' , alignItems:'center'}}>
+                                        <AiFillStar color='#ffda38' size='20'></AiFillStar><span>{item.reviewTotal.toFixed(1)}</span>
+                                    </div>
+                                    <div style={{ display: 'flex', alignItems:'center', marginLeft:'0.3vw' }}>
+                                        <AiFillHeart color='red' size='20'></AiFillHeart><span>{item.likeCount}</span>
+                                    </div>
+                                    </div>
+                                    
+                                </div>
+                                <div style={{ width:'98%', margin:'auto'}}>
                                 <p>{item.name}</p>
+                                </div>
                             </a>
                         </Content>
-                        
+
                     )
                 })
                 }
-                {isLoading?
-                ''
-            :
-            <Pagination>
-                {currentPage>5?<PageButton onClick={previousPageList}>&lt;</PageButton>:''}
-                {pageList.map((item)=>{
-                    if(item === currentPage){
-                        return(
-                            <CurrentPageButton onClick={()=>{window.scrollTo(0, 0);setCurrentPage(item);}}>{item}</CurrentPageButton>
-                        )
-                    }
-                    else{
-                    return(
-                    <PageButton onClick={()=>{window.scrollTo(0, 0);setCurrentPage(item);}}>{item}</PageButton>
-                    )
-                    }
-                })}
-                <PageButton onClick={nextPageList}>&gt;</PageButton>
-            </Pagination>}
+                {isLoading ?
+                    ''
+                    :
+                    <Pagination>
+                        {currentPage > 5 ? <PageButton onClick={previousPageList}>&lt;</PageButton> : ''}
+                        {pageList.map((item) => {
+                            if (item === currentPage) {
+                                return (
+                                    <CurrentPageButton onClick={() => { window.scrollTo(0, 0); setCurrentPage(item); }}>{item}</CurrentPageButton>
+                                )
+                            }
+                            else {
+                                return (
+                                    <PageButton onClick={() => { window.scrollTo(0, 0); setCurrentPage(item); }}>{item}</PageButton>
+                                )
+                            }
+                        })}
+                        <PageButton onClick={nextPageList}>&gt;</PageButton>
+                    </Pagination>}
             </ContentList>
         </Container>
     )

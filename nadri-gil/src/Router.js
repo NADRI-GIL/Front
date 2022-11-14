@@ -11,6 +11,7 @@ import TravelList from "./routes/TravelList";
 import TravelListHeart from "./routes/TravelList-heart";
 import CreateCourse from "./routes/CreateCourse";
 import Course from "./routes/Course";
+import Search from "./routes/Search";
 
 import MyPageLayout from "./routes/MyPage/MyPageLayout"
 import MyPageInfo from "./routes/MyPage/MyPageInfo";
@@ -32,6 +33,7 @@ function Router() {
                     <Route path="/preferenceSurvey" element={<PreferenceSurvey />}></Route>
                     <Route path="/TravelDetail/:id" element={<TravelDetail/>}></Route>
                     <Route path="/Notice" element={<Notice/>}></Route>
+                    <Route path="/Search/:search" element={<Search/>}></Route>
                     <Route path="/travelList" element={<TravelList/>}></Route>
                     <Route path="/travelListHeart" element={<TravelListHeart/>}></Route>
 
