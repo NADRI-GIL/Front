@@ -8,7 +8,7 @@ import TravelDetail from "./routes/TravelDetail";
 import PutData from "./routes/PutData";
 import Notice from "./routes/Notice/Notice";
 import TravelList from "./routes/TravelList";
-import TravelListHeart from "./routes/TravelList-heart";
+import TravelRecommendList from "./routes/TravelRecommendList";
 import CreateCourse from "./routes/CreateCourse";
 import Course from "./routes/Course";
 import Search from "./routes/Search";
@@ -36,7 +36,7 @@ function Router() {
                     <Route path="/Notice" element={<Notice/>}></Route>
                     <Route path="/Search/:search" element={<Search/>}></Route>
                     <Route path="/travelList" element={<TravelList/>}></Route>
-                    <Route path="/travelListHeart" element={<TravelListHeart/>}></Route>
+                    <Route path="/travelRecommendList" element={<TravelRecommendList/>}></Route>
 
                 <Route path="/createcourse" element={<CreateCourse/>}></Route>
                 <Route path="/course" element={<Course/>}></Route>

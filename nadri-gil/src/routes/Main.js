@@ -84,7 +84,9 @@ function Rank() {
 }
 
 function Recommend() {
-  const { isLoading, isError, error, data } = useQuery('Recommend', getRecommend,{
+  const loginId = useRecoilValue(loginIdAtom);
+
+  const { isLoading, isError, error, data } = useQuery(['Recommend', loginId], getRecommend,{
  
     staleTime: Infinity,
     refetchOnMount: false,
@@ -101,7 +103,7 @@ function Recommend() {
 
   return(
     <div>
-     <div className="title"><h4>추천순</h4><Link className="text_link" to= "./travelListHeart"><h6>전체보기</h6></Link></div>
+     <div className="title"><h4>추천순</h4><Link className="text_link" to= "./travelRecommendList"><h6>전체보기</h6></Link></div>
       <div className="swipe">
             <Swiper spaceBetween={10} slidesPerView={4} >
               {data?.list.map((e)=> {
