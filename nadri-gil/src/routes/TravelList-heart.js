@@ -6,11 +6,11 @@ import {Link } from 'react-router-dom';
 
 
 
-import { getTravelsHeart } from "../api.js"
+import { getMostHeart } from "../api.js"
 import { useQuery } from "react-query";
 
 const Container = styled.div`
-    width:60%;
+    width:55%;
     margin:auto;
 `;
 
@@ -79,7 +79,7 @@ background-color:#f4f4f4;
 const Pagination = styled.div`
 width:100%;
 height:4vh;
-margin: 7vh 0 20vh 0;
+margin: 7vh 0 0 0;
 // background-color:yellow;
 // display:flex;
 // vertical-align:middle;
@@ -101,7 +101,7 @@ border:1px solid #3366ff;
 background-color:white;
 `
 function TravelListHeart() {
-    const { isLoading, data, isFetching } = useQuery("travelDataHeart", getTravelsHeart, {
+    const { isLoading, data, isFetching } = useQuery("mostHeart", getMostHeart, {
         cacheTime: Infinity,
         staleTime: Infinity,
         refetchOnMount: false,
@@ -109,7 +109,7 @@ function TravelListHeart() {
         retry: 0,
         onSuccess: data => {
             // 성공시 호출
-            setTravelList(data.list)
+            setTravelList(data.data.list)
             console.log(data);
         },
         onError: e => {
@@ -153,7 +153,7 @@ function TravelListHeart() {
     }
     useEffect(()=>{
         if(data&&travelList.length===0){
-            setTravelList(data.list)
+            setTravelList(data.data.list)
         }
         console.log(travelList)
 

@@ -61,6 +61,16 @@ block:inline;
 padding-right:1vw;
 cursor:pointer;
 `
+const Shared = styled.p`
+margin:auto 0;
+margin-right:0.4vw;
+font-family: 'SUIT';
+font-size:0.7vw;
+background-color:#e1e9ff;
+color:#3366ff;
+border-radius: 20px;
+padding:0.3vh 0.3vw 0.3vh 0.3vw;
+`
 const Info = styled.div`
 float:right;
 font-family: 'SUIT';
@@ -147,6 +157,7 @@ function MyPageCourse(){
                         <Content >
                             
                                 <div style={{display:'flex'}}>
+                                {item._shared?<Shared>공유</Shared>:''}
                                 <StyledLink to ={`/viewcourse/${item.id}`}>
                                 <Title>{item.name}</Title>
                                 </StyledLink>
