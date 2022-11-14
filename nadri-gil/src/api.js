@@ -283,16 +283,21 @@ export const getTravelReview = async (travelId) => {
 export const updateReview = async ( request) => {
   console.log(request)
   return fetch(`${URL}/reviews/edit/${request[0]}`, {
-
-export const postDeleteUser = async (userId) => {
-  return fetch(`${URL}/users/delete/${userId}`, {
-
     method: "post",
     headers: {
       "Content-Type": "application/json",
     },
-
     body: JSON.stringify(request[1]),
+  })
+    .then((response) => response.json());
+}
+
+export const postDeleteUser = async (userId) => {
+  return fetch(`${URL}/users/delete/${userId}`, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
   })
     .then((response) => response.json());
 }
@@ -300,7 +305,11 @@ export const postDeleteUser = async (userId) => {
 
 export const deleteReview = async (reviewId) => {
   return fetch(`${URL}/reviews/delete/${reviewId}`, {
-
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  
   })
     .then((response) => response.json());
 }
@@ -320,12 +329,14 @@ export const postChangePassword = async (data) => {
 
 
 export const getRecommend = async (loginId) => {
-  return fetch(`${URL}/recommend/${loginId}`, {
+  return fetch(`http://localhost:8080/recommend/${loginId}`, {
     method: "get",
     headers: {
       "Content-Type": "application/json",
     },
-
+  })
+    .then((response) => response.json());
+}
 export const postUserReview = async (data) => {
   return fetch(`${URL}/reviews/myList`, {
     method: "post",

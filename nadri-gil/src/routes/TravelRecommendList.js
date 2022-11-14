@@ -4,14 +4,21 @@ import { useNavigate } from "react-router-dom";
 import "../index.css"
 import {Link } from 'react-router-dom';
 
+import { loginIdAtom, isLoginedAtom } from "../atom.js"
+import { constSelector, useRecoilValue } from "recoil";
+import { AiFillStar, AiFillHeart } from 'react-icons/ai';
 
 
-import { getMostHeart } from "../api.js"
+import { getRecommend } from "../api.js"
 import { useQuery } from "react-query";
 
 const Container = styled.div`
     width:55%;
     margin:auto;
+    p{
+        font-family: 'SUIT';
+        margin-top:1vh;
+    }
 `;
 
 const ContentList = styled.div`
@@ -101,7 +108,10 @@ border:1px solid #3366ff;
 background-color:white;
 `
 function TravelListHeart() {
-    const { isLoading, data, isFetching } = useQuery("mostHeart", getMostHeart, {
+    const loginId = useRecoilValue(loginIdAtom);
+    const isLogined = useRecoilValue(isLoginedAtom);
+
+    const { isLoading, data, isFetching } = useQuery(['Recommend', loginId], getRecommend, {
         cacheTime: Infinity,
         staleTime: Infinity,
         refetchOnMount: false,
@@ -119,38 +129,12 @@ function TravelListHeart() {
         }
     });
 
-    
-    const OPTIONS = ['경기', '경북', '경남', '서울', '부산', '대구', '인천', '광주', '대전', '울산', '세종', '강원',
-        '충북', '충남', '전북', '전남', '제주'];
-
     const [travelList, setTravelList] = useState([]);
-    const [fieldValue, setFieldValue] = useState([]);
-    const [selectState, setSelectState] = useState(false);
     const [limit, setLimit] = useState(24);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageList, setPageList] = useState([1, 2, 3])
     const offset = (currentPage - 1) * limit;
 
-    const selectedData = (field) => {
-        if (fieldValue.indexOf(field) === -1) {
-            let tmp = [...fieldValue]
-            tmp.push(field)
-            setFieldValue([...tmp])
-            let tmpdata = data.list.filter((e) => tmp.indexOf(e.location) != -1)
-            setTravelList([...tmpdata])
-        }
-
-    }
-    const deleteData = (index) => {
-        let tmp = [...fieldValue]
-        tmp.splice(index, 1)
-        setFieldValue([...tmp])
-        let tmpdata = data.list.filter((e) => tmp.indexOf(e.location) != -1)
-        setTravelList([...tmpdata])
-        if (tmp.length === 0) {
-            setTravelList(data.list)
-        }
-    }
     useEffect(()=>{
         if(data&&travelList.length===0){
             setTravelList(data.data.list)
@@ -161,25 +145,7 @@ function TravelListHeart() {
 
     return (
         <Container>
-            <SelectContainer>
-                <Select onClick={() => { setSelectState(!selectState) }}>지역</Select>
-                {fieldValue.map((item, index) => {
-                    return (
-                        <Selected onClick={() => deleteData(index)} style={{ margin: '0 0 0 0.5vw' }}>{item}</Selected>
-                    )
-                })}
-                
-                {selectState ?
-                
-                    <div>
-                        <Hr></Hr>
-                        {OPTIONS.map((item) => {
-                            return (
-                                <Select onClick={() => selectedData(item)} style={{ margin: '0.5vh 0.5vw 0 0' }}>{item}</Select>
-                            )
-                        })}
-                    </div> : ''}
-            </SelectContainer>
+            {isLogined?
             <ContentList>
 
                 {travelList.length===0 ? 'loading...' : travelList.slice(offset, offset+limit).map((item) => {
@@ -187,7 +153,21 @@ function TravelListHeart() {
                         <Content>
                             <a href={`/TravelDetail/${item.id}`} target='_blank' rel='noreferrer'>
                                 <img src={item.image}></img>
-                                <p>{item.name}</p>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', width: '98%', margin: '0.5vh auto' }}>
+                                    <p style={{ color: '#3366ff' }}>{item.location}</p>
+                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                                            <AiFillStar color='#ffda38' size='20'></AiFillStar><span>{item.reviewTotal.toFixed(1)}</span>
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', marginLeft: '0.3vw' }}>
+                                            <AiFillHeart color='red' size='20'></AiFillHeart><span>{item.likeCount}</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div style={{ width: '98%', margin: 'auto' }}>
+                                    <p>{item.name}</p>
+                                </div>
                             </a>
                         </Content>
                         
@@ -212,7 +192,7 @@ function TravelListHeart() {
                 })}
 
             </Pagination>}
-            </ContentList>
+            </ContentList>:<p>로그인이 필요한 기능입니다.</p>}
         </Container>
     )
 
