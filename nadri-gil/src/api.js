@@ -35,6 +35,20 @@ export const postLogin = async (data) => {
     })
       .then((response) => response.json());
   }
+  export const postPreferenceData = async (data) => {
+    return fetch(`${URL}/hearts/addFive`, {
+      method: "post",
+      headers: {
+        Accept:'application/json',
+  
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    }, { withCredentials: true })
+      .then((response) => response.json());
+  
+  }
+  
 
   export const getMain = async (data) => {
     return axios.get(`${URL}/travels/random`);
