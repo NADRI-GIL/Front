@@ -24,6 +24,7 @@ margin:2vh 0 2vh 0;
 const Title = styled.p`
 color:#868686;
 width:10%;
+font-family: 'SUIT';
 font-size:0.7vw;
 margin:auto 0 auto 0;
 `
