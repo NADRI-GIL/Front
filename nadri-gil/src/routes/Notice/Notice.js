@@ -72,15 +72,6 @@ const Tbody = styled.div`
 `
 
 function Notice(){
-    const data=[
-      {notice_id:1, user_id: 1,register_date:20220208 ,title:"첫번째 게시글입니다.", content :"내용" , tag: "중요"  },
-      {notice_id:2, user_id: 1,register_date:20220208 ,title:"제목", content :"내용" , tag: "중요"  },
-      {notice_id:3, user_id: 1,register_date:20220208 ,title:"제목", content :"내용" , tag: "중요"  },
-      {notice_id:4, user_id: 1,register_date:20220208 ,title:"제목", content :"내용" , tag: "중요"  },
-      {notice_id:5, user_id: 1,register_date:20220208 ,title:"제목", content :"내용" , tag: "중요"  },
-
-    ]
-
     const navigate = useNavigate();
  
     const navigateToPurchase = () => {
@@ -97,15 +88,15 @@ function Notice(){
             <th>등록일</th> 
         </Thead>
         <Hr/>
-           {data.map((e)=> {
-          return( 
+           {/* {data.map((e)=> {
+          return(  */}
             <Tbody>
-            <td>{e.notice_id}</td>
-            <Link to ="../Notice/NoticeContent" state={e} ><td> {e.tag}{e.title}</td></Link>
-            <td>{e.register_date}</td>
+            <td>1</td>
+            <Link to ="../Notice/NoticeContent" ><td>나드리길 이용방법</td></Link>
+            <td>2022.11.01</td>
             </Tbody>
-            )
-            })}
+            {/* )
+            })} */}
            <button  onClick={navigateToPurchase}>작성하기</button>
       </Container>
     </>

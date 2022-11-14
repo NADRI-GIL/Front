@@ -1,13 +1,31 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {FaMapMarkerAlt, FaQuoteLeft } from 'react-icons/fa';
+import {Link } from 'react-router-dom';
 import { SlArrowRight,SlArrowLeft } from 'react-icons/sl';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore, { Navigation, Scrollbar } from 'swiper';
-import { faQuoteLeft, faQuoteRight, faChevronCircleRight ,faChevronCircleLeft} from "@fortawesome/free-solid-svg-icons";
+import { faQuoteLeft, faQuoteRight} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styled from "styled-components";
 import { getSharedCourse, getTravelDetail } from "../api.js";
 import { useQuery } from "react-query";
+
+const Cont = styled.div`
+margin-top:1vh;
+width:25%;
+// height:22vh;
+padding:5px;
+// text-align:center;
+color:black;
+
+    img{
+        object-fit: cover;
+        height:15vh;
+        // overflow: hidden;
+        width:100%;
+    }
+
+`;
 
 const Container = styled.div`
 width: 50%;
@@ -58,6 +76,65 @@ padding: 0;
 background: none;
 border:none;
 `
+
+const Title = styled.p`
+margin:auto 0;
+font-family: 'SUIT';
+font-size:1vw;
+`
+const Name = styled.p`
+font-size:0.6vw;
+padding-left:0.6vw;
+`
+const Delete = styled.p`
+font-size:0.6vw;
+margin:auto 0;
+color:#B8B8B8;
+margin-left: auto;
+block:inline;
+padding-right:1vw;
+cursor:pointer;
+`
+const Info = styled.div`
+float:right;
+font-family: 'SUIT';
+font-size:1.3w;
+margin:1vh;
+button{
+    background-color:#3366ff;
+    color:#ffffff;
+    border:none;
+    border-radius: 10px;
+    margin-left:0.5vw;
+    padding: 0 0.5vw 0 0.5vw;
+}
+`
+const CompleteButton = styled.button`
+float:right;
+font-family: 'SUIT';
+box-sizing: border-box;
+background-color:#3366ff;
+color:#ffffff;
+border:none;
+border-radius: 10px;
+height: 6vh;
+font-size:0.8vw;
+padding:0 7vh 0 7vh;
+margin:auto;
+margin-top:2vh;
+`
+const StyledLink = styled(Link)`
+	color:black;
+`;
+
+const ContentList = styled.div`
+display:flex;
+flex-wrap:wrap;
+width:100%;
+margin:auto;
+margin-top:3vh;
+`
+
 function Course(props) {
 
   const [data1, setData] = useState([
@@ -195,7 +272,7 @@ function Course(props) {
         <Container>
             <h3><b>코스</b></h3>
             <Hr/>
-            <h5>지자체 추천 코스</h5>
+            <h4 style={{marginTop:"20px"}}>지자체 추천 코스</h4>
             {Info.map((e)=>{return(<>
              <div style={{display:"flex", marginBottom:"30px",  justifyContent: "center" ,textAlign:"center"}}>
               <FontAwesomeIcon icon ={faQuoteLeft} /> 
@@ -221,7 +298,7 @@ function Course(props) {
           </div> 
           <h6>{e.content}</h6>
               </> )})} 
-            <Content style={{display: "flex", textAlign:"center",  justifyContent:"space-around", marginTop:"20px"}}>
+            <Content style={{marginBottom:"20px", display: "flex", textAlign:"center",  justifyContent:"space-around", marginTop:"20px"}}>
               <button onClick={()=>navigationChange(0)}>
                   <div style={{width:"180px",margin:"0 20px", height:"180px", borderRadius:"50%", display:"block", overflow:"hidden"}}>
                   {course3?.list.map((e)=>{return(<img style={{objectFit:"cover", width:"100%", height:"100%"}} src ={e.image}></img> )}) }
@@ -243,11 +320,31 @@ function Course(props) {
                   <h6>아름다운 풍경을 자랑하는<br></br> 제천 & 단양 여행 코스</h6>
                   </button>
             </Content>
-            <div>
+            <Hr/>
+            <div style={{marginTop: "20px"}}>
               <h4>코스 공유 목록</h4>
-              
-
-
+              <ContentList>
+              {
+              shared?.list.map((item) => {
+                    return (
+                        <Cont>
+                          <div style={{display:'flex'}}>
+                            <StyledLink to ={`/viewcourse/${item.id}`}>
+                            <Title>{item.name}</Title>
+                            </StyledLink>
+                            {/* <Delete onClick={()=>{onClinkDeleteCourse(item.id, item.name)}}>삭제</Delete> */}
+                          </div>
+                          <StyledLink to ={`/viewcourse/${item.id}`}>
+                            <div style={{ borderLeft: "0.2vw solid #3366ff", marginTop:"2vh"}}>
+                            {item.courseTravels.map((travelname)=>
+                            <Name>{travelname.travelName}</Name>)}
+                            </div>
+                          </StyledLink> 
+                        </Cont>
+                    )
+                })
+                } 
+                </ContentList>
             </div>
               
         </Container>
