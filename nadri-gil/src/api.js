@@ -249,25 +249,82 @@ export const getViewCourse = async (courseId) => {
     .then((response) => response.json());
 }
 
+
+export const getSharedCourse = async () => {
+  return fetch(`${URL}/courses/getShared`, {
+    method: "get",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json());
+}
+
+export const getStar = async () => {
+  return fetch(`${URL}/travels/review`, {
+    method: "get",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json());
+}
+
+export const getTravelReview = async (travelId) => {
+  return fetch(`${URL}/reviews/all/${travelId}`, {
+    method: "get",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json());
+}
+
+export const updateReview = async ( request) => {
+  console.log(request)
+  return fetch(`${URL}/reviews/edit/${request[0]}`, {
+
 export const postDeleteUser = async (userId) => {
   return fetch(`${URL}/users/delete/${userId}`, {
+
     method: "post",
     headers: {
       "Content-Type": "application/json",
     },
+
+    body: JSON.stringify(request[1]),
+  })
+    .then((response) => response.json());
+}
+
+
+export const deleteReview = async (reviewId) => {
+  return fetch(`${URL}/reviews/delete/${reviewId}`, {
+
   })
     .then((response) => response.json());
 }
 export const postChangePassword = async (data) => {
   return fetch(`${URL}/users/edit`, {
+
     method: "post",
     headers: {
       "Content-Type": "application/json",
     },
+
     body: JSON.stringify(data),
+
   })
     .then((response) => response.json());
 }
+
+
+export const getRecommend = async (loginId) => {
+  return fetch(`${URL}/recommend/${loginId}`, {
+    method: "get",
+    headers: {
+      "Content-Type": "application/json",
+    },
 
 export const postUserReview = async (data) => {
   return fetch(`${URL}/reviews/myList`, {

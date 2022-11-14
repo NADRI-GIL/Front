@@ -43,25 +43,41 @@ color: inherit;
 
 .swipe_div{
     margin: 0 auto; 
-    height:320px;
     text-align: center;
     overflow: hidden;
+    max-width: 230px;
+    width:230px;
 }
 
 .swipe_div img {
     transition: all 0.2s linear;
+    /* overflow:hidden; */
+    max-height: 260px;
+
+    margin: 0 auto;
   }
   .swipe_div:hover img {
+
     transform: scale(1.1);
-  }
+    /* transition: all 0.2s linear; */
+    /* width:230px;
+    overflow:hidden;
+    object-fit: cover; */
+}
 
   .swipe_imgbox{
 overflow: hidden;
+margin: 0 auto; 
+text-align: center;
+overflow: hidden;
+max-width: 230px;
+height:260px;
+width:230px;
  }
 
 .swipe_img{
    height:260px;
-    Width:230px;
+    width:230px;
     margin: 0 auto;
 }
 

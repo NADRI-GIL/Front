@@ -5,10 +5,10 @@ import { AiOutlineHeart, AiOutlineEdit, AiFillStar, AiFillHeart, AiFillFilter, A
 import { BsTrash } from 'react-icons/bs';
 import { RiRoadMapLine, RiRoadMapFill } from "react-icons/ri";
 import { Mutation, QueryClient, useMutation, useQuery } from "react-query";
-import { getTravelDetail, postCart,getHeart, postHeart, postReview, getInfo } from "../api.js";
+import { getTravelDetail,getTravelReview,updateReview, postCart,getHeart, deleteReview, postHeart, postReview, getInfo } from "../api.js";
 import "./Main.css";
 import styled from "styled-components";
-import { faStar , faPencilSquare,faTrash} from "@fortawesome/free-solid-svg-icons";
+import { faStar , faQuoteLeft, faQuoteRight, faPencilSquare,faTrash} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { loginIdAtom } from "../atom.js"
 import { constSelector, useRecoilValue } from "recoil";
@@ -158,10 +158,11 @@ function Detail(){
     const loginId = useRecoilValue(loginIdAtom);
     const [likeCount, setLikeCount] = useState(0);
     const [reviewss, setReviewss] = useState(false);
- 
+    const [num, setNum] = useState(0);
+    const [revid , setReviewId] = useState(0);
 
     let writeCheck = false;
-    let num = 0;
+    // let num = 0;
     
     const {data:res} = useQuery(['userInfo', loginId], () => getInfo(loginId), {
       cacheTime: Infinity,
@@ -178,7 +179,7 @@ function Detail(){
       }
   })
 
-  const { data } = useQuery(['TravelDetail', id], () => getTravelDetail(id), {
+  const { data:travelall } = useQuery(['TravelDetail', id], () => getTravelDetail(id), {
       cacheTime: Infinity,
       staleTime: Infinity,
       refetchOnMount: false,
@@ -194,18 +195,69 @@ function Detail(){
       },
     })
 
+    const { refetch:reviewrefetch, data:travelreview } = useQuery(['TravelReview', id], () => getTravelReview(id), {
+      // cacheTime: Infinity,
+      staleTime: Infinity,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      retry: 0,
+      onSuccess: data => {
+        console.log(data);
+        console.log("SDfd");
+        setTimeout(ReviewCheck(data), 1000);
+        
+    
+        // console.log(travelreview);
+      },
+      // onSuccess: refetch => {
+      //   console.log("refetch");
+      // },
+    })
+
+    const updatereview = useMutation(updateReview, {
+      cacheTime: Infinity,
+      staleTime: Infinity,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      retry: 0,
+      onSuccess: data => {
+          console.log(data);
+          reviewrefetch();
+          setEditReview(false);
+      },
+  });
+
+  const deletereview = useMutation(deleteReview, {
+    cacheTime: Infinity,
+    staleTime: Infinity,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    retry: 0,
+    onSuccess: data => {
+        console.log(data);
+    },
+    onError: error =>{
+      console.log("d");
+    }
+});
+
+
     const ReviewCheck= (e) =>{
 
-     console.log("1체크");
-      for (let i = 0; i < e.reviews.length;  i++)
+     console.log("1체크", travelreview);
+     setTimeout(1000);
+    //  console.log(e.list.length);
+      for (let i = 0; i < e.list.length;  i++)
       {
         console.log("2체크");
 
-        if(e.reviews[i].nickname == res.list[0].nickname)
+        if(e.list[i].nickname == res.list[0].nickname)
         { 
           writeCheck = true;
           console.log("writecheck",writeCheck);
           setReviewss(writeCheck);
+          setNum(i);
+          setReviewId(e.list[i].id);
           console.log("ss1", reviewss);
           return true;
         }
@@ -213,15 +265,17 @@ function Detail(){
       return null;
         
     }
-
+    useEffect(()=>{
+      if(loginId != '' && travelreview!==undefined) setReviewss(ReviewCheck(travelreview));
+    }, [travelreview])
     useEffect(() => {
     const { naver } = window;
     if (!mapElement.current || !naver) return;
     
-    if(loginId != '')
-    setReviewss(ReviewCheck(data.list[0]));
+    // if(loginId != '')
+    // setReviewss(ReviewCheck(travelreview));
     
-    data?.list.forEach((e) => {
+    travelall?.list.forEach((e) => {
         new naver.maps.Marker({
         map: new naver.maps.Map(mapElement.current, naver.maps.MapOptions = {
             center: new naver.maps.LatLng(e.latitude, e.longitude),
@@ -235,7 +289,7 @@ function Detail(){
         title: e.name,
         });
     })
-    }, [data]);
+    }, [travelall]);
 
     const mapElement = useRef(null);
 
@@ -354,10 +408,12 @@ function Detail(){
       //리뷰
       const [hovered, setHovered] = useState(null);
       const [clicked, setClicked] = useState(null);
-      const [commentArray, setCommentArray] = useState([]);
+      // const [commentArray, setCommentArray] = useState([]);
       const [comment, setComment] = useState('');
       const [img, setImg] = useState('');
-      const [commentreview, setCommentreview] = useState(false);
+      // const [commentreview, setCommentreview] = useState(false);
+      const [editreview, setEditReview] = useState(false);      
+      // const [deletereview, setDeleteReview] = useState(false);
 
       const uploadProfile = (e) =>{
         setComment(e.target.value);
@@ -393,7 +449,8 @@ function Detail(){
       if (data.resultCode === 0) {
         alert(data.resultMsg)
         console.log(img);
-        setCommentreview(true);
+        reviewrefetch();
+        setTimeout(ReviewCheck(travelreview), 3000);
         setCheck(true);
       }
       else {
@@ -408,23 +465,54 @@ function Detail(){
 
 const onClickReview = event => {
   
-  console.log(loginId, id, clicked,review, img)
-  reviewmutation.mutate({
-    "loginId":loginId,
-    "travelId": id,
-    "star" : clicked,
-    "content" : review,
-    "image" : img
-  })
+  if(clicked==null && editreview ==false)
+  {
+    alert("별점을 입력해주세요");
+  }
+  else{
+    console.log(loginId, id, clicked,review, img)
+
+    if(editreview ==true)
+    {
+      // updateReview(revid);
+      console.log('ss', review,img )
+      updatereview.mutate([revid, {
+        "content" : review,
+        "image" : img
+    }])
+    // reviewrefetch();
+  }
+    else{
+      reviewmutation.mutate({
+      "loginId":loginId,
+      "travelId": id,
+      "star" : clicked,
+      "content" : review,
+      "image" : img
+    })
+  }
+  }
+}
+
+const EditReview = () =>{
+  setEditReview(true);
+}
+const DeleteReview = () =>{
+  // deleteReview(revid);
+  deletereview.mutate(revid);
+  setReviewss(false);
+  
 }
   
     return(
         <Container>
-                    {data?.list.map((e) => {
+                    {travelall?.list.map((e) => {
           return (
             <Content>
                 <User>
-                    <h4>{e.name}</h4> <h6>{e.address}</h6>
+                <div style={{justifyContent:"center"}}><FontAwesomeIcon icon ={faQuoteLeft} />  <h4 style={{background: "linear-gradient(to top, rgb(255 250 3) 50%, transparent 50%)"}}>
+                  {e.name}</h4><FontAwesomeIcon icon ={faQuoteRight} /></div> 
+                 <h6>{e.address}</h6>
                     <div>
                       <div><Like /> <h5>{likeCount}</h5></div>
                       <Cart />
@@ -448,32 +536,32 @@ const onClickReview = event => {
                 <Hr/>
                 <Review>
                 <h5>리뷰</h5>
-       {reviewss == true ?
+       {(reviewss == true)&&(editreview == false) ?  //해당 여행지에 대해 리뷰를 썼는가
        (<>
        <StarContainer>{[1, 2, 3, 4, 5].map(el => (
-          <FontAwesomeIcon  icon ={faStar}  size="2x" style={{color:el <= e.reviews[num].star ? '#ffda38':'#b9b9b9'}}/>))}
+          <FontAwesomeIcon  icon ={faStar}  size="2x" style={{color:el <= travelreview.list[num].star ? '#ffda38':'#b9b9b9'}}/>))}
           <h3 style={{marginLeft:"10px"}}><b>{e.reviewTotal.toFixed(1)}/5.0</b></h3></StarContainer>
           <Edit style={{justifyContent:"right"}}>
-         <button><AiOutlineEdit size="20"  /></button>
-         <button><BsTrash size="20" /></button>
+         <button onClick={()=>{EditReview()}}><AiOutlineEdit size="20"  /></button>
+         <button  onClick={()=>{DeleteReview()}}><BsTrash size="20" /></button>
           </Edit>
           <div style ={{textAlign:"center", display:"flex"}}>
-          {e.reviews[num].image != '' ?  <img  style ={{width:"20%"}} src={e.reviews[num].image}/>: ''}              
-          <div style={{width:(e.reviews[num].image != '') ? '80%': '100%',marginLeft:"20px", minHeight:"70px", backgroundColor:"#f4f2f2", borderRadius:"20px",padding : "20px", justifyContent: "right"}}>
-              <h6 style={{position:"absolute", top:"50%", padding:"0 20px",transform:"translateY(-50%)"}}>{e.reviews[num].content}</h6>
+          {travelreview.list[num].image != '' ?  <img  style ={{width:"20%"}} src={travelreview.list[num].image}/>: ''}              
+          <div style={{width:(travelreview.list[num].image != '') ? '80%': '100%',marginLeft:"20px", minHeight:"70px", backgroundColor:"#f4f2f2", borderRadius:"20px",padding : "20px", justifyContent: "right"}}>
+              <h6 style={{position:"absolute", top:"50%", padding:"0 20px",transform:"translateY(-50%)"}}>{travelreview.list[num].content}</h6>
             </div>
           </div>
        </>)
        :  //writecheck
-       ( (check== false ?(
+       (
        <> 
-       <StarContainer> {[1, 2, 3, 4, 5].map(el => (
-        <FontAwesomeIcon  icon ={faStar}  size="2x" style={{color:(clicked>=el | hovered >=el) ? '#ffda38':'#b9b9b9'}}  
+       <StarContainer> {[1, 2, 3, 4, 5].map(el => (<>
+        {editreview ==true ?  <FontAwesomeIcon  icon ={faStar}  size="2x" style={{color:el <= travelreview.list[num].star ? '#ffda38':'#b9b9b9'}}/> : <FontAwesomeIcon  icon ={faStar}  size="2x" style={{color:(clicked>=el | hovered >=el) ? '#ffda38':'#b9b9b9'}}  
           key={el}
           onMouseEnter={() => setHovered(el)}
           onMouseLeave={() => setHovered(null)}
           onClick={() => setClicked(el)} 
-        />))}
+        />}</>))}
         <h3 style={{marginLeft:"10px"}}><b>{e.reviewTotal.toFixed(1)}/5.0</b></h3>
       </StarContainer>
       <HiddenReview style={{display:"flex"}} show={clicked !=null}>
@@ -482,26 +570,15 @@ const onClickReview = event => {
           :  <div style={{display:"block"}}><img style={{width:"80%"}} src={img} /><label style={{}} for = "fileupload">사진 수정하기</label></div>}
           <input style={{height:"0px", visibility:"hidden"}} enctype="multipart/form-data"  onChange ={uploadProfile} type='file' value={comment} accept='image/*' id = 'fileupload' name = 'file' />
         </div>
-        <div style={{width:"80%", height:"fit-content "}}> {check===false ? <>
-          <button onClick={onClickReview}>올리기</button>
-          <input  placeholder='리뷰를 남겨주세요' type="text"  onChange={onReviewHandler}></input></>:<h6>{review}</h6>  }
-        </div>                    
+        <div style={{width:"80%", height:"fit-content"}}> 
+          <button onClick={()=>{onClickReview()}}>올리기</button>
+          <input  placeholder='리뷰를 남겨주세요' type="text"  onChange={onReviewHandler}></input>
+        </div>             
       </HiddenReview></> )
-      : //check
-     ( <>
-      <StarContainer> {[1, 2, 3, 4, 5].map(el => (
-        <FontAwesomeIcon  icon ={faStar}  size="2x" style={{color:el <= clicked ? '#ffda38':'#b9b9b9'}}/>
-      ))}
-      <h3 style={{marginLeft:"10px"}}><b>{e.reviewTotal.toFixed(1)}/5.0</b></h3></StarContainer>  
-      <div style ={{textAlign:"center", display:"flex"}}>
-          {img != '' ?  <img  style ={{width:"20%"}} src={img}/>: ''}              
-          <div style={{ width:(img != '') ? '80%': '100%',marginLeft:"20px", minHeight:"70px", backgroundColor:"#f4f2f2", borderRadius:"20px",padding : "20px"}}>
-              <h6 style={{position:"absolute", top:"50%", padding:"0 20px",transform:"translateY(-50%)"}}>{review}</h6>
-            </div>
-          </div></>)))}
+     }
   </Review>
 
-        {e.reviews.slice(0).reverse().map((d) => {
+        {travelreview?.list.slice(0).reverse().map((d) => {
           return(<> <Hr/>
         <Comment >
           <div>
@@ -514,8 +591,8 @@ const onClickReview = event => {
               </div>
           </div>
           <div style ={{display: "flex" , padding : "5px 20px"}}>
-              <h6 style={{width:"70%"}}>{d.content}</h6>
-             {d.image === ''?'':<img style ={{width:"30%"}}src={d.image}/>}
+              <h6 style={{width:"75%"}}>{d.content}</h6>
+             {d.image === ''?'':<img style ={{ justifyContent:"right", width:"20%"}}src={d.image}/>}
           </div>
         </Comment>
        </>
