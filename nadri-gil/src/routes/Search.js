@@ -78,7 +78,7 @@ const Search = () => {
 
     const [limit, setLimit] = useState(24);
     const [currentPage, setCurrentPage] = useState(1);
-    const [pageList, setPageList] = useState([1, 2, 3, 4, 5])
+    const [pageList, setPageList] = useState([])
     const offset = (currentPage - 1) * limit;
 
     const { isLoading, data, isFetching } = useQuery("travelData", getTravelsAll, {
@@ -89,8 +89,11 @@ const Search = () => {
         retry: 0,
         onSuccess: data => {
             // 성공시 호출
-            setTravelList(data.list)
-            console.log(data);
+            setTravelList(data.list.filter((e)=> e.name.includes(search)))
+            let tmp = new Array(Math.ceil(data.list.filter((e)=> e.name.includes(search)).length / 24)).fill(0)
+            tmp.forEach((e, i)=>tmp[i] = i+1)
+            setPageList(tmp)
+
         },
         onError: e => {
             // 실패시 호출 (401, 404 같은 error가 아니라 정말 api 호출이 실패한 경우만 호출됩니다.)
@@ -120,6 +123,8 @@ const Search = () => {
     return (
         <Container>
             <ContentList>
+            {isLoading?'여행지를 불러오는 중입니다.':''}
+            {!isLoading && travelList.length===0?'검색한 여행지를 찾을 수 없습니다.':''}
             {travelList.slice(offset, offset + limit).map((item)=>{
                 return(
                     <Content>
