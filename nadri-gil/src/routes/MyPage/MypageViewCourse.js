@@ -345,7 +345,7 @@ function ViewCourse(props) {
                 map: map           //오버레이할 지도
             });
             let info = []
-            courseData.trafast[0].summary.waypoints.forEach((item) => {
+            courseData.trafast[0].summary.waypoints?.forEach((item) => {
                 info.push({
                     distance: item.distance,
                     duration: item.duration
@@ -445,7 +445,7 @@ function ViewCourse(props) {
                 map: map           //오버레이할 지도
             });
             let info = []
-            target.summary.waypoints.forEach((item) => {
+            target.summary.waypoints?.forEach((item) => {
                 info.push({
                     distance: item.distance,
                     duration: item.duration
@@ -499,9 +499,9 @@ function ViewCourse(props) {
                 {isViewCourseLoading ? 'loading' : viewCourse?.courseTravels.map((item, i) => {
                     return (
                         <CourseContent>
-                            <Distance>{courseInfo[i - 1] != undefined ? courseInfo[i - 1].distance > 1000 ? '-' + (courseInfo[i - 1].distance / 1000).toFixed(2) + 'km' + '→' : '-' + (courseInfo[i - 1].distance).toFixed(2) + "m→" : ''}<br>
+                            <Distance>{courseInfo[i - 1] != undefined ? courseInfo[i - 1].distance > 1000 ? '-' + (courseInfo[i - 1].distance / 1000)?.toFixed(2) + 'km' + '→' : '-' + (courseInfo[i - 1].distance)?.toFixed(2) + "m→" : ''}<br>
                             </br>
-                                {courseInfo[i - 1] != undefined ? courseInfo[i - 1].duration > 3600000 ? '-' + (courseInfo[i - 1].duration / 3600000).toFixed(0) + '시간' + '→' : '-' + (courseInfo[i - 1].duration / 60000).toFixed(0) + "분→" : ''}</Distance>
+                                {courseInfo[i - 1] != undefined ? courseInfo[i - 1].duration > 3600000 ? '-' + (courseInfo[i - 1].duration / 3600000)?.toFixed(0) + '시간' + '→' : '-' + (courseInfo[i - 1].duration / 60000)?.toFixed(0) + "분→" : ''}</Distance>
                             <Content>
                                 <a href={`/TravelDetail/${item.travelId}`} target='_blank' rel='noreferrer'>
 
@@ -514,8 +514,8 @@ function ViewCourse(props) {
                 })}
             </ContentList>
             <TotalDistance>
-                {targetData != null ? targetData.summary.duration > 3600000 ? '총 ' + (targetData.summary.distance / 1000).toFixed(2) + 'km' : '총' + (targetData.summary.distance).toFixed(2) + "m" : ''}
-                {targetData != null ? targetData.summary.duration > 3600000 ? ', ' + (parseInt(targetData.summary.duration / 3600000)) + '시간 ' + ((targetData.summary.duration % 3600000) / 60000).toFixed(0) + '분 소요' : ', ' + (targetData.summary.duration / 60000).toFixed(2) + "분 소요" : ''}
+                {targetData != null ? targetData.summary.duration > 3600000 ? '총 ' + (targetData.summary.distance / 1000)?.toFixed(2) + 'km' : '총' + (targetData.summary.distance)?.toFixed(2) + "m" : ''}
+                {targetData != null ? targetData.summary.duration > 3600000 ? ', ' + (parseInt(targetData.summary.duration / 3600000)) + '시간 ' + ((targetData.summary.duration % 3600000) / 60000)?.toFixed(0) + '분 소요' : ', ' + (targetData.summary.duration / 60000)?.toFixed(2) + "분 소요" : ''}
             </TotalDistance>
 
             <Menu>
