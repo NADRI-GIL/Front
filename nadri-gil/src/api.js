@@ -134,7 +134,6 @@ export const postCourse = async (data) => {
 }
 
 
-
 export const getCourse = async (data) => {
   return fetch(`${URL}/courses/myList`, {
     method: "post",
@@ -148,6 +147,16 @@ export const getCourse = async (data) => {
 
 export const deleteCourse = async (courseId) => {
   return fetch(`${URL}/courses/delete/${courseId}`, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json());
+}
+
+export const shareCourse = async (courseId) => {
+  return fetch(`${URL}/courses/share/${courseId}`, {
     method: "post",
     headers: {
       "Content-Type": "application/json",
@@ -236,7 +245,7 @@ export const postDeleteUser = async (userId) => {
     .then((response) => response.json());
 }
 export const postChangePassword = async (data) => {
-  return fetch(`${URL}/users/users/edit`, {
+  return fetch(`${URL}/users/edit`, {
     method: "post",
     headers: {
       "Content-Type": "application/json",

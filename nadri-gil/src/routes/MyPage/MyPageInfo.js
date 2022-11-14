@@ -168,7 +168,6 @@ function MyPageInfo() {
         onSuccess: data => {
             // console.log(data);
             if (data.resultCode === 0) {
-                alert(data.resultMsg)
                 changePasswordMutate(
                     {
                         "loginId": loginId,
