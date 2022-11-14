@@ -2,20 +2,38 @@ import React, { useEffect, useState } from 'react'
 import styled from "styled-components";
 import { useParams } from 'react-router-dom';
 import { useMutation, useQuery } from "react-query";
-import { directions5api, getViewCourse } from "../../api.js"
-import { useLocation } from 'react-router-dom';
+import { directions5api, getViewCourse, shareCourse } from "../../api.js"
+import { useLocation, useNavigate } from 'react-router-dom';
 import "../../index.css"
 
 
 const Container = styled.div`
-    width:60%;
+    width:50%;
     margin:auto;
 `;
 const MapContainer = styled.div`
 width:100%;
-height:70vh;
+height:50vh;
 margin-top:3vh;
+margin:auto;
 `
+const Title = styled.div`  
+text-align:center;
+font-family: 'SUIT';
+margin-top:3vh;
+margin-bottom:3vh;
+    div{
+      display: flex;
+      justify-content: space-between;
+    }
+
+    button{
+    background-color: transparent;
+    border: 0;
+    }
+
+`;
+
 const Content = styled.div`
 width:90%;
 // height:25vh;
@@ -53,6 +71,8 @@ text-align:center;
 `;
 const TotalDistance = styled.h4`
 font-family: 'SUIT';
+margin-bottom:2vh;
+margin-top:3vh;
 `
 const Distance = styled.div`
 width:30%;
@@ -69,11 +89,20 @@ margin-top:3vh;
 
 
 `
+const TravelDetail = styled.div`
+font-family: 'SUIT';
+font-size:0.6vw;
+margin:auto;
+h5{
+    margin-top:2vh;
+    font-weight: bolder;
+}
+`
 const Menu = styled.div`
     width:100%;
     height:5vh;
     display: flex;
-    margin-bottom:3vh;
+    margin-bottom:1vh;
 `;
 const Menus = styled.div`
     width:15%;
@@ -90,8 +119,9 @@ const Hr = styled.hr`
 border:0;
 height:2px;
 margin:1vh 0 1vh 0;
-background-color:#f4f4f4;
+background-color:#595959;
 `
+
 const CompleteButton = styled.button`
 float:right;
 font-family: 'SUIT';
@@ -181,17 +211,19 @@ function ViewCourse(props) {
     // const [trafastInfo, setTrafastInfo] = useState([])
     // const [traoptimalInfo, setTraoptimalInfo] = useState([])
     const [courseInfo, setCourseInfo] = useState([])
-
-    let {courseId} = useParams();
-    const { isLoading : isViewCourseLoading, data:viewCourseData } = useQuery(["getViewCourse", courseId], () => getViewCourse(courseId), {
+    let navigate = useNavigate();
+    let { courseId } = useParams();
+    const { isLoading: isViewCourseLoading, data: viewCourseData } = useQuery(["getViewCourse", courseId], () => getViewCourse(courseId), {
         cacheTime: Infinity,
         staleTime: Infinity,
         refetchOnMount: false,
         refetchOnWindowFocus: false,
         retry: 0,
         onSuccess: data => {
+            console.log(data.list[0])
             // 성공시 호출
             setviewCourse(data.list[0])
+
         },
         onError: e => {
             // 실패시 호출 (401, 404 같은 error가 아니라 정말 api 호출이 실패한 경우만 호출됩니다.)
@@ -205,7 +237,7 @@ function ViewCourse(props) {
         refetchOnMount: false,
         refetchOnWindowFocus: false,
         retry: 0,
-        enabled: viewCourse!==null,
+        enabled: viewCourse !== null,
         onSuccess: data => {
             // 성공시 호출
             setCourseData(data.route)
@@ -216,16 +248,17 @@ function ViewCourse(props) {
             console.log(e.message);
         }
     });
-    useEffect(()=>{
-        if(viewCourseData&&viewCourse===null){
+
+    useEffect(() => {
+        if (viewCourseData && viewCourse === null) {
             setviewCourse(viewCourseData.list[0])
         }
-    },[viewCourseData])
-    
+    }, [viewCourseData])
+
     useEffect(() => {
         console.log(courseData)
-        
-        if(data&&courseData===null){
+
+        if (data && courseData === null) {
             setCourseData(data.route)
         }
         if (courseData != null) {
@@ -312,7 +345,7 @@ function ViewCourse(props) {
                 map: map           //오버레이할 지도
             });
             let info = []
-            courseData.trafast[0].summary.waypoints.forEach((item) => {
+            courseData.trafast[0].summary.waypoints?.forEach((item) => {
                 info.push({
                     distance: item.distance,
                     duration: item.duration
@@ -412,7 +445,7 @@ function ViewCourse(props) {
                 map: map           //오버레이할 지도
             });
             let info = []
-            target.summary.waypoints.forEach((item) => {
+            target.summary.waypoints?.forEach((item) => {
                 info.push({
                     distance: item.distance,
                     duration: item.duration
@@ -423,108 +456,76 @@ function ViewCourse(props) {
         }
 
     }
+    const { mutate } = useMutation(shareCourse, {
+        onSuccess: data => {
+            if (data.resultCode === 0) {
+                alert(`"${viewCourse.courseName}"가 공유되었습니다.`)
+                navigate('/mypage/mypageinfo')
+            }
+            else {
+                alert(data.resultMsg)
+            }
+        },
+        onError: () => {
+            alert("there was an error")
+        },
 
-    const loginid = JSON.parse(localStorage.getItem("recoil-persist"));
-
-
-
-    const { } = props;
-    const [popup, handlePopup] = useState(false);
-    const [coursesave, setcoursesave] = useState([]);
-
-    // const Popup = (props) => {
-
-    //     const [name, setName] = useState("")
-
-    //     const { onClose } = props;
-    //     const onNameHandler = (event) => {
-    //         setName(event.currentTarget.value)
-    //     }
-    //     const { mutate } = useMutation(postCourse, {
-    //         onSuccess: data => {
-    //             // console.log(data);
-    //             if (data.resultCode === 0) {
-    //                 alert(data.resultMsg)
-    //             }
-    //             else {
-    //                 alert(data.resultMsg)
-    //             }
-    //         },
-    //         onError: () => {
-    //             console.log("error");
-    //         },
-
-    //     });
-
-    //     const onClickshare = () => {
-    //         console.log(loginid.loginId, name, state[0].travelId)
-
-    //         let tmp = []
-    //         state.forEach((item, index) => {
-    //             tmp.push(
-    //                 { travelId: item.travelId, orderNo: index + 1 });
-    //         }
-    //         )
-    //         setcoursesave(tmp);
-    //         mutate({
-    //             "loginId": loginid.loginId,
-    //             "name": name,
-    //             "courseOrders": tmp
-    //         })
-    //     }
-
-    //     return (
-    //         <Popupdiv>
-    //             <Header>
-    //                 <h4>코스만들기</h4>
-    //             </Header>
-    //             <Main>
-    //                 <h5>제목을 입력하세요</h5>
-    //                 <input type="text" onChange={onNameHandler} ></input>
-    //             </Main>
-    //             <Footer>
-    //                 <button onClick={() => {
-    //                     onClose(false)
-    //                     onClickshare()
-    //                 }} >제출</button>
-    //             </Footer>
-    //         </Popupdiv>
-    //     )
-    // }
+    });
+    const onClickshareCourse = () => {
+        if(window.confirm(`"${viewCourse.courseName}"를 공유하시겠습니까?`)){
+            mutate(courseId)
+        } 
+    }
 
     return (
         <Container>
-            <Menu>
-                {courseOption === 0 ? <Menus onClick={() => { setCourseOption(0) }}><p style={{ borderBottom: "0.5vh solid #3366ff", paddingBottom: "1vh" }}>실시간 빠른길</p></Menus> : <Menus onClick={() => { setCourseOption(0); optionhaddle(0) }}><p style={{ borderBottom: "0.5vh solid white", paddingBottom: "1vh" }}>실시간 빠른길</p></Menus>}
-                {courseOption === 1 ? <Menus onClick={() => { setCourseOption(1) }}><p style={{ borderBottom: "0.5vh solid #3366ff", paddingBottom: "1vh" }}>실시간 편한길</p></Menus> : <Menus onClick={() => { setCourseOption(1); optionhaddle(1) }}><p style={{ borderBottom: "0.5vh solid white", paddingBottom: "1vh" }}>실시간 편한길</p></Menus>}
-                {courseOption === 2 ? <Menus onClick={() => { setCourseOption(2) }}><p style={{ borderBottom: "0.5vh solid #3366ff", paddingBottom: "1vh" }}>실시간 최적</p></Menus> : <Menus onClick={() => { setCourseOption(2); optionhaddle(2) }}><p style={{ borderBottom: "0.5vh solid white", paddingBottom: "1vh" }}>실시간 최적</p></Menus>}
-            </Menu>
-            <TotalDistance>
-                {targetData != null ? targetData.summary.duration > 3600000 ? '총 ' + (targetData.summary.distance / 1000).toFixed(2) + 'km' : '총' + (targetData.summary.distance).toFixed(2) + "m" : ''}
-                {targetData != null ? targetData.summary.duration > 3600000 ? ', ' + (parseInt(targetData.summary.duration / 3600000)) + '시간 ' + ((targetData.summary.duration % 3600000) / 60000).toFixed(0) + '분 소요' : ', ' + (targetData.summary.duration / 60000).toFixed(2) + "분 소요" : ''}
-            </TotalDistance>
+            {viewCourse === null ? '' :
+                <Title>
+                    <h2>{viewCourse.courseName}</h2>
+                    <h6>작성자</h6>
+                </Title>
+            }
+            <Hr />
+            {viewCourse === null ? '' :
+                <TravelDetail>
+                    <h5>설명</h5>
+                    <div style={{ marginTop: '2vh', marginBottom: '2vh' }}>{viewCourse.courseContent?.split('\n').map((content) => {
+                        return (<h6>{content}</h6>)
+                    })}</div>
+                </TravelDetail>
+            }
             <Hr />
             <ContentList>
-                {isViewCourseLoading?'loading':viewCourse?.courseTravels.map((item, i) => {
+                {isViewCourseLoading ? 'loading' : viewCourse?.courseTravels.map((item, i) => {
                     return (
                         <CourseContent>
-                            <Distance>{courseInfo[i - 1] != undefined ? courseInfo[i - 1].distance > 1000 ? '-' + (courseInfo[i - 1].distance / 1000).toFixed(2) + 'km' + '→' : '-' + (courseInfo[i - 1].distance).toFixed(2) + "m→" : ''}<br>
+                            <Distance>{courseInfo[i - 1] != undefined ? courseInfo[i - 1].distance > 1000 ? '-' + (courseInfo[i - 1].distance / 1000)?.toFixed(2) + 'km' + '→' : '-' + (courseInfo[i - 1].distance)?.toFixed(2) + "m→" : ''}<br>
                             </br>
-                                {courseInfo[i - 1] != undefined ? courseInfo[i - 1].duration > 3600000 ? '-' + (courseInfo[i - 1].duration / 3600000).toFixed(0) + '시간' + '→' : '-' + (courseInfo[i - 1].duration / 60000).toFixed(0) + "분→" : ''}</Distance>
+                                {courseInfo[i - 1] != undefined ? courseInfo[i - 1].duration > 3600000 ? '-' + (courseInfo[i - 1].duration / 3600000)?.toFixed(0) + '시간' + '→' : '-' + (courseInfo[i - 1].duration / 60000)?.toFixed(0) + "분→" : ''}</Distance>
                             <Content>
-                            <a href={`/TravelDetail/${item.travelId}`} target='_blank' rel='noreferrer'>
+                                <a href={`/TravelDetail/${item.travelId}`} target='_blank' rel='noreferrer'>
 
-                                <img src={item.image}></img>
-                                <p>{item.name}</p>
+                                    <img src={item.image}></img>
+                                    <p>{item.name}</p>
                                 </a>
                             </Content>
                         </CourseContent>
                     )
                 })}
             </ContentList>
+            <TotalDistance>
+                {targetData != null ? targetData.summary.duration > 3600000 ? '총 ' + (targetData.summary.distance / 1000)?.toFixed(2) + 'km' : '총' + (targetData.summary.distance)?.toFixed(2) + "m" : ''}
+                {targetData != null ? targetData.summary.duration > 3600000 ? ', ' + (parseInt(targetData.summary.duration / 3600000)) + '시간 ' + ((targetData.summary.duration % 3600000) / 60000)?.toFixed(0) + '분 소요' : ', ' + (targetData.summary.duration / 60000)?.toFixed(2) + "분 소요" : ''}
+            </TotalDistance>
+
+            <Menu>
+                {courseOption === 0 ? <Menus onClick={() => { setCourseOption(0) }}><p style={{ borderBottom: "0.5vh solid #3366ff", paddingBottom: "1vh" }}>실시간 빠른길</p></Menus> : <Menus onClick={() => { setCourseOption(0); optionhaddle(0) }}><p style={{ borderBottom: "0.5vh solid white", paddingBottom: "1vh" }}>실시간 빠른길</p></Menus>}
+                {courseOption === 1 ? <Menus onClick={() => { setCourseOption(1) }}><p style={{ borderBottom: "0.5vh solid #3366ff", paddingBottom: "1vh" }}>실시간 편한길</p></Menus> : <Menus onClick={() => { setCourseOption(1); optionhaddle(1) }}><p style={{ borderBottom: "0.5vh solid white", paddingBottom: "1vh" }}>실시간 편한길</p></Menus>}
+                {courseOption === 2 ? <Menus onClick={() => { setCourseOption(2) }}><p style={{ borderBottom: "0.5vh solid #3366ff", paddingBottom: "1vh" }}>실시간 최적</p></Menus> : <Menus onClick={() => { setCourseOption(2); optionhaddle(2) }}><p style={{ borderBottom: "0.5vh solid white", paddingBottom: "1vh" }}>실시간 최적</p></Menus>}
+            </Menu>
+
             <MapContainer id="map"></MapContainer>
-            <CompleteButton onClick={() => { handlePopup(true); }}>내가 만든 코스 공유하기 -&gt;</CompleteButton>
-            {/* {popup && <Popup onClose={handlePopup} />} */}
+            <CompleteButton onClick={() => { onClickshareCourse(); }}>내가 만든 코스 공유하기 -&gt;</CompleteButton>
         </Container>
     )
 };

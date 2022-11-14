@@ -35,6 +35,20 @@ export const postLogin = async (data) => {
     })
       .then((response) => response.json());
   }
+  export const postPreferenceData = async (data) => {
+    return fetch(`${URL}/hearts/addFive`, {
+      method: "post",
+      headers: {
+        Accept:'application/json',
+  
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    }, { withCredentials: true })
+      .then((response) => response.json());
+  
+  }
+  
 
   export const getMain = async (data) => {
     return axios.get(`${URL}/travels/random`);
@@ -134,7 +148,6 @@ export const postCourse = async (data) => {
 }
 
 
-
 export const getCourse = async (data) => {
   return fetch(`${URL}/courses/myList`, {
     method: "post",
@@ -148,6 +161,16 @@ export const getCourse = async (data) => {
 
 export const deleteCourse = async (courseId) => {
   return fetch(`${URL}/courses/delete/${courseId}`, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json());
+}
+
+export const shareCourse = async (courseId) => {
+  return fetch(`${URL}/courses/share/${courseId}`, {
     method: "post",
     headers: {
       "Content-Type": "application/json",
@@ -236,7 +259,18 @@ export const postDeleteUser = async (userId) => {
     .then((response) => response.json());
 }
 export const postChangePassword = async (data) => {
-  return fetch(`${URL}/users/users/edit`, {
+  return fetch(`${URL}/users/edit`, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => response.json());
+}
+
+export const postUserReview = async (data) => {
+  return fetch(`${URL}/reviews/myList`, {
     method: "post",
     headers: {
       "Content-Type": "application/json",

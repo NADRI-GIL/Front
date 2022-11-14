@@ -1,7 +1,11 @@
 import React, { useState } from 'react'
+import { Link, useNavigate } from "react-router-dom"
 import styled from "styled-components";
-import { useQuery } from "react-query";
-import { getPreference } from "../api.js"
+import { useQuery, useMutation } from "react-query";
+import { getPreference, postPreferenceData } from "../api.js"
+
+import { loginIdAtom } from "../atom.js"
+import { useRecoilValue } from "recoil";
 
 const Container = styled.div`
 h3{font-family: 'SUIT';}
@@ -52,6 +56,8 @@ padding:0 7vh 0 7vh;
 `
 function PreferenceSurvey() {
     const [preferenceTravel, setPreferenceTravel] = useState([])
+    const loginId = useRecoilValue(loginIdAtom);
+    let navigate = useNavigate();
     const { isLoading, isError, error, data } = useQuery('preference', getPreference,{
         cacheTime: Infinity,
         staleTime: Infinity,
@@ -68,22 +74,28 @@ function PreferenceSurvey() {
             console.log(e.message);
           }
     });
-    
-    // const data = {
-    //     list:[
-    //     { id: 0, name: '경복궁', image: './img/images.jpg' },
-    //     { id: 1, name: '경복궁1', image: './img/images.jpg' },
-    //     { id: 2, name: '경복궁2', image: './img/images.jpg' },
-    //     { id: 3, name: '경복궁3', image: './img/images.jpg' },
-    //     { id: 4, name: '경복궁4', image: './img/images.jpg' },
-    //     { id: 5, name: '경복궁5', image: './img/images.jpg' },
-    //     { id: 6, name: '경복궁6', image: './img/images.jpg' },
-    //     ]
-    // }
+    const { mutate: addPreference } = useMutation(postPreferenceData, {
+        onSuccess: data => {
+            if (data.resultCode === 0) {
+                alert('선호도 조사가 완료되었습니다.')
+                navigate('/')
+            }
+            else {
+                alert(data.resultMsg)
+            }
+        },
+        onError: () => {
+            console.log("error");
+        },
+
+    });
 
     const onPreferenceTravelHandler = (id) => {
         if(preferenceTravel.indexOf(id)===-1){
-            setPreferenceTravel([...preferenceTravel, id])
+            if(preferenceTravel.length === 5){
+                alert('최대 다섯 개까지 선택 가능합니다.')
+            }
+            else{setPreferenceTravel([...preferenceTravel, id])}
         }
         else{
             let tmp = [...preferenceTravel]
@@ -93,6 +105,10 @@ function PreferenceSurvey() {
     }
     const onClickHandler = () => {
         console.log(preferenceTravel)
+        addPreference({
+            "loginId":loginId,
+            "travelIds":preferenceTravel
+        })
     }
 
     return (

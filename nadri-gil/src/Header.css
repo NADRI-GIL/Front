@@ -1,6 +1,6 @@
 header{
  font-family: 'SUIT';
- width: 62%;
+ width: 55%;
  margin: 0 auto;   
  padding-top: 40px;
  padding-bottom: 10px;
@@ -16,7 +16,7 @@ ul {
     list-style: none;
     display:flex;
     justify-content: space-around;
-    margin: auto !important;
+    margin: auto;
 }
 
 header ul >li{
@@ -75,4 +75,6 @@ header ul li a{
 
   .group{
     display: flex;
+    width: 70%;
+    /* justify-content: space-around; */
   }
