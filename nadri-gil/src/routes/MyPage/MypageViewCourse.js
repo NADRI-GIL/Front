@@ -235,7 +235,7 @@ function ViewCourse(props) {
 
             let mapOptions = {
                 center: new naver.maps.LatLng(courseData.trafast[0].summary.bbox[1][1] - (courseData.trafast[0].summary.bbox[1][1] - courseData.trafast[0].summary.bbox[0][1]) / 2, courseData.trafast[0].summary.bbox[1][0] - (courseData.trafast[0].summary.bbox[1][0] - courseData.trafast[0].summary.bbox[0][0]) / 2),
-                zoom: 12
+                zoom: 8
             };
             const style = "background-color:white; padding:1vw; border-radius:0.5vw;"
 
@@ -335,7 +335,7 @@ function ViewCourse(props) {
 
             let mapOptions = {
                 center: new naver.maps.LatLng(target.summary.bbox[1][1] - (target.summary.bbox[1][1] - target.summary.bbox[0][1]) / 2, target.summary.bbox[1][0] - (target.summary.bbox[1][0] - target.summary.bbox[0][0]) / 2),
-                zoom: 12
+                zoom: 8
             };
             const style = "background-color:white; padding:1vw; border-radius:0.5vw;"
 
