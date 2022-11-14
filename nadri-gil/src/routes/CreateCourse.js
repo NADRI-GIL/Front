@@ -2,18 +2,20 @@ import React, { useEffect, useState } from 'react'
 import styled from "styled-components";
 import { useMutation, useQuery } from "react-query";
 import { directions5api, postCourse } from "../api.js"
-import { useLocation } from 'react-router-dom';
+import { useLocation,useNavigate } from 'react-router-dom';
 import "../index.css"
 
 
 const Container = styled.div`
     width:60%;
     margin:auto;
+
 `;
 const MapContainer = styled.div`
-width:100%;
-height:70vh;
+width:90%;
+height:50vh;
 margin-top:3vh;
+margin:auto;
 `
 const Content = styled.div`
 width:90%;
@@ -113,107 +115,60 @@ background-color: white;
 border:2px solid rgb(245 244 244);
 box-shadow: 0 5px 18px -7px rgba(0,0,0,1);
 z-index: 10;
-top: 30%;
-left: 38%;
+top: 20%;
+left: 25%;
 position: fixed;
-height: 250px;
-width: 400px;
+height: 60vh;
+width: 50vw;
 border-radius : 20px;
-text-align: center;
+// text-align: center;
 align-item: center;
-    h2{
-        
-    }
-`
-
-const Header = styled.div`
-font-family: 'SUIT';
-height: 40%;
-align-items: center;
-display: flex;
-justify-content: center;
-`
-
-const Main = styled.div`
-font-family: 'SUIT';
-height: 35%;
-align-items: center;
-justify-content: center;
-    input{
-        background-color :rgb(240, 237, 237);
-        border-radius: 10px;
-        border: none;
-        width: 80%;
-        height: 50%;
-    }
-
-`
-
-const Footer = styled.div`
-height: 25%;
-align-items: center;
-display: flex;
-justify-content: center;
-
-    button{
-font-family: 'SUIT';
-box-sizing: border-box;
-background-color:#3366ff;
-color:#ffffff;
-border:none;
-border-radius: 10px;
-height: 6vh;
-font-size:0.8vw;
-padding:0 5vh 0 5vh;
-margin: 8vh auto 8vh auto;
-// margin-top:2vh;
-    }
-
+h4{
+    text-align: center;
+    margin-top:5vh;
+}
+h5{
+    font-family: 'SUIT';
+    height: 35%;
+    align-items: center;
+    justify-content: center;
+}
+input{
+    background-color :rgb(240, 237, 237);
+    border-radius: 10px;
+    border: none;
+    width: 90%;
+    height: 15%;
+    padding-left:1vw;
+    margin-left:5%;
+}
+textarea{
+    background-color :rgb(240, 237, 237);
+    border-radius: 10px;
+    border: none;
+    width: 90%;
+    height: 15%;
+    padding-left:1vw;
+    margin-left:5%;
+}
+button{
+    font-family: 'SUIT';
+    box-sizing: border-box;
+    background-color:#3366ff;
+    color:#ffffff;
+    border:none;
+    border-radius: 10px;
+    height: 6vh;
+    padding:0 5vh 0 5vh;
+    margin:3vh 1vw 0 1vw;
+}
+p{
+    margin:3vh 0 2vh 0vw;
+    margin-left:5%;
+}
 `
 
 function CreateCourse(props) {
-    // const points = [
-    //     {
-    //         travelId : 1,
-    //         name: "청주 시외버스터미널",
-    //         lng: 127.43202481650647,
-    //         lat: 36.62576080594968,
-    //         add:"충북 청주시 흥덕구 풍산로 6",
-    //         "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
-    //     },
-    //     {
-    //         travelId : 2,
-    //         name: "충북대학교",
-    //         lng: 127.45739630160224,
-    //         lat: 36.6284055465184,
-    //         add:"충북 청주시 서원구 충대로 1 충북대학교",
-    //         "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
-    //     },
-    //     {
-    //         travelId : 3,
-    //         name: "투썸플레이스 동남지구점",
-    //         lng: 127.5170063098491,
-    //         lat: 36.61543334257298,
-    //         add:"충북 청주시 서원구 충대로 1 충북대학교",
-    //         "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
-    //     },
-    //     {
-    //         travelId : 4,
-    //         name: "청주고등학교",
-    //         lng: 127.45537018595921,
-    //         lat: 36.63558179683339,
-    //         add:"충북 청주시 서원구 충대로 1 충북대학교",
-    //         "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
-    //     },
-    //     {
-    //         travelId : 5,
-    //         name: "청주고등학교",
-    //         lng: 127.65537018595921,
-    //         lat: 36.63558179683339,
-    //         add:"충북 청주시 서원구 충대로 1 충북대학교",
-    //         "image": "https://user-images.githubusercontent.com/58421346/194452297-e7a076d3-5475-4cde-bd95-cbfa8342c8f6.png"
-    //     }
-    // ]
     const location = useLocation();
     const state = location.state;
 
@@ -226,8 +181,7 @@ function CreateCourse(props) {
     // const [trafastInfo, setTrafastInfo] = useState([])
     // const [traoptimalInfo, setTraoptimalInfo] = useState([])
     const [courseInfo, setCourseInfo] = useState([])
-
-
+    
     const { isLoading, data } = useQuery(["createCourse", state], () => directions5api(state), {
         cacheTime: Infinity,
         staleTime: Infinity,
@@ -253,7 +207,7 @@ function CreateCourse(props) {
 
             let mapOptions = {
                 center: new naver.maps.LatLng(courseData.trafast[0].summary.bbox[1][1] - (courseData.trafast[0].summary.bbox[1][1] - courseData.trafast[0].summary.bbox[0][1]) / 2, courseData.trafast[0].summary.bbox[1][0] - (courseData.trafast[0].summary.bbox[1][0] - courseData.trafast[0].summary.bbox[0][0]) / 2),
-                zoom: 12
+                zoom: 8
             };
             const style = "background-color:white; padding:1vw; border-radius:0.5vw;"
 
@@ -353,7 +307,7 @@ function CreateCourse(props) {
 
             let mapOptions = {
                 center: new naver.maps.LatLng(target.summary.bbox[1][1] - (target.summary.bbox[1][1] - target.summary.bbox[0][1]) / 2, target.summary.bbox[1][0] - (target.summary.bbox[1][0] - target.summary.bbox[0][0]) / 2),
-                zoom: 12
+                zoom: 8
             };
             const style = "background-color:white; padding:1vw; border-radius:0.5vw;"
 
@@ -446,23 +400,25 @@ function CreateCourse(props) {
 
 
 
-    const { } = props;
     const [popup, handlePopup] = useState(false);
-    const [coursesave, setcoursesave] = useState([]);
 
-    const Popup = (props) => {
+    const Popup = () => {
 
         const [name, setName] = useState("")
-
-        const { onClose } = props;
+        const [content, setContent] = useState("")
+        let navigate = useNavigate();
         const onNameHandler = (event) => {
             setName(event.currentTarget.value)
+        }
+        const onContentHandler = (event) => {
+            setContent(event.currentTarget.value)
         }
         const { mutate } = useMutation(postCourse, {
             onSuccess: data => {
                 // console.log(data);
                 if (data.resultCode === 0) {
                     alert(data.resultMsg)
+                    navigate('/mypage/mypageinfo')
                 }
                 else {
                     alert(data.resultMsg)
@@ -475,19 +431,16 @@ function CreateCourse(props) {
         });
 
         const onClickshare = () => {
-            console.log(loginid.loginId, name, state[0].travelId)
-
             let tmp = []
+            console.log(content)
             state.forEach((item, index) => {
                 tmp.push(
-
                     { travelId: item.travelId, orderNo: index + 1 });
-            }
-            )
-            setcoursesave(tmp);
+            })
             mutate({
                 "loginId": loginid.loginId,
                 "name": name,
+                "content":content,
                 "courseOrders": tmp
 
             })
@@ -495,19 +448,15 @@ function CreateCourse(props) {
 
         return (
             <Popupdiv>
-                <Header>
                     <h4>코스만들기</h4>
-                </Header>
-                <Main>
-                    <h5>제목을 입력하세요</h5>
-                    <input type="text" onChange={onNameHandler} ></input>
-                </Main>
-                <Footer>
-                    <button onClick={() => {
-                        onClose(false)
-                        onClickshare()
-                    }} >제출</button>
-                </Footer>
+                    <p>제목을 입력하세요</p>
+                    <input type="text" onChange={onNameHandler} value={name} style={{height:'10%'}}></input>
+                    <p>내용을 입력하세요</p>
+                    <textarea  onChange={onContentHandler} value={content}  style={{height:'30%'}}></textarea>
+                    <div style={{ width:'100%', textAlign:'center'}}>
+                    <button onClick={() => {handlePopup(false)}} >취소</button>
+                    <button onClick={() => {onClickshare()}}>제출</button>
+                    </div>
             </Popupdiv>
         )
     }
@@ -534,10 +483,10 @@ function CreateCourse(props) {
                             </br>
                                 {courseInfo[i - 1] != undefined ? courseInfo[i - 1].duration > 3600000 ? '-' + (courseInfo[i - 1].duration / 3600000).toFixed(0) + '시간' + '→' : '-' + (courseInfo[i - 1].duration / 60000).toFixed(0) + "분→" : ''}</Distance>
                             <Content>
-                            <a href={`/TravelDetail/${item.travelId}`} target='_blank' rel='noreferrer'>
+                                <a href={`/TravelDetail/${item.travelId}`} target='_blank' rel='noreferrer'>
 
-                                <img src={item.image}></img>
-                                <p>{item.name}</p>
+                                    <img src={item.image}></img>
+                                    <p>{item.name}</p>
                                 </a>
                             </Content>
                         </CourseContent>
@@ -545,7 +494,7 @@ function CreateCourse(props) {
                 })}
             </ContentList>
             <MapContainer id="map"></MapContainer>
-            <CompleteButton onClick={() => { handlePopup(true); }}>내가 만든 코스 공유하기 -&gt;</CompleteButton>
+            <CompleteButton onClick={() => { handlePopup(true); }}>내가 만든 코스 저장하기 -&gt;</CompleteButton>
             {popup && <Popup onClose={handlePopup} />}
         </Container>
     )
