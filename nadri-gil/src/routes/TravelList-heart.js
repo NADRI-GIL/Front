@@ -79,7 +79,7 @@ background-color:#f4f4f4;
 const Pagination = styled.div`
 width:100%;
 height:4vh;
-margin: 7vh 0 20vh 0;
+margin: 7vh 0 0 0;
 // background-color:yellow;
 // display:flex;
 // vertical-align:middle;
