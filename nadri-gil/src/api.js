@@ -214,7 +214,9 @@ export const postReviewImage = async () => {
 
 export const  getMostHeart  = async (data) => {
   return axios.get(`${URL}/travels/heart`);
+  // return axios.get(`http://192.168.0.7:8080/travels/heart`);
 }
+
 
 export const getInfo = async (loginId) => {
   return fetch(`${URL}/users/mypage/${loginId}`, {

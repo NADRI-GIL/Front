@@ -86,7 +86,7 @@ function Rank() {
 function Recommend() {
   const loginId = useRecoilValue(loginIdAtom);
 
-  const { isLoading, isError, error, data } = useQuery(['Recommend', loginId], getRecommend,{
+  const { isLoading, isError, error, data } = useQuery(['Recommend', loginId],()=> getRecommend(loginId),{
  
     staleTime: Infinity,
     refetchOnMount: false,
