@@ -235,6 +235,8 @@ function Detail(){
     retry: 0,
     onSuccess: data => {
         console.log(data);
+        setImg('')
+        setClicked(0);
         reviewrefetch();
     },
     onError: error =>{
@@ -579,13 +581,13 @@ const DeleteReview = () =>{
       </StarContainer>
       <HiddenReview style={{display:"flex"}} show={clicked !=null}>
         <div style={{textAlign:"center", width:"20%"}}>
-          {img ===''?   <label style={{position:"absolute", top:"50%", transform:"translateY(-50%)"}} for = "fileupload">사진 추가하기</label>
+          {img ==='' ?   <label style={{position:"absolute", top:"50%", transform:"translateY(-50%)"}} for = "fileupload">사진 추가하기</label>
           :  <div style={{display:"block"}}><img style={{width:"80%"}} src={img} /><label style={{}} for = "fileupload">사진 수정하기</label></div>}
           <input style={{height:"0px", visibility:"hidden"}} enctype="multipart/form-data"  onChange ={uploadProfile} type='file' value={comment} accept='image/*' id = 'fileupload' name = 'file' />
         </div>
         <div style={{width:"80%", height:"fit-content"}}> 
           <button onClick={()=>{onClickReview()}}>올리기</button>
-          <input  placeholder='리뷰를 남겨주세요' type="text"  onChange={onReviewHandler} value={review}></input>
+          <input  placeholder='리뷰를 남겨주세요' type="text"  onChange={onReviewHandler} ></input>
         </div>             
       </HiddenReview></> )
      }

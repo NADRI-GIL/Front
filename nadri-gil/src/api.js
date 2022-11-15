@@ -213,8 +213,8 @@ export const postReviewImage = async () => {
 }
 
 export const  getMostHeart  = async (data) => {
-  // return axios.get(`${URL}/travels/heart`);
-  return axios.get(`http://192.168.0.7:8080/travels/heart`);
+  return axios.get(`${URL}/travels/heart`);
+  // return axios.get(`http://192.168.0.7:8080/travels/heart`);
 }
 
 
@@ -263,7 +263,7 @@ export const getSharedCourse = async () => {
 }
 
 export const getStar = async () => {
-  return fetch(`http://localhost:8080/travels/review`, {
+  return fetch(`${URL}/travels/review`, {
     method: "get",
     headers: {
       "Content-Type": "application/json",
@@ -331,7 +331,7 @@ export const postChangePassword = async (data) => {
 
 
 export const getRecommend = async (loginId) => {
-  return fetch(`http://192.168.0.7:8080/recommend/${loginId}`, {
+  return fetch(`http://localhost:8080/recommend/${loginId}`, {
     method: "get",
     headers: {
       "Content-Type": "application/json",
