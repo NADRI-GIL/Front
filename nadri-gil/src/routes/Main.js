@@ -17,7 +17,7 @@ function ControlledCarousel() {
   const data1 = [
         { id : 0, src : 'img/banner1.png', link : '/Course'},
         { id : 1, src : 'img/banner2.png', link : '/travellistheart'},
-        { id : 2, src : 'img/banner3.png', link : '/Notice'},
+        { id : 2, src : 'img/banner3.png', link : '/notice/noticecontent'},
     ]
 
 

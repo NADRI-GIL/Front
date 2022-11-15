@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from "styled-components";
 import { useParams } from 'react-router-dom';
 import { useMutation, useQuery } from "react-query";
-import { directions5api, getViewCourse, shareCourse } from "../../api.js"
+import { directions5api, getViewCourse, shareCourse ,getSharedCourse} from "../../api.js"
 import { useLocation, useNavigate } from 'react-router-dom';
 import "../../index.css"
 
@@ -213,6 +213,18 @@ function ViewCourse(props) {
     const [courseInfo, setCourseInfo] = useState([])
     let navigate = useNavigate();
     let { courseId } = useParams();
+
+    const { data:shared , refetch :sharedrefetch } = useQuery('SharedCourse', getSharedCourse,{
+ 
+        staleTime: Infinity,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        retry: 0,
+        onSuccess: data => {
+          console.log(data);
+        },
+      });
+  
     const { isLoading: isViewCourseLoading, data: viewCourseData } = useQuery(["getViewCourse", courseId], () => getViewCourse(courseId), {
         cacheTime: Infinity,
         staleTime: Infinity,
@@ -461,6 +473,7 @@ function ViewCourse(props) {
             if (data.resultCode === 0) {
                 alert(`"${viewCourse.courseName}"가 공유되었습니다.`)
                 navigate('/mypage/mypageinfo')
+                sharedrefetch();
             }
             else {
                 alert(data.resultMsg)
