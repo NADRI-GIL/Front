@@ -13,7 +13,7 @@ const Container = styled.div`
     margin:auto;
     
 `;
-const ContentList = styled.div`
+const ContentList = styled.div` 
 display:flex;
 flex-wrap:wrap;
 width:100%;
