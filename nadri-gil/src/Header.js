@@ -82,13 +82,13 @@ const Header = () => {
                 <nav>
                     <div className="group">
                         <div>
-                            <h1><Link style={{ color: "black" }} to="/" onClick={() => {setSearch('');setCurrentPageFn(1);}}>
-                                <img style={{width: "15vh"}} src="https://user-images.githubusercontent.com/63081612/202198872-b3314c4c-d0b7-45cd-9702-0223846c4e3b.png"></img>
+                            <h1><Link style={{ color: "black" }} to="/" onClick={() => setSearch('')setCurrentPageFn(1);}>
+                                <img style={{width: "25vh", marginTop:"7%"}} src="https://user-images.githubusercontent.com/63081612/202528869-ddad7334-a0f6-4d27-bca6-70453eb37d89.png"></img>
                                 </Link>
                             </h1>
                         </div>
-                        <ul style={{height:'100%'}}>
-                            <li><Link to="/travelList" onClick={() => {setSearch('');setCurrentPageFn(1);}}>지역</Link></li>
+                        <ul style={{height:'100%', padding:"0"}}>
+                            <li><Link to="/travelList" onClick={() => setSearch('')}>지역</Link></li>
                             <li><Link to="/travelRecommendList" onClick={() => setSearch('')}>추천</Link></li>
                             <li><Link to="/course" onClick={() =>{ setSearch('');setCurrentPageFn(1);}}>코스</Link></li>
                             <li><Link to="/Notice" onClick={() => {setSearch('');setCurrentPageFn(1);}}>공지사항</Link></li>
@@ -119,7 +119,7 @@ const Header = () => {
                 <Foot>
                     <FooterTop>
                         <FooterLogo>
-                            <img style={{ width: "30%", height: "100%", objectFit: "fill" }} src="https://user-images.githubusercontent.com/63081612/202201336-f27c6438-bb03-43a9-b68e-7cce10c6368c.png"></img>
+                            <img style={{ width: "30%", height: "100%", objectFit: "fill" }} src="https://user-images.githubusercontent.com/63081612/202529275-c40206e9-d698-4b74-ab66-1fa78d61a85d.png"></img>
                         </FooterLogo>
                         <FooterContest><h4>여행지 추천 서비스</h4><h4>https://github.com/NADRI-GIL</h4></FooterContest>
                     </FooterTop>
