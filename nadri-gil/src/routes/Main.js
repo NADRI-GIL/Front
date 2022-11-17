@@ -62,7 +62,7 @@ function Rank() {
      <div className="title"><h4>인기순</h4><Link className="text_link" to= "./travelListHeart"><h6>전체보기</h6></Link></div>
       <div className="swipe">
             <Swiper spaceBetween={10} slidesPerView={4}>
-              {data?.data.list.map((e)=> {
+              {data?.list.map((e)=> {
               return( <SwiperSlide>
               <Link className="text_link" to = {`/TravelDetail/${e.id}`} state={e}>
                   <div class ="swipe_div">

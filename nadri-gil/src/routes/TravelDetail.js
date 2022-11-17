@@ -5,7 +5,7 @@ import { AiOutlineHeart, AiOutlineEdit, AiFillStar, AiFillHeart, AiFillFilter, A
 import { BsTrash } from 'react-icons/bs';
 import { RiRoadMapLine, RiRoadMapFill } from "react-icons/ri";
 import { Mutation, QueryClient, useMutation, useQuery } from "react-query";
-import { getTravelDetail,getTravelReview,updateReview, postCart,getHeart, deleteReview, postHeart, postReview, getInfo } from "../api.js";
+import { getTravelDetail,getTravelReview,updateReview, postCart, getRecommend,getHeart, deleteReview, postHeart, postReview, getInfo } from "../api.js";
 import "./Main.css";
 import styled from "styled-components";
 import { faStar , faQuoteLeft, faQuoteRight, faPencilSquare,faTrash} from "@fortawesome/free-solid-svg-icons";
@@ -13,6 +13,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { loginIdAtom } from "../atom.js"
 import { constSelector, useRecoilValue } from "recoil";
 import axios from 'axios';
+import { SlArrowRight,SlArrowLeft } from 'react-icons/sl';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import SwiperCore, { Navigation, Scrollbar } from 'swiper';
 
 const Container = styled.div`
 width: 50%;
@@ -151,6 +154,26 @@ min-height: 100px;
 
   
 `
+const NextButton = styled.button`
+padding: 0;
+background: none;
+border:none;
+
+`
+const PrevButton = styled.button`
+padding: 0;
+background: none;
+border:none;`
+
+const DeleteImage = styled.div`
+position:absolute;
+left:5%;
+top: 2%;
+background-color:#ffffffb5;
+border-radius:40%;
+padding:0.3vw;
+`
+
 const { kakao } = window;
 
 function Detail(){
@@ -178,6 +201,19 @@ function Detail(){
    
       }
   })
+
+  const { refetch :recrefetch , data: recommend } = useQuery(['Recommend', loginId],()=> getRecommend(loginId),{
+ 
+    staleTime: Infinity,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    retry: 0,
+    onSuccess: data => {
+      // 성공시 호출
+      console.log(data);
+    }
+
+  });
 
   const { data:travelall } = useQuery(['TravelDetail', id], () => getTravelDetail(id), {
       cacheTime: Infinity,
@@ -235,8 +271,6 @@ function Detail(){
     retry: 0,
     onSuccess: data => {
         console.log(data);
-        setImg('')
-        setClicked(0);
         reviewrefetch();
     },
     onError: error =>{
@@ -305,7 +339,7 @@ function Detail(){
      "travelId": id})
      }
   }, [likemutation])
-  
+
     useEffect(() => {
     const { naver } = window;
     if (!mapElement.current || !naver) return;
@@ -344,9 +378,8 @@ function Detail(){
               if (data.resultCode == 0 && like==false) {
                   setLike(true);
                   alert(data.resultMsg);
-                  console.log("처음",likeCount);
                   setLikeCount(likeCount-1);
-                  console.log("나중", likeCount);
+                  recrefetch();
               }
               else if(data.resultCode == -1){
                   alert(data.resultMsg)
@@ -356,22 +389,12 @@ function Detail(){
                 alert(data.resultMsg)
                 setLike(false);
                 console.log(like);
-                console.log("처음",likeCount);
                 setLikeCount(likeCount+1);
-                console.log("나중", likeCount);
+                recrefetch();
               }
           },
         });
    
-
-
-      // useEffect(()=>{
-      //   if(loginId != null)
-      //    { likemutation({
-      //       "loginId": loginId,
-      //    "travelId": id})
-      //    }
-      // }, [])
 
         return (
           <div><button onClick={handleLike}>
@@ -518,7 +541,38 @@ const DeleteReview = () =>{
   // reviewrefetch();
   
 }
-  
+const prevRef = useRef(null);
+const nextRef = useRef(null);
+const {  slidesPerView } = 4;
+SwiperCore.use([Navigation]);
+const [swiperSetting, setSwiperSetting] = useState(null);
+
+useEffect(() => {
+
+  if (!swiperSetting) {
+    setSwiperSetting({
+      spaceBetween: 0,
+      navigation: {
+        prevEl: prevRef.current, // 이전 버튼
+        nextEl: nextRef.current, // 다음 버튼
+      },
+    
+     slidesPerView: 4,
+      onBeforeInit: (swiper) => {
+        if (typeof swiper.params.navigation !== 'boolean') 
+        {
+          if (swiper.params.navigation) {
+            swiper.params.navigation.prevEl = prevRef.current;
+            swiper.params.navigation.nextEl = nextRef.current;
+          }
+        }
+        swiper.navigation.update();
+      },
+    });
+  }
+},[swiperSetting, slidesPerView]);
+
+
     return(
         <Container>
                     {travelall?.list.map((e) => {
@@ -548,7 +602,32 @@ const DeleteReview = () =>{
                     <div style={{display:'flex', marginRight: '10px'}}> <h6>주소 : {e.address}</h6></div>
                     <div ref={mapElement} id="map" style={{ minHeight: '400px', width:"100%" }} ></div>
                 </Location>
-                <Hr/>
+                {/* <Hr/> */}
+                <h5 style={{margin:"20px 0"}}><b>{e.name}</b> 비슷한 여행지 추천</h5>
+                <div style={{display:"flex" , margin:"20px 0",  borderRadius: "10px"}}>
+              <PrevButton ref={prevRef}><SlArrowLeft size="20"/></PrevButton>
+              {swiperSetting && (  <Swiper {...swiperSetting}>
+                {
+                e.recommendTravels.map((e)=> {
+                return( <SwiperSlide >
+                  <Link  to = {`/TravelDetail/${e.id}`}state={e} style={{ width:"25vh",color:"black"}}>
+                      <div style={{ width:"24vh", textAlign:"center"}}>
+                        {/* <div><h7 style={{background: "linear-gradient(to top, rgb(255 250 3) 50%, transparent 50%)"}}>19% 일치</h7></div> */}
+                        <DeleteImage>
+                                           <div style={{ cursor: 'pointer' , fontSize:"small"}} ><h7>{e.similarity} %</h7></div>
+                                        </DeleteImage>
+                        <div><img style={{width:"170px",overflow:"hidden",objectFit:"cover", height:"150px", borderRadius: "10px"}} src={e.image}></img></div>
+                        <div style={{textAlign:"center"}}><h7>{e.location} {e.name} </h7></div>
+                      </div>
+                  </Link>
+              </SwiperSlide>
+                )
+              })}
+            </Swiper>
+              )}          
+              <NextButton ref={nextRef}><SlArrowRight size="20" /> </NextButton>
+          </div>
+          <Hr/>
                 <Review>
                 <h5>리뷰</h5>
        {(reviewss == true)&&(editreview == false) ?  //해당 여행지에 대해 리뷰를 썼는가
@@ -581,13 +660,13 @@ const DeleteReview = () =>{
       </StarContainer>
       <HiddenReview style={{display:"flex"}} show={clicked !=null}>
         <div style={{textAlign:"center", width:"20%"}}>
-          {img ==='' ?   <label style={{position:"absolute", top:"50%", transform:"translateY(-50%)"}} for = "fileupload">사진 추가하기</label>
+          {img ===''?   <label style={{position:"absolute", top:"50%", transform:"translateY(-50%)"}} for = "fileupload">사진 추가하기</label>
           :  <div style={{display:"block"}}><img style={{width:"80%"}} src={img} /><label style={{}} for = "fileupload">사진 수정하기</label></div>}
           <input style={{height:"0px", visibility:"hidden"}} enctype="multipart/form-data"  onChange ={uploadProfile} type='file' value={comment} accept='image/*' id = 'fileupload' name = 'file' />
         </div>
         <div style={{width:"80%", height:"fit-content"}}> 
           <button onClick={()=>{onClickReview()}}>올리기</button>
-          <input  placeholder='리뷰를 남겨주세요' type="text"  onChange={onReviewHandler} ></input>
+          <input  placeholder='리뷰를 남겨주세요' type="text"  onChange={onReviewHandler} value={review}></input>
         </div>             
       </HiddenReview></> )
      }

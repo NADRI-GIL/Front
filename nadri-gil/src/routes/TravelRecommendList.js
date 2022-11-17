@@ -111,15 +111,15 @@ function TravelListHeart() {
     const loginId = useRecoilValue(loginIdAtom);
     const isLogined = useRecoilValue(isLoginedAtom);
 
-    const { isLoading, data, isFetching } = useQuery(['Recommend', loginId], getRecommend, {
+    const { isLoading, data, isFetching } = useQuery(['Recommend', loginId],()=> getRecommend(loginId), {
         cacheTime: Infinity,
         staleTime: Infinity,
         refetchOnMount: false,
         refetchOnWindowFocus: false,
-        retry: 0,
+        retry: 3,
         onSuccess: data => {
             // 성공시 호출
-            setTravelList(data.data.list)
+            setTravelList(data.list)
             console.log(data);
         },
         onError: e => {
@@ -137,7 +137,7 @@ function TravelListHeart() {
 
     useEffect(()=>{
         if(data&&travelList.length===0){
-            setTravelList(data.data.list)
+            setTravelList(data.list)
         }
         console.log(travelList)
 
@@ -163,7 +163,6 @@ function TravelListHeart() {
                                             <AiFillHeart color='red' size='20'></AiFillHeart><span>{item.likeCount}</span>
                                         </div>
                                     </div>
-
                                 </div>
                                 <div style={{ width: '98%', margin: 'auto' }}>
                                     <p>{item.name}</p>

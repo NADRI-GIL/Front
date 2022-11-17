@@ -199,41 +199,41 @@ function Course(props) {
       },
     });
 
-    const { data:course2 } = useQuery(['TravelDetail1', 15993], () => getTravelDetail(15993), {
-      cacheTime: Infinity,
-      staleTime: Infinity,
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      retry: 0, 
-      onSuccess: course2 => {
-        // 성공시 호출
-        console.log("1", course2);
-      },
-    })
+    // const { data:course2 } = useQuery(['TravelDetail1', 15993], () => getTravelDetail(15993), {
+    //   cacheTime: Infinity,
+    //   staleTime: Infinity,
+    //   refetchOnMount: false,
+    //   refetchOnWindowFocus: false,
+    //   retry: 0, 
+    //   onSuccess: course2 => {
+    //     // 성공시 호출
+    //     console.log("1", course2);
+    //   },
+    // })
 
-    const { data:course3 } = useQuery(['TravelDetail2', 1831], () => getTravelDetail(1831), {
-      cacheTime: Infinity,
-      staleTime: Infinity,
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      retry: 0,
-      onSuccess: data => {
-        // 성공시 호출
-        console.log("2", data);
-      },
-    })
+    // const { data:course3 } = useQuery(['TravelDetail2', 1831], () => getTravelDetail(1831), {
+    //   cacheTime: Infinity,
+    //   staleTime: Infinity,
+    //   refetchOnMount: false,
+    //   refetchOnWindowFocus: false,
+    //   retry: 0,
+    //   onSuccess: data => {
+    //     // 성공시 호출
+    //     console.log("2", data);
+    //   },
+    // })
 
-    const { data:course4 } = useQuery(['TravelDetail', 11691], () => getTravelDetail(11691), {
-      cacheTime: Infinity,
-      staleTime: Infinity,
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      retry: 0,
-      onSuccess: data => {
-        // 성공시 호출
-        console.log("3", data);
-      },
-    })
+    // const { data:course4 } = useQuery(['TravelDetail', 11691], () => getTravelDetail(11691), {
+    //   cacheTime: Infinity,
+    //   staleTime: Infinity,
+    //   refetchOnMount: false,
+    //   refetchOnWindowFocus: false,
+    //   retry: 0,
+    //   onSuccess: data => {
+    //     // 성공시 호출
+    //     console.log("3", data);
+    //   },
+    // })
 
     SwiperCore.use([Navigation]);
   const [swiperSetting, setSwiperSetting] = useState(null);
@@ -261,7 +261,7 @@ function Course(props) {
         },
       });
     }
-  },[swiperSetting, slidesPerView,course2, course3, course4]);
+  },[swiperSetting, slidesPerView]);
 
   const navigationChange =(e) => {
     setData(courselist[e]);
@@ -301,21 +301,23 @@ function Course(props) {
             <Content style={{marginBottom:"20px", display: "flex", textAlign:"center",  justifyContent:"space-around", marginTop:"20px"}}>
               <button onClick={()=>navigationChange(0)}>
                   <div style={{width:"180px",margin:"0 20px", height:"180px", borderRadius:"50%", display:"block", overflow:"hidden"}}>
-                  {course3?.list.map((e)=>{return(<img style={{objectFit:"cover", width:"100%", height:"100%"}} src ={e.image}></img> )}) }
+                 {/* <img style={{objectFit:"cover", width:"100%", height:"100%"}} src ="https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=92ba3130-e1b8-497a-b4df-27f663636b52"></img> */}
+                 <img style={{objectFit:"cover", width:"100%", height:"100%"}} src ="https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=17a09a42-749d-476c-9f1b-88a8da8acf30"></img>
+
                   </div>
                   <h6>제주올레길</h6>
               </button>
               
               <button onClick={()=>navigationChange(1)}>
                 <div style={{width:"180px", margin:"0 20px", height:"180px", borderRadius:"50%", display:"block", overflow:"hidden"}}>
-                 {course2?.list.map((e)=>{return(<img style={{objectFit:"cover", width:"100%", height:"100%"}} src ={e.image}></img> )}) }
+               <img style={{objectFit:"cover", width:"100%", height:"100%"}} src ="https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=d34b9fd3-9abc-425d-9152-6a83b0676683"></img>   
                 </div>
                   <h6>역사 위에 피어난 봄</h6>
               </button>
 
                 <button onClick={()=>navigationChange(2)}>
                   <div style={{width:"180px",margin:"0 20px", height:"180px", borderRadius:"50%", display:"block", overflow:"hidden"}}>
-                  {course4?.list.map((e)=>{return(<img style={{objectFit:"cover", width:"100%", height:"100%"}} src ={e.image}></img> )}) }
+                 <img style={{objectFit:"cover", width:"100%", height:"100%"}} src ="https://cdn.visitkorea.or.kr/img/call?cmd=VIEW&id=3ab295c3-78a9-40f0-aa8e-92be0c6152f0"></img>
                   </div>
                   <h6>아름다운 풍경을 자랑하는<br></br> 제천 & 단양 여행 코스</h6>
                   </button>
