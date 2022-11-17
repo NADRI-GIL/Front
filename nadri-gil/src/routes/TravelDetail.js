@@ -545,6 +545,7 @@ const prevRef = useRef(null);
 const nextRef = useRef(null);
 const {  slidesPerView } = 4;
 SwiperCore.use([Navigation]);
+
 const [swiperSetting, setSwiperSetting] = useState(null);
 
 useEffect(() => {
@@ -614,8 +615,8 @@ useEffect(() => {
                       <div style={{ width:"24vh", textAlign:"center"}}>
                         {/* <div><h7 style={{background: "linear-gradient(to top, rgb(255 250 3) 50%, transparent 50%)"}}>19% 일치</h7></div> */}
                         <DeleteImage>
-                                           <div style={{ cursor: 'pointer' , fontSize:"small"}} ><h7>{e.similarity} %</h7></div>
-                                        </DeleteImage>
+                        <div style={{ cursor: 'pointer' , fontSize:"small"}} ><h7>{e.similarity} %</h7></div>
+                        </DeleteImage>
                         <div><img style={{width:"170px",overflow:"hidden",objectFit:"cover", height:"150px", borderRadius: "10px"}} src={e.image}></img></div>
                         <div style={{textAlign:"center"}}><h7>{e.location} {e.name} </h7></div>
                       </div>

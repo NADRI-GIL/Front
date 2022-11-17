@@ -199,42 +199,6 @@ function Course(props) {
       },
     });
 
-    // const { data:course2 } = useQuery(['TravelDetail1', 15993], () => getTravelDetail(15993), {
-    //   cacheTime: Infinity,
-    //   staleTime: Infinity,
-    //   refetchOnMount: false,
-    //   refetchOnWindowFocus: false,
-    //   retry: 0, 
-    //   onSuccess: course2 => {
-    //     // 성공시 호출
-    //     console.log("1", course2);
-    //   },
-    // })
-
-    // const { data:course3 } = useQuery(['TravelDetail2', 1831], () => getTravelDetail(1831), {
-    //   cacheTime: Infinity,
-    //   staleTime: Infinity,
-    //   refetchOnMount: false,
-    //   refetchOnWindowFocus: false,
-    //   retry: 0,
-    //   onSuccess: data => {
-    //     // 성공시 호출
-    //     console.log("2", data);
-    //   },
-    // })
-
-    // const { data:course4 } = useQuery(['TravelDetail', 11691], () => getTravelDetail(11691), {
-    //   cacheTime: Infinity,
-    //   staleTime: Infinity,
-    //   refetchOnMount: false,
-    //   refetchOnWindowFocus: false,
-    //   retry: 0,
-    //   onSuccess: data => {
-    //     // 성공시 호출
-    //     console.log("3", data);
-    //   },
-    // })
-
     SwiperCore.use([Navigation]);
   const [swiperSetting, setSwiperSetting] = useState(null);
 
