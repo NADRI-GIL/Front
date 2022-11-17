@@ -80,7 +80,10 @@ const Header = () => {
                 <nav>
                     <div className="group">
                         <div>
-                            <h1><Link style={{ color: "black" }} to="/" onClick={() => setSearch('')}>나드리길</Link></h1>
+                            <h1><Link style={{ color: "black" }} to="/" onClick={() => setSearch('')}>
+                                <img style={{width: "15vh"}} src="https://user-images.githubusercontent.com/63081612/202198872-b3314c4c-d0b7-45cd-9702-0223846c4e3b.png"></img>
+                                </Link>
+                            </h1>
                         </div>
                         <ul style={{height:'100%'}}>
                             <li><Link to="/travelList" onClick={() => setSearch('')}>지역</Link></li>
@@ -93,7 +96,7 @@ const Header = () => {
                             <input type="text" value={search} onChange={(v) => setSearch(v.target.value)} placeholder="검색어 입력" />
                             <FiSearch onClick={() => navigate(`/Search/${search}`)} size="30" className="search_button" />
                         </div></div>
-                    <div style={{ display: 'flex', width: '30%', alignContent: 'center', textAlign: 'center' }}>
+                    <div style={{ display: 'flex', width: '20%', alignContent: 'center', textAlign: 'center' }}>
                         {isLogined ?
                             <ul style={{ margin: '0 0 0 auto' }}>
                                 <li><Link to="/mypage/mypageinfo" onClick={() => setSearch('')}>마이페이지</Link></li>
@@ -114,7 +117,7 @@ const Header = () => {
                 <Foot>
                     <FooterTop>
                         <FooterLogo>
-                            <img style={{ width: "100%", height: "100%", objectFit: "fill" }} src="https://user-images.githubusercontent.com/44117975/190621512-54a2e02e-f0c3-4a6e-8243-6201ea2ee52d.PNG" alt="jjowinLogo"></img>
+                            <img style={{ width: "30%", height: "100%", objectFit: "fill" }} src="https://user-images.githubusercontent.com/63081612/202201336-f27c6438-bb03-43a9-b68e-7cce10c6368c.png"></img>
                         </FooterLogo>
                         <FooterContest><h4>여행지 추천 서비스</h4><h4>https://github.com/NADRI-GIL</h4></FooterContest>
                     </FooterTop>
