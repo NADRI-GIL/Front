@@ -151,7 +151,7 @@ function TravelListHeart() {
                 {travelList.length===0 ? 'loading...' : travelList.slice(offset, offset+limit).map((item) => {
                     return (
                         <Content>
-                            <Link to={`/TravelDetail/${item.id}`} target='_blank' rel='noreferrer'>
+                            <Link to={`/TravelDetail/${item.id}`}>
                                 <img src={item.image}></img>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', width: '98%', margin: '0.5vh auto' }}>
                                     <p style={{ color: '#3366ff' }}>{item.location}</p>
