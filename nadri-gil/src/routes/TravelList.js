@@ -206,6 +206,9 @@ function TravelList() {
     useEffect(() => {
         if (data && travelList.length === 0) {
             setTravelList(data.list)
+            let tmppagelist = new Array(Math.ceil(data.list.length / 24)).fill(0)
+            tmppagelist.forEach((e, i) => tmppagelist[i] = i + 1)
+            setPageList(tmppagelist)
         }
         console.log(travelList)
 
