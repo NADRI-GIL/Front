@@ -1,7 +1,7 @@
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { useState } from "react";
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { isLoginedAtom, loginIdAtom } from './atom';
+import { isLoginedAtom, loginIdAtom, currentPageAtom } from './atom';
 import "./Header.css";
 import { FiSearch } from 'react-icons/fi';
 import styled from "styled-components";
@@ -67,10 +67,12 @@ const Header = () => {
     const isLogined = useRecoilValue(isLoginedAtom);
     const setIsLoginedFn = useSetRecoilState(isLoginedAtom);
     const setLoginIdFn = useSetRecoilState(loginIdAtom);
+    const setCurrentPageFn = useSetRecoilState(currentPageAtom);
     const onClickLogOut = () => {
         setIsLoginedFn(false);
         setLoginIdFn("");
         navigate('/')
+        setCurrentPageFn(1)
     }
 
 
@@ -80,30 +82,30 @@ const Header = () => {
                 <nav>
                     <div className="group">
                         <div>
-                            <h1><Link style={{ color: "black" }} to="/" onClick={() => setSearch('')}>나드리길</Link></h1>
+                            <h1><Link style={{ color: "black" }} to="/" onClick={() => {setSearch('');setCurrentPageFn(1);}}>나드리길</Link></h1>
                         </div>
                         <ul style={{height:'100%'}}>
-                            <li><Link to="/travelList" onClick={() => setSearch('')}>지역</Link></li>
+                            <li><Link to="/travelList" onClick={() => {setSearch('');setCurrentPageFn(1);}}>지역</Link></li>
                             <li><Link to="/travelRecommendList" onClick={() => setSearch('')}>추천</Link></li>
-                            <li><Link to="/course" onClick={() => setSearch('')}>코스</Link></li>
-                            <li><Link to="/Notice" onClick={() => setSearch('')}>공지사항</Link></li>
+                            <li><Link to="/course" onClick={() =>{ setSearch('');setCurrentPageFn(1);}}>코스</Link></li>
+                            <li><Link to="/Notice" onClick={() => {setSearch('');setCurrentPageFn(1);}}>공지사항</Link></li>
                         </ul>
 
                         <div className="search">
                             <input type="text" value={search} onChange={(v) => setSearch(v.target.value)} placeholder="검색어 입력" />
-                            <FiSearch onClick={() => navigate(`/Search/${search}`)} size="30" className="search_button" />
+                            <FiSearch onClick={() => {setCurrentPageFn(1); navigate(`/Search/${search}`)}} size="30" className="search_button" />
                         </div></div>
                     <div style={{ display: 'flex', width: '30%', alignContent: 'center', textAlign: 'center' }}>
                         {isLogined ?
                             <ul style={{ margin: '0 0 0 auto' }}>
-                                <li><Link to="/mypage/mypageinfo" onClick={() => setSearch('')}>마이페이지</Link></li>
+                                <li><Link to="/mypage/mypageinfo" onClick={() => {setSearch('');setCurrentPageFn(1);}}>마이페이지</Link></li>
                                 <div onClick={() => { onClickLogOut(); setSearch(''); }}>
                                     <li>로그아웃</li>
                                 </div>
                             </ul>
                             :
                             <ul style={{ margin: '0 0 0 auto' }}>
-                                <li style={{ color: "black" }}><Link to="/signIn" onClick={() => setSearch('')} style={{ alignContent: 'center' }}>로그인</Link></li>
+                                <li style={{ color: "black" }}><Link to="/signIn" onClick={() => {setSearch('');setCurrentPageFn(1);}} style={{ alignContent: 'center' }}>로그인</Link></li>
                             </ul>}
                     </div>
                 </nav>
