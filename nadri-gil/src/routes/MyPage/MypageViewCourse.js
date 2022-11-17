@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useParams } from 'react-router-dom';
 import { useMutation, useQuery } from "react-query";
 import { directions5api, getViewCourse, shareCourse ,getSharedCourse} from "../../api.js"
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import "../../index.css"
 
 

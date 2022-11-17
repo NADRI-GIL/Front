@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from "styled-components";
 import { useMutation, useQuery } from "react-query";
 import { directions5api, postCourse } from "../api.js"
-import { useLocation,useNavigate } from 'react-router-dom';
+import { useLocation,useNavigate, Link } from 'react-router-dom';
 import "../index.css"
 
 
