@@ -82,7 +82,7 @@ const Header = () => {
                 <nav>
                     <div className="group">
                         <div>
-                            <h1><Link style={{ color: "black" }} to="/" onClick={() => setSearch('')setCurrentPageFn(1);}>
+                            <h1><Link style={{ color: "black" }} to="/" onClick={() => {setSearch('');setCurrentPageFn(1);}}>
                                 <img style={{width: "25vh", marginTop:"7%"}} src="https://user-images.githubusercontent.com/63081612/202528869-ddad7334-a0f6-4d27-bca6-70453eb37d89.png"></img>
                                 </Link>
                             </h1>
