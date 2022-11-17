@@ -116,19 +116,19 @@ function PreferenceSurvey() {
             <h3>여행지 선호도 조사 페이지</h3>
             <ContentList>
             {!isLoading?data.list.map((item) => {
-                if (preferenceTravel.indexOf(item.id)!=-1) {
+                if (preferenceTravel.indexOf(item.travleId)!=-1) {
                     return (
                         <Content>
-                            <img src={item.image} style={{filter:'brightness(0.5)'}} onClick={() => onPreferenceTravelHandler(item.id)}></img>
-                            <p onClick={() => onPreferenceTravelHandler(item.id)}>{item.name}</p>
+                            <img src={item.travelImage} style={{filter:'brightness(0.5)'}} onClick={() => onPreferenceTravelHandler(item.id)}></img>
+                            <p onClick={() => onPreferenceTravelHandler(item.travelId)}>{item.travelName}</p>
                         </Content>
                     )
                 }
                 else{
                     return (
                         <Content>
-                            <img src={item.image} onClick={() => onPreferenceTravelHandler(item.id)}></img>
-                            <p onClick={() => onPreferenceTravelHandler(item.id)}>{item.name}</p>
+                            <img src={item.travelImage} onClick={() => onPreferenceTravelHandler(item.travelId)}></img>
+                            <p onClick={() => onPreferenceTravelHandler(item.travelId)}>{item.travelName}</p>
                         </Content>
                     )
                 }

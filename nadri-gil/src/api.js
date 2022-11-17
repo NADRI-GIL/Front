@@ -27,7 +27,7 @@ export const postLogin = async (data) => {
 
 }
   export const getPreference = async (data) => {
-    return fetch(`${URL}/travels/random`, {
+    return fetch(`${URL}/surveys/all`, {
       method: "get",
       headers: {
         "Content-Type": "application/json",
@@ -55,8 +55,9 @@ export const postLogin = async (data) => {
   }
 
   export const getTravelDetail = async (id) => {
-    return fetch(`${URL}/travels/${id}/detail`, {
-      method: "get",
+    // return fetch(`${URL}/travels/${id}/detail`, {
+     return fetch(`${URL}/travels/${id}/detail`, {
+    method: "get",
       headers: {
         "Content-Type": "application/json",
       },
@@ -109,7 +110,7 @@ export const directions5api = async (direction) => {
     headers: {
       "Content-Type": "application/json",
       "X-NCP-APIGW-API-KEY-ID":"mczr185hv8",
-      "X-NCP-APIGW-API-KEY": "fK3YTgXVtMaULn4EULEbgABK0G0lC4wrHmSUVj6o"
+      "X-NCP-APIGW-API-KEY": "fK3YTgXVtMaULn4EULEbgABK0G0lC4wrHmSUVj6o",
     },
   })
     .then((response) => response.json());
@@ -213,8 +214,15 @@ export const postReviewImage = async () => {
 }
 
 export const  getMostHeart  = async (data) => {
-  return axios.get(`${URL}/travels/heart`);
+  return fetch(`${URL}/travels/heart`, {
+    method: "get",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json());
 }
+
 
 export const getInfo = async (loginId) => {
   return fetch(`${URL}/users/mypage/${loginId}`, {
@@ -329,7 +337,7 @@ export const postChangePassword = async (data) => {
 
 
 export const getRecommend = async (loginId) => {
-  return fetch(`http://localhost:8080/recommend/${loginId}`, {
+  return fetch(`${URL}/recommend/${loginId}`, {
     method: "get",
     headers: {
       "Content-Type": "application/json",
@@ -347,3 +355,4 @@ export const postUserReview = async (data) => {
   })
     .then((response) => response.json());
 }
+

@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import {Link, useNavigate } from 'react-router-dom';
 import styled from "styled-components";
+import { loginIdAtom, isLoginedAtom } from "../../atom.js"
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { getInfo } from "../../api.js"
+import { useMutation, useQuery } from "react-query";
 
 const Container = styled.div`
     width:50%;
@@ -72,6 +76,26 @@ const Tbody = styled.div`
 `
 
 function Notice(){
+
+  const loginId = useRecoilValue(loginIdAtom);
+
+
+  const {error, data, isLoading } = useQuery(['userInfo', loginId], () => getInfo(loginId), {
+    cacheTime: Infinity,
+    staleTime: Infinity,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    retry: 0,
+    onSuccess: data => {
+        console.log(data);
+
+    },
+    onError: error => {
+      console.log(error);
+
+  },
+})
+
     const navigate = useNavigate();
  
     const navigateToPurchase = () => {
@@ -97,7 +121,9 @@ function Notice(){
             </Tbody>
             {/* )
             })} */}
-           <button  onClick={navigateToPurchase}>작성하기</button>
+
+            { loginId != '' ? ( data?.list[0].id == 1 ? <button  onClick={navigateToPurchase}>작성하기</button>   : ''):''}
+          
       </Container>
     </>
     )
