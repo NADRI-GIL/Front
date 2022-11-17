@@ -10,6 +10,9 @@ import { AiFillStar, AiFillHeart } from 'react-icons/ai';
 import { getTravelsAll } from "../api.js"
 import { useQuery } from "react-query";
 
+import { currentPageAtom } from "../atom.js"
+import { useRecoilValue, useSetRecoilState } from "recoil";
+
 const Container = styled.div`
     width:55%;
     margin:auto;
@@ -118,19 +121,21 @@ color:#868686;
 `
 
 function TravelList() {
-
-
-
     const OPTIONS = ['경기', '경북', '경남', '서울', '부산', '대구', '인천', '광주', '대전', '울산', '세종', '강원',
         '충북', '충남', '전북', '전남', '제주'];
+
+    const currentPageatom = useRecoilValue(currentPageAtom);
+    const setCurrentPageFn = useSetRecoilState(currentPageAtom);
 
     const [travelList, setTravelList] = useState([]);
     const [fieldValue, setFieldValue] = useState([]);
     const [selectState, setSelectState] = useState(false);
     const [limit, setLimit] = useState(24);
-    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(currentPageatom);
     const [pageList, setPageList] = useState([])
     const offset = (currentPage - 1) * limit;
+
+    
 
     const { isLoading, data, isFetching } = useQuery("travelData", getTravelsAll, {
         cacheTime: Infinity,
@@ -161,6 +166,8 @@ function TravelList() {
             tmppagelist.forEach((e, i) => tmppagelist[i] = i + 1)
             setPageList(tmppagelist)
             setTravelList([...tmpdata])
+            setCurrentPage(1)
+            setCurrentPageFn(1);
         }
 
     }
@@ -181,6 +188,8 @@ function TravelList() {
             tmppagelist.forEach((e, i) => tmppagelist[i] = i + 1)
             setPageList(tmppagelist)
         }
+        setCurrentPage(1)
+        setCurrentPageFn(1);
     }
     // const previousPageList = () => {
     //     window.scrollTo(0, 0);
@@ -202,10 +211,14 @@ function TravelList() {
         else if (index === 3) tmp.sort((a, b) => b.reviewTotal - a.reviewTotal)
         setTravelList(tmp)
         setCurrentPage(1)
+        setCurrentPageFn(1);
     }
     useEffect(() => {
         if (data && travelList.length === 0) {
             setTravelList(data.list)
+            let tmppagelist = new Array(Math.ceil(data.list.length / 24)).fill(0)
+            tmppagelist.forEach((e, i) => tmppagelist[i] = i + 1)
+            setPageList(tmppagelist)
         }
         console.log(travelList)
 
@@ -242,7 +255,7 @@ function TravelList() {
                 {travelList.length === 0 ? 'loading...' : travelList.slice(offset, offset + limit).map((item) => {
                     return (
                         <Content>
-                            <a href={`/TravelDetail/${item.id}`} target='_blank' rel='noreferrer'>
+                            <Link to={`/TravelDetail/${item.id}`}>
                                 <img src={item.image}></img>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', width: '98%', margin: '0.5vh auto' }}>
                                     <p style={{ color: '#3366ff' }}>{item.location}</p>
@@ -259,7 +272,7 @@ function TravelList() {
                                 <div style={{ width: '98%', margin: 'auto' }}>
                                     <p>{item.name}</p>
                                 </div>
-                            </a>
+                            </Link>
                         </Content>
 
                     )
@@ -269,22 +282,22 @@ function TravelList() {
                     ''
                     :
                     <Pagination>
-                        {currentPage > 5 ? <PageButton onClick={()=>{window.scrollTo(0, 0); setCurrentPage(1);}}>&lt;&lt;</PageButton> : ''}
-                        {currentPage > 5 ? <PageButton onClick={()=>{window.scrollTo(0, 0); setCurrentPage((parseInt((currentPage-1)/5)*5)-4);}}>&lt;</PageButton> : ''}
+                        {currentPage > 5 ? <PageButton onClick={()=>{window.scrollTo(0, 0);setCurrentPage(1);setCurrentPageFn(1);}}>&lt;&lt;</PageButton> : ''}
+                        {currentPage > 5 ? <PageButton onClick={()=>{window.scrollTo(0, 0);setCurrentPage((parseInt((currentPage-1)/5)*5)-4);setCurrentPageFn((parseInt((currentPage-1)/5)*5)-4)}}>&lt;</PageButton> : ''}
                         {pageList.slice((parseInt((currentPage-1)/5)*5), (parseInt((currentPage-1)/5)*5)+5).map((item) => {
                             if (item === currentPage) {
                                 return (
-                                    <CurrentPageButton onClick={() => { window.scrollTo(0, 0); setCurrentPage(item); }}>{item}</CurrentPageButton>
+                                    <CurrentPageButton onClick={() => {window.scrollTo(0, 0);setCurrentPage(item); setCurrentPageFn(item);}}>{item}</CurrentPageButton>
                                 )
                             }
                             else {
                                 return (
-                                    <PageButton onClick={() => { window.scrollTo(0, 0); setCurrentPage(item); }}>{item}</PageButton>
+                                    <PageButton onClick={() => {window.scrollTo(0, 0);setCurrentPage(item); setCurrentPageFn(item);}}>{item}</PageButton>
                                 )
                             }
                         })}
-                        {pageList.length > 5 && currentPage <= (parseInt(pageList.length/5))*5? <PageButton onClick={()=>{window.scrollTo(0, 0); setCurrentPage((parseInt((currentPage-1)/5)*5)+6);}}>&gt;</PageButton> : ''}
-                        {pageList.length > 5 && currentPage <= (parseInt(pageList.length/5))*5? <PageButton onClick={()=>{window.scrollTo(0, 0); setCurrentPage(pageList.length)}}>&gt;&gt;</PageButton> : ''}
+                        {pageList.length > 5 && currentPage <= (parseInt(pageList.length/5))*5? <PageButton onClick={()=>{window.scrollTo(0, 0);setCurrentPage((parseInt((currentPage-1)/5)*5)+6);setCurrentPageFn((parseInt((currentPage-1)/5)*5)+6);}}>&gt;</PageButton> : ''}
+                        {pageList.length > 5 && currentPage <= (parseInt(pageList.length/5))*5? <PageButton onClick={()=>{window.scrollTo(0, 0);setCurrentPage(pageList.length);setCurrentPageFn(pageList.length)}}>&gt;&gt;</PageButton> : ''}
                     </Pagination>}
             </ContentList>
         </Container>

@@ -30,9 +30,11 @@ margin-top:3vh;
 `
 const Content = styled.div`
 width:25%;
-height:25vh;
+// height:25vh;
+margin-bottom:2vh;
 padding:5px;
-text-align:center;
+
+// text-align:center;
     img{
         object-fit: cover;
         height:18vh;
@@ -45,7 +47,13 @@ text-align:center;
     p{
         font-family: 'SUIT';
         font-size:0.8vw;
-        margin-top:1vh;
+        margin:0;
+        font-weight:500;
+    }
+    span{
+        font-family: 'SUIT';
+        font-size:0.95em;
+        margin-left:0.2vw;
     }
 `;
 const SelectContainer = styled.div`
@@ -110,6 +118,7 @@ background-color:white;
 function TravelListHeart() {
     const loginId = useRecoilValue(loginIdAtom);
     const isLogined = useRecoilValue(isLoginedAtom);
+    
 
     const { isLoading, data, isFetching } = useQuery(['Recommend', loginId],()=> getRecommend(loginId), {
         cacheTime: Infinity,
@@ -120,7 +129,9 @@ function TravelListHeart() {
         onSuccess: data => {
             // 성공시 호출
             setTravelList(data.list)
-            console.log(data);
+            let tmp = new Array(Math.ceil(data.list.length / 24)).fill(0)
+            tmp.forEach((e, i) => tmp[i] = i + 1)
+            setPageList(tmp)
         },
         onError: e => {
             // 실패시 호출 (401, 404 같은 error가 아니라 정말 api 호출이 실패한 경우만 호출됩니다.)
@@ -138,6 +149,9 @@ function TravelListHeart() {
     useEffect(()=>{
         if(data&&travelList.length===0){
             setTravelList(data.list)
+            let tmp = new Array(Math.ceil(data.list.length / 24)).fill(0)
+            tmp.forEach((e, i) => tmp[i] = i + 1)
+            setPageList(tmp)
         }
         console.log(travelList)
 
@@ -151,7 +165,7 @@ function TravelListHeart() {
                 {travelList.length===0 ? 'loading...' : travelList.slice(offset, offset+limit).map((item) => {
                     return (
                         <Content>
-                            <a href={`/TravelDetail/${item.id}`} target='_blank' rel='noreferrer'>
+                            <Link to={`/TravelDetail/${item.id}`}>
                                 <img src={item.image}></img>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', width: '98%', margin: '0.5vh auto' }}>
                                     <p style={{ color: '#3366ff' }}>{item.location}</p>
@@ -163,11 +177,12 @@ function TravelListHeart() {
                                             <AiFillHeart color='red' size='20'></AiFillHeart><span>{item.likeCount}</span>
                                         </div>
                                     </div>
+
                                 </div>
                                 <div style={{ width: '98%', margin: 'auto' }}>
                                     <p>{item.name}</p>
                                 </div>
-                            </a>
+                            </Link>
                         </Content>
                         
                     )

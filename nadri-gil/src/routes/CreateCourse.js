@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from "styled-components";
 import { useMutation, useQuery } from "react-query";
 import { directions5api, postCourse } from "../api.js"
-import { useLocation,useNavigate } from 'react-router-dom';
+import { useLocation,useNavigate, Link } from 'react-router-dom';
 import "../index.css"
 
 
@@ -483,11 +483,11 @@ function CreateCourse(props) {
                             </br>
                                 {courseInfo[i - 1] != undefined ? courseInfo[i - 1].duration > 3600000 ? '-' + (courseInfo[i - 1].duration / 3600000)?.toFixed(0) + '시간' + '→' : '-' + (courseInfo[i - 1].duration / 60000)?.toFixed(0) + "분→" : ''}</Distance>
                             <Content>
-                                <a href={`/TravelDetail/${item.travelId}`} target='_blank' rel='noreferrer'>
+                                <Link to={`/TravelDetail/${item.travelId}`} >
 
                                     <img src={item.image}></img>
                                     <p>{item.name}</p>
-                                </a>
+                                </Link>
                             </Content>
                         </CourseContent>
                     )

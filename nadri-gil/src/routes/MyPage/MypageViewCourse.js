@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useParams } from 'react-router-dom';
 import { useMutation, useQuery } from "react-query";
 import { directions5api, getViewCourse, shareCourse ,getSharedCourse} from "../../api.js"
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import "../../index.css"
 
 
@@ -225,7 +225,7 @@ function ViewCourse(props) {
         },
       });
   
-    const { isLoading: isViewCourseLoading, data: viewCourseData } = useQuery(["getViewCourse", courseId], () => getViewCourse(courseId), {
+    const { isLoading: isViewCourseLoading, data: viewCourseData, refetch :viewCourseRefetch } = useQuery(["getViewCourse", courseId], () => getViewCourse(courseId), {
         cacheTime: Infinity,
         staleTime: Infinity,
         refetchOnMount: false,
@@ -299,7 +299,7 @@ function ViewCourse(props) {
                 ${item.name}
                 </p>
                 <span style="font-family: 'SUIT'; font-size:0.6vw; display:inline-block;margin-bottom:0;">
-                ${item.add}
+                ${item.address}
                 <span>
                 </div>`
 
@@ -399,7 +399,7 @@ function ViewCourse(props) {
                 ${item.name}
                 </p>
                 <span style="font-family: 'SUIT'; font-size:0.6vw; display:inline-block;margin-bottom:0;">
-                ${item.add}
+                ${item.address}
                 <span>
                 </div>`
 
@@ -472,8 +472,10 @@ function ViewCourse(props) {
         onSuccess: data => {
             if (data.resultCode === 0) {
                 alert(`"${viewCourse.courseName}"가 공유되었습니다.`)
-                navigate('/mypage/mypageinfo')
+                viewCourseRefetch();
                 sharedrefetch();
+                navigate('/mypage/mypageinfo')
+                
             }
             else {
                 alert(data.resultMsg)
@@ -495,7 +497,7 @@ function ViewCourse(props) {
             {viewCourse === null ? '' :
                 <Title>
                     <h2>{viewCourse.courseName}</h2>
-                    <h6>작성자</h6>
+                    <h6>{viewCourse.nickName}</h6>
                 </Title>
             }
             <Hr />
@@ -516,11 +518,11 @@ function ViewCourse(props) {
                             </br>
                                 {courseInfo[i - 1] != undefined ? courseInfo[i - 1].duration > 3600000 ? '-' + (courseInfo[i - 1].duration / 3600000)?.toFixed(0) + '시간' + '→' : '-' + (courseInfo[i - 1].duration / 60000)?.toFixed(0) + "분→" : ''}</Distance>
                             <Content>
-                                <a href={`/TravelDetail/${item.travelId}`} target='_blank' rel='noreferrer'>
+                                <Link to={`/TravelDetail/${item.travelId}`}>
 
                                     <img src={item.image}></img>
                                     <p>{item.name}</p>
-                                </a>
+                                </Link>
                             </Content>
                         </CourseContent>
                     )
@@ -538,7 +540,8 @@ function ViewCourse(props) {
             </Menu>
 
             <MapContainer id="map"></MapContainer>
-            <CompleteButton onClick={() => { onClickshareCourse(); }}>내가 만든 코스 공유하기 -&gt;</CompleteButton>
+            {viewCourse?._shared?'':<CompleteButton onClick={() => { onClickshareCourse(); }}>내가 만든 코스 공유하기 -&gt;</CompleteButton>}
+            
         </Container>
     )
 };
