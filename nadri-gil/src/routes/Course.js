@@ -245,7 +245,7 @@ function Course(props) {
              </div>
   
             <div style={{display:"flex" , marginBottom:"20px", backgroundColor: "#faf7f7", padding: "20px 0", borderRadius: "10px"}}>
-              <PrevButton ref={prevRef}><SlArrowLeft size="20"/></PrevButton>
+              {/* <PrevButton ref={prevRef}><SlArrowLeft size="20"/></PrevButton> */}
               {swiperSetting && (  <Swiper {...swiperSetting}>
                 {data1.map((e)=> {
                 return( <SwiperSlide >
@@ -258,7 +258,7 @@ function Course(props) {
               })}
             </Swiper>
               )}          
-              <NextButton ref={nextRef}><SlArrowRight size="20" /> </NextButton>
+              {/* <NextButton ref={nextRef}><SlArrowRight size="20" /> </NextButton> */}
           </div> 
           <h6>{e.content}</h6>
               </> )})} 

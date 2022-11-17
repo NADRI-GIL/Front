@@ -59,7 +59,7 @@ function Rank() {
 
   return(
     <div >  
-     <div className="title"><h4>인기순</h4><Link className="text_link" to= "./travelListHeart"><h6>전체보기</h6></Link></div>
+     <div className="title"><h4>인기순</h4><Link className="text_link" to= "./travelList"><h6>전체보기</h6></Link></div>
       <div className="swipe">
             <Swiper spaceBetween={10} slidesPerView={4}>
               {data?.list.map((e)=> {
@@ -147,7 +147,7 @@ function Star(){
 
   return(
     <div>
-    <div className="title"><h4>별점순</h4><Link className="text_link" to= "./travelListHeart"><h6>전체보기</h6></Link></div>
+    <div className="title"><h4>별점순</h4><Link className="text_link" to= "./travelList"><h6>전체보기</h6></Link></div>
      <div className="swipe">
            <Swiper spaceBetween={10} slidesPerView={4} >
              {data?.list.map((e)=> {
