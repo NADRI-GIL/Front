@@ -1,0 +1,90 @@
+.main{
+    width: 62%;
+    margin: 0 auto;
+    font-family: 'SUIT';
+}
+    
+a {
+    text-decoration: none;
+    color: black;
+}
+a:link { 
+    text-decoration: none;
+    color : black;
+   }
+    
+a:visited { 
+text-decoration: none;
+}
+
+a:hover { 
+text-decoration: none;
+color: inherit;
+}
+/* SWipe image */
+
+.title{
+    display : flex;
+    justify-content:space-between;
+    margin-top: 70px;
+}
+
+.title > .text_link> h6{
+    color: #3366ff;
+}
+
+
+.swipe{
+    margin-top: 30px;
+    margin-bottom: 50px;
+}
+
+.swipe_div{
+    margin: 0 auto; 
+    text-align: center;
+    overflow: hidden;
+    max-width: 230px;
+    width:230px;
+}
+
+.swipe_div img {
+    transition: all 0.2s linear;
+    /* overflow:hidden; */
+    max-height: 260px;
+
+    margin: 0 auto;
+  }
+  .swipe_div:hover img {
+
+    transform: scale(1.1);
+    /* transition: all 0.2s linear; */
+    /* width:230px;
+    overflow:hidden;
+    object-fit: cover; */
+}
+
+  .swipe_imgbox{
+overflow: hidden;
+margin: 0 auto; 
+text-align: center;
+overflow: hidden;
+max-width: 230px;
+height:260px;
+width:230px;
+ }
+
+.swipe_img{
+   height:260px;
+    width:230px;
+    margin: 0 auto;
+}
+
+.swipe_h5{
+    text-align:center; 
+    justify-content:center;
+    margin:0 auto;
+    position: static;
+    color: black;
+}
+
+
